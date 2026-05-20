@@ -1,4 +1,5 @@
 .idea
+*.iml
 
 .claude/**/10x-*
 .claude/.10x-*
