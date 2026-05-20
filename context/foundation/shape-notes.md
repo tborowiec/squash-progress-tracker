@@ -48,7 +48,7 @@ A match record carries: opponent name, overall sets score (e.g. 3-1), individual
 
 ## Non-Functional Requirements
 
-- Any AI operation (text parsing, game plan generation) that takes longer than 2 seconds provides continuous visible progress feedback to the player; the interface does not freeze or go silent.
+- Any AI operation (text parsing, game plan generation) provides continuous visible progress feedback to the player; the interface does not freeze or go silent.
 - AI text parsing completes within 5 seconds as perceived by the player (from submit to structured preview appearing).
 - No match record belonging to one player is accessible via any API path by a different player; account boundary is enforced at the data layer.
 - The product is fully usable on the latest two major versions of Chrome, Firefox, Safari, and Edge (desktop). Mobile browser support is explicitly out of scope for MVP.
@@ -86,8 +86,8 @@ Multi-user web app with per-player accounts. Sign-up and sign-in via email + pas
 ### US-01: Player logs a match via AI text entry and receives an AI game plan
 
 - **Given** a signed-in player who wants to log a just-played match
-- **When** they type a natural language description (e.g. "beat Kowalski 3-1, struggled in the second set")
-- **Then** the AI returns a structured preview (opponent name, score, date), the player confirms it, and the match is saved to their history
+- **When** they type a natural language description (e.g. "beat Kowalski 3:1 (11:5, 6:11, 11:2, 11:1) on May 5th, struggled in the second set")
+- **Then** the AI returns a structured preview (opponent name, score, date, notes), the player confirms it, and the match is saved to their history
 
 #### Acceptance Criteria
 - AI produces a structured preview within a reasonable response time; the player sees progress indication during processing
@@ -100,7 +100,7 @@ Multi-user web app with per-player accounts. Sign-up and sign-in via email + pas
 ### US-02: Player requests AI game plan before a match
 
 - **Given** a signed-in player with at least one saved match against opponent X
-- **When** they select opponent X from their history and tap "Get game plan"
+- **When** they select opponent X from their history and tap "Generate game plan"
 - **Then** the app displays an AI-generated tactical game plan for the next match against opponent X, clearly labelled as AI-generated advice
 
 #### Acceptance Criteria
