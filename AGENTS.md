@@ -28,6 +28,8 @@ Use `./mvnw` (wrapper) rather than a locally installed `mvn` so the Maven versio
 
 Java 21, standard Spring Boot conventions. Class names are `PascalCase`; method and field names are `camelCase`. Package root is `com.example.squash_progress_tracker`. No linter or formatter is configured yet.
 
+All REST endpoints should be available under paths prefixed with `/api`.
+
 ## Testing Guidelines
 
 JUnit 5 via `spring-boot-starter-test`. Test classes live in `src/test/java/` mirroring the source package and are named `<ClassName>Tests.java`. Run with `./mvnw test`.
