@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: squash-progress-tracker
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: frankfurt
+    branch: main
+    autoDeployTrigger: off
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JAVA_TOOL_OPTIONS
+        value: -XX:MaxRAMPercentage=75
+      - key: DB_HOST
+        fromDatabase:
+          name: squash-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: squash-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: squash-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: squash-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: squash-db
+          property: password
+
+databases:
+  - name: squash-db
+    plan: free
+    region: frankfurt
+    postgresMajorVersion: "17"
+
+previews:
+  generation: automatic

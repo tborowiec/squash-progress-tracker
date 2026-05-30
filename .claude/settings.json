@@ -4,7 +4,7 @@
       "Bash(npm *)",
       "Bash(npx *)",
       "Bash(node *)",
-      "Bash(mvn *)",
+      "Bash(./mvnw *)",
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(git diff *)",
