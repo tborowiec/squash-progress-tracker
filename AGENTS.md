@@ -5,6 +5,7 @@ Squash Progress Tracker is a Java 21 / Spring Boot 4.0.6 web app where squash pl
 ## Hard Rules
 
 - Never write to `context/archive/` — archived changes are immutable; use `/10x-new` to open a new change.
+- Track project implementation progress both in the repository and in GitHub Issues
 - Always show the AI parse result to the player for confirmation before saving any match record. No silent mis-save.
 - Enforce the auth boundary on every data-access query — one player's match history must never be readable by another.
 - Label every AI-generated game plan as AI-generated advice, not factual analysis.
@@ -29,6 +30,8 @@ Use `./mvnw` (wrapper) rather than a locally installed `mvn` so the Maven versio
 Java 21. Package root is `com.example.squashprogresstracker`. No linter or formatter is configured yet.
 
 All REST endpoints should be available under paths prefixed with `/api`.
+
+Database table names are plural `snake_case` (e.g. `users`, `matches`). This also sidesteps reserved-word collisions — `user` is reserved in PostgreSQL, `users` is not. Map entities to the table explicitly with `@Table(name = "...")`.
 
 ## Testing Guidelines
 
