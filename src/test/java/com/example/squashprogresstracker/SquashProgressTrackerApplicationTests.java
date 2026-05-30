@@ -1,4 +1,4 @@
-package com.example.squash_progress_tracker;
+package com.example.squashprogresstracker;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

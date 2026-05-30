@@ -1,4 +1,4 @@
-package com.example.squash_progress_tracker;
+package com.example.squashprogresstracker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
