@@ -37,6 +37,3 @@ databases:
     plan: free
     region: frankfurt
     postgresMajorVersion: "17"
-
-previews:
-  generation: automatic
