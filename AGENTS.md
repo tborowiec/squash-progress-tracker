@@ -36,4 +36,4 @@ Test classes are named `<ClassName>Tests.java`. Run with `./mvnw test`.
 
 ## Commit Guidelines
 
-Lowercase descriptive phrases (e.g. `add match logging endpoint`, `wire spring security auth`). No conventional-commit prefixes in use. CI (GitHub Actions, auto-deploy to Fly.io on merge to `main`) is planned but not yet wired.
+Lowercase descriptive phrases (e.g. `add match logging endpoint`, `wire spring security auth`). No conventional-commit prefixes in use. CI (GitHub Actions, auto-deploy to Render on merge to `main`) is planned but not yet wired.
