@@ -6,7 +6,7 @@ services:
     plan: free
     region: frankfurt
     branch: main
-    autoDeployTrigger: off
+    autoDeployTrigger: commit
     healthCheckPath: /actuator/health
     envVars:
       - key: JAVA_TOOL_OPTIONS
