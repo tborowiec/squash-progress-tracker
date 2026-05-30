@@ -41,8 +41,10 @@ perform. Tick each before Phase 2.
 
 - [ ] **GitHub:** confirm this repo is pushed to a GitHub remote (Render deploys from a connected
       Git repo, not a local folder). `git remote -v` should show a GitHub URL on `main`.
-- [ ] **Render account + workspace:** sign in at <https://dashboard.render.com> and confirm/create
-      the workspace this project will live in.
+- [ ] **Render account + workspace:** sign in at <https://dashboard.render.com>. A workspace is
+      created automatically on signup — just confirm which one is active (top-left dropdown), not the
+      "New +" button (that creates resources *inside* a workspace). Only create a new workspace if you
+      want this project isolated from other Render work.
 - [ ] **Connect GitHub to Render:** in the Render dashboard, authorize the Render GitHub app for
       this repository (Account Settings → GitHub). Without this, blueprint launch can't see the repo.
 - [ ] **Install the Render CLI** and authenticate interactively:
