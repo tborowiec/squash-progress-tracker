@@ -5,6 +5,7 @@ COPY .mvn/ .mvn/
 COPY mvnw pom.xml ./
 RUN ./mvnw -q -B dependency:go-offline
 COPY src/ src/
+COPY frontend/ frontend/
 RUN ./mvnw -q -B clean package -DskipTests
 
 # ---- runtime stage ----

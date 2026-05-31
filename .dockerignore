@@ -4,3 +4,6 @@ target/
 *.iml
 context/
 .mvn/wrapper/*.jar
+frontend/node_modules/
+frontend/dist/
+cookies.txt
