@@ -357,8 +357,8 @@ Data volumes are small (PRD: per-player, low QPS). The `(user_id, match_date)` a
 
 #### Automated
 
-- [x] 3.1 `./mvnw package` builds the frontend and embeds it (jar contains `static/index.html` + assets)
-- [x] 3.2 `./mvnw test` still green; SPA fallback does not break the anonymous-`/api`-→`401` test, and anonymous `GET /login` / `GET /register` serve or forward to the SPA
+- [x] 3.1 `./mvnw package` builds the frontend and embeds it (jar contains `static/index.html` + assets) — 27f03b8
+- [x] 3.2 `./mvnw test` still green; SPA fallback does not break the anonymous-`/api`-→`401` test, and anonymous `GET /login` / `GET /register` serve or forward to the SPA — 27f03b8
 
 #### Manual
 
@@ -370,7 +370,7 @@ Data volumes are small (PRD: per-player, low QPS). The `(user_id, match_date)` a
 
 #### Automated
 
-- [ ] 4.1 `./mvnw package` succeeds with the new components (frontend build clean — no type/lint errors if configured)
+- [x] 4.1 `./mvnw package` succeeds with the new components (frontend build clean — no type/lint errors if configured)
 
 #### Manual
 

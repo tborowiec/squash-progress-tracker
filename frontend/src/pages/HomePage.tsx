@@ -1,39 +1,12 @@
 import { useNavigate } from 'react-router-dom'
-import { logout } from '../api/auth'
 import { useAuth } from '../contexts/AuthContext'
+import NavHeader from '../components/NavHeader'
 
 const s: Record<string, React.CSSProperties> = {
   page: {
     minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
-  },
-  header: {
-    borderBottom: '1px solid var(--border)',
-    padding: '1rem 2rem',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    background: 'var(--surface)',
-  },
-  logo: {
-    fontFamily: 'var(--font-display)',
-    fontWeight: 700,
-    fontSize: '1.25rem',
-    letterSpacing: '0.05em',
-    color: 'var(--teal)',
-  },
-  logoutBtn: {
-    background: 'transparent',
-    border: '1px solid var(--border)',
-    borderRadius: '2px',
-    color: 'var(--muted)',
-    fontFamily: 'var(--font-mono)',
-    fontSize: '11px',
-    letterSpacing: '0.1em',
-    padding: '0.4rem 0.85rem',
-    textTransform: 'uppercase' as const,
-    transition: 'border-color 0.15s, color 0.15s',
   },
   main: {
     flex: 1,
@@ -95,21 +68,12 @@ const s: Record<string, React.CSSProperties> = {
 }
 
 export default function HomePage() {
-  const { user, setUser } = useAuth()
+  const { user } = useAuth()
   const navigate = useNavigate()
-
-  async function handleLogout() {
-    await logout()
-    setUser(null)
-    navigate('/login')
-  }
 
   return (
     <div style={s.page}>
-      <header style={s.header}>
-        <span style={s.logo}>Squash Progress Tracker</span>
-        <button style={s.logoutBtn} onClick={handleLogout}>Sign out</button>
-      </header>
+      <NavHeader links={[{ label: 'History', to: '/history' }, { label: 'Log match', to: '/matches/new' }]} />
 
       <main style={s.main}>
         <div style={s.welcome}>

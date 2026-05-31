@@ -9,6 +9,13 @@
 - **Rule**: On Linux, never rely on `host.docker.internal` to reach a sibling container. Put both containers on a shared Docker network (`docker network create`) and reference the DB container by its `--name`. Alternatively, pass `--add-host=host.docker.internal:host-gateway` explicitly to each container that needs host resolution.
 - **Applies to**: plan, implement
 
+## Add node_modules/ to .gitignore before npm install
+
+- **Context**: Any /10x-implement phase that scaffolds a new frontend project (Vite, CRA, Next.js, or any npm-based setup) and runs npm install or npm ci for the first time.
+- **Problem**: If node_modules/ is not in .gitignore before npm install runs, all dependency files get staged and committed — thousands of files that must be cleaned up with a follow-up git rm -r --cached commit, polluting the git history.
+- **Rule**: Before running npm install or npm ci in a new frontend project, always add node_modules/ and the build output dir (dist/, build/) to .gitignore. Run git status --porcelain after install and before any git add to catch unintended files.
+- **Applies to**: implement
+
 ## Keep Squash MVP project board in sync during implementation
 
 - **Context**: Any `/10x-implement` run on this project — on phase start and on change completion.
