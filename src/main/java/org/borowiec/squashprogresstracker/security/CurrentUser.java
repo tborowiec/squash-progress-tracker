@@ -1,6 +1,5 @@
 package org.borowiec.squashprogresstracker.security;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,7 @@ public class CurrentUser {
     }
 
     public AppUserDetails principal() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        var auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !(auth.getPrincipal() instanceof AppUserDetails details)) {
             throw new IllegalStateException("No authenticated user in SecurityContext");
         }

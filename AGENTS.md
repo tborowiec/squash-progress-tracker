@@ -29,6 +29,8 @@ Use `./mvnw` (wrapper) rather than a locally installed `mvn` so the Maven versio
 
 Java 21. Package root is `org.borowiec.squashprogresstracker`. No linter or formatter is configured yet.
 
+Use `var` for all local variable declarations where the type is inferred from the right-hand side.
+
 All REST endpoints should be available under paths prefixed with `/api`.
 
 Database table names are plural `snake_case` (e.g. `users`, `matches`). This also sidesteps reserved-word collisions — `user` is reserved in PostgreSQL, `users` is not. Map entities to the table explicitly with `@Table(name = "...")`.

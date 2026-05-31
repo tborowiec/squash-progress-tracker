@@ -1,6 +1,5 @@
 package org.borowiec.squashprogresstracker.security;
 
-import org.borowiec.squashprogresstracker.user.User;
 import org.borowiec.squashprogresstracker.user.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +20,7 @@ public class AppUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email)
+        var user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("No user with email: " + email));
 
         return new AppUserDetails(

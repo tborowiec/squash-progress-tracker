@@ -46,7 +46,7 @@ class AuthIntegrationTests {
 
     @Test
     void registerDuplicateEmailReturns409() throws Exception {
-        String body = """
+        var body = """
                 {"email":"bob@example.com","password":"password1"}
                 """;
         mockMvc.perform(post("/api/auth/register")
@@ -123,7 +123,7 @@ class AuthIntegrationTests {
                                 """))
                 .andExpect(status().isCreated());
 
-        MockHttpSession session = (MockHttpSession) mockMvc.perform(post("/api/auth/login")
+        var session = (MockHttpSession) mockMvc.perform(post("/api/auth/login")
                         .with(csrf()).contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {"email":"eve@example.com","password":"password1"}
@@ -153,7 +153,7 @@ class AuthIntegrationTests {
                                 """))
                 .andExpect(status().isCreated());
 
-        MockHttpSession session = (MockHttpSession) mockMvc.perform(post("/api/auth/login")
+        var session = (MockHttpSession) mockMvc.perform(post("/api/auth/login")
                         .with(csrf()).contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {"email":"frank@example.com","password":"password1"}

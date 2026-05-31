@@ -1,6 +1,8 @@
 package org.borowiec.squashprogresstracker.security;
 
+import tools.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
+import org.borowiec.squashprogresstracker.user.dto.ApiError;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -20,7 +22,7 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, ObjectMapper objectMapper) {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/actuator/health").permitAll()
@@ -36,7 +38,7 @@ public class SecurityConfig {
                 .authenticationEntryPoint((request, response, authException) -> {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                    response.getWriter().write("{\"status\":401,\"message\":\"Unauthorized\"}");
+                    response.getWriter().write(objectMapper.writeValueAsString(ApiError.of(401, "Unauthorized")));
                 })
             )
             .formLogin(form -> form.disable())
@@ -51,8 +53,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
-            throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) {
         return config.getAuthenticationManager();
     }
 }
