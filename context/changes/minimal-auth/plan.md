@@ -271,14 +271,14 @@ Negligible at MVP scale (PRD: low QPS, small data). BCrypt cost is intentionally
 
 #### Automated
 
-- [ ] 1.1 Compiles & context loads: `./mvnw test` (existing `contextLoads` passes against Postgres-backed context)
-- [ ] 1.2 Flyway applies cleanly and `ddl-auto=validate` passes on boot
-- [ ] 1.3 Package builds: `./mvnw -DskipTests package`
+- [x] 1.1 Compiles & context loads: `./mvnw test` (existing `contextLoads` passes against Postgres-backed context)
+- [x] 1.2 Flyway applies cleanly and `ddl-auto=validate` passes on boot
+- [x] 1.3 Package builds: `./mvnw -DskipTests package`
 
 #### Manual
 
-- [ ] 1.4 `./run-local.sh` boots; logs show Flyway migrating `V1`; `flyway_schema_history` + `users` table exist
-- [ ] 1.5 `/actuator/health` returns 200 (DB UP)
+- [x] 1.4 `./run-local.sh` boots; logs show Flyway migrating `V1`; `flyway_schema_history` + `users` table exist
+- [x] 1.5 `/actuator/health` returns 200 (DB UP)
 
 ### Phase 2: Security filter chain & password hashing
 
