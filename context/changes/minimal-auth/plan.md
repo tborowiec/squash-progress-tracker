@@ -296,10 +296,10 @@ Negligible at MVP scale (PRD: low QPS, small data). BCrypt cost is intentionally
 
 #### Automated
 
-- [x] 3.1 `./mvnw test` passes incl. Testcontainers integration test (register/login/me/logout + error matrix)
-- [x] 3.2 `./mvnw -DskipTests package` succeeds
+- [x] 3.1 `./mvnw test` passes incl. Testcontainers integration test (register/login/me/logout + error matrix) — 105efbb
+- [x] 3.2 `./mvnw -DskipTests package` succeeds — 105efbb
 
 #### Manual
 
-- [x] 3.3 `curl` full register → login → me → logout flow works; `passwordHash` never in any response
-- [x] 3.4 Duplicate registration → 409 `ApiError`; short password → 400 field error
+- [x] 3.3 `curl` full register → login → me → logout flow works; `passwordHash` never in any response — 105efbb
+- [x] 3.4 Duplicate registration → 409 `ApiError`; short password → 400 field error — 105efbb

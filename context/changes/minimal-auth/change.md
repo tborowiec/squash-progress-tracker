@@ -1,7 +1,7 @@
 ---
 change_id: minimal-auth
 title: Minimal auth
-status: implementing
+status: implemented
 created: 2026-05-30
 updated: 2026-05-31
 archived_at: null
