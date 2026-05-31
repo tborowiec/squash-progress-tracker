@@ -5,5 +5,5 @@ import jakarta.validation.constraints.Size;
 
 public record RegisterRequest(
         @Email String email,
-        @Size(min = 8) String password
+        @Size(min = 8, message = "Password must be at least 8 characters") String password
 ) {}

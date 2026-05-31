@@ -39,7 +39,8 @@ class SecurityFilterChainTests {
 
     @Test
     void rootEndpointIsPublic() throws Exception {
+        // Security permits "/" — no 401. Static file not present in test classpath (built by Vite), so 404 is expected.
         mockMvc.perform(get("/"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
     }
 }

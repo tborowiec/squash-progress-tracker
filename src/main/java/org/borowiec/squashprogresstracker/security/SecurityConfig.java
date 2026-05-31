@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.borowiec.squashprogresstracker.user.dto.ApiError;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -25,8 +26,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, ObjectMapper objectMapper) {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/actuator/health").permitAll()
+                .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                .requestMatchers(HttpMethod.GET,
+                        "/", "/index.html", "/favicon.ico", "/vite.svg",
+                        "/assets/**",
+                        "/login", "/register", "/history", "/matches/**").permitAll()
                 .anyRequest().authenticated()
             )
             .csrf(csrf -> csrf

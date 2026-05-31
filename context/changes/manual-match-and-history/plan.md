@@ -343,11 +343,11 @@ Data volumes are small (PRD: per-player, low QPS). The `(user_id, match_date)` a
 
 #### Automated
 
-- [x] 2.1 `./mvnw test` passes including new `MatchApiIntegrationTests` (Testcontainers + MockMvc, mirroring `AuthIntegrationTests`)
-- [x] 2.2 Test: authenticated `POST /api/matches` with valid body → `201`; response `setsWon`/`setsLost` match the entered sets (derivation correctness, e.g. 3 won + 1 lost → 3/1)
-- [x] 2.3 Test: validation matrix → `400` with `fieldErrors` for blank opponent, future `matchDate`, empty `sets`, 6 sets, negative score
-- [x] 2.4 Test (ownership, hard rule): player A logs a match; player B's `GET /api/matches` returns `[]` and `GET /api/matches?opponent=<A's opponent>` returns `[]`; anonymous `GET /api/matches` → `401`
-- [x] 2.5 Test: `GET /api/matches/opponents` returns only the caller's distinct opponents and collapses case variants (`Kowalski` + `kowalski` yields one option)
+- [x] 2.1 `./mvnw test` passes including new `MatchApiIntegrationTests` (Testcontainers + MockMvc, mirroring `AuthIntegrationTests`) — 0a0d9c1
+- [x] 2.2 Test: authenticated `POST /api/matches` with valid body → `201`; response `setsWon`/`setsLost` match the entered sets (derivation correctness, e.g. 3 won + 1 lost → 3/1) — 0a0d9c1
+- [x] 2.3 Test: validation matrix → `400` with `fieldErrors` for blank opponent, future `matchDate`, empty `sets`, 6 sets, negative score — 0a0d9c1
+- [x] 2.4 Test (ownership, hard rule): player A logs a match; player B's `GET /api/matches` returns `[]` and `GET /api/matches?opponent=<A's opponent>` returns `[]`; anonymous `GET /api/matches` → `401` — 0a0d9c1
+- [x] 2.5 Test: `GET /api/matches/opponents` returns only the caller's distinct opponents and collapses case variants (`Kowalski` + `kowalski` yields one option) — 0a0d9c1
 
 #### Manual
 
@@ -357,8 +357,8 @@ Data volumes are small (PRD: per-player, low QPS). The `(user_id, match_date)` a
 
 #### Automated
 
-- [ ] 3.1 `./mvnw package` builds the frontend and embeds it (jar contains `static/index.html` + assets)
-- [ ] 3.2 `./mvnw test` still green; SPA fallback does not break the anonymous-`/api`-→`401` test, and anonymous `GET /login` / `GET /register` serve or forward to the SPA
+- [x] 3.1 `./mvnw package` builds the frontend and embeds it (jar contains `static/index.html` + assets)
+- [x] 3.2 `./mvnw test` still green; SPA fallback does not break the anonymous-`/api`-→`401` test, and anonymous `GET /login` / `GET /register` serve or forward to the SPA
 
 #### Manual
 
