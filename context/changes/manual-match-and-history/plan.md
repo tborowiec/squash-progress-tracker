@@ -337,7 +337,7 @@ Data volumes are small (PRD: per-player, low QPS). The `(user_id, match_date)` a
 
 #### Manual
 
-- [ ] 1.3 `./run-local.sh` boots; logs show Flyway applying `V2`; `matches` and `match_sets` tables exist with the FK + cascade.
+- [x] 1.3 `./run-local.sh` boots; logs show Flyway applying `V2`; `matches` and `match_sets` tables exist with the FK + cascade.
 
 ### Phase 2: Match REST API
 
@@ -351,7 +351,7 @@ Data volumes are small (PRD: per-player, low QPS). The `(user_id, match_date)` a
 
 #### Manual
 
-- [ ] 2.6 `curl` (with session cookie + CSRF header) create → list → filter → opponents flow returns expected JSON; overall result reads correctly.
+- [x] 2.6 `curl` (with session cookie + CSRF header) create → list → filter → opponents flow returns expected JSON; overall result reads correctly.
 
 ### Phase 3: React SPA scaffold, build integration & auth shell
 
@@ -362,19 +362,19 @@ Data volumes are small (PRD: per-player, low QPS). The `(user_id, match_date)` a
 
 #### Manual
 
-- [ ] 3.3 `./run-local.sh` boots; visiting `/` serves the React app (not the old plaintext); a deep link like `/login` refreshed in the browser still loads the SPA
-- [ ] 3.4 Register a new account, log in, and land in the authenticated area through the UI; refresh keeps the session; logout returns to `/login`
-- [ ] 3.5 Unauthenticated route redirects to `/login`; no CSRF `403` on login/register
+- [x] 3.3 `./run-local.sh` boots; visiting `/` serves the React app (not the old plaintext); a deep link like `/login` refreshed in the browser still loads the SPA
+- [x] 3.4 Register a new account, log in, and land in the authenticated area through the UI; refresh keeps the session; logout returns to `/login`
+- [x] 3.5 Unauthenticated route redirects to `/login`; no CSRF `403` on login/register
 
 ### Phase 4: Match UI — log form & history
 
 #### Automated
 
-- [x] 4.1 `./mvnw package` succeeds with the new components (frontend build clean — no type/lint errors if configured)
+- [x] 4.1 `./mvnw package` succeeds with the new components (frontend build clean — no type/lint errors if configured) — f589e27
 
 #### Manual
 
-- [ ] 4.2 In a browser: log a match (e.g. opponent "Kowalski", 3:1 with four set scores, a note) → it saves and appears at the top of history with the correct derived result
-- [ ] 4.3 Opponent filter shows only that opponent's matches; "All" restores full list
-- [ ] 4.4 Invalid input shows field errors and does not save
-- [ ] 4.5 A second account, freshly registered, sees an empty history — confirming the ownership boundary end-to-end through the UI
+- [x] 4.2 In a browser: log a match (e.g. opponent "Kowalski", 3:1 with four set scores, a note) → it saves and appears at the top of history with the correct derived result
+- [x] 4.3 Opponent filter shows only that opponent's matches; "All" restores full list
+- [x] 4.4 Invalid input shows field errors and does not save
+- [x] 4.5 A second account, freshly registered, sees an empty history — confirming the ownership boundary end-to-end through the UI
