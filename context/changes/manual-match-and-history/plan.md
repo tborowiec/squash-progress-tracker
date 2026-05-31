@@ -332,8 +332,8 @@ Data volumes are small (PRD: per-player, low QPS). The `(user_id, match_date)` a
 
 #### Automated
 
-- [x] 1.1 Compiles & context loads: `./mvnw test` (existing tests still pass; `ddl-auto=validate` accepts the new entities against `V2`)
-- [x] 1.2 Package builds: `./mvnw -DskipTests package`
+- [x] 1.1 Compiles & context loads: `./mvnw test` (existing tests still pass; `ddl-auto=validate` accepts the new entities against `V2`) — 1ac7183
+- [x] 1.2 Package builds: `./mvnw -DskipTests package` — 1ac7183
 
 #### Manual
 
@@ -343,11 +343,11 @@ Data volumes are small (PRD: per-player, low QPS). The `(user_id, match_date)` a
 
 #### Automated
 
-- [ ] 2.1 `./mvnw test` passes including new `MatchApiIntegrationTests` (Testcontainers + MockMvc, mirroring `AuthIntegrationTests`)
-- [ ] 2.2 Test: authenticated `POST /api/matches` with valid body → `201`; response `setsWon`/`setsLost` match the entered sets (derivation correctness, e.g. 3 won + 1 lost → 3/1)
-- [ ] 2.3 Test: validation matrix → `400` with `fieldErrors` for blank opponent, future `matchDate`, empty `sets`, 6 sets, negative score
-- [ ] 2.4 Test (ownership, hard rule): player A logs a match; player B's `GET /api/matches` returns `[]` and `GET /api/matches?opponent=<A's opponent>` returns `[]`; anonymous `GET /api/matches` → `401`
-- [ ] 2.5 Test: `GET /api/matches/opponents` returns only the caller's distinct opponents and collapses case variants (`Kowalski` + `kowalski` yields one option)
+- [x] 2.1 `./mvnw test` passes including new `MatchApiIntegrationTests` (Testcontainers + MockMvc, mirroring `AuthIntegrationTests`)
+- [x] 2.2 Test: authenticated `POST /api/matches` with valid body → `201`; response `setsWon`/`setsLost` match the entered sets (derivation correctness, e.g. 3 won + 1 lost → 3/1)
+- [x] 2.3 Test: validation matrix → `400` with `fieldErrors` for blank opponent, future `matchDate`, empty `sets`, 6 sets, negative score
+- [x] 2.4 Test (ownership, hard rule): player A logs a match; player B's `GET /api/matches` returns `[]` and `GET /api/matches?opponent=<A's opponent>` returns `[]`; anonymous `GET /api/matches` → `401`
+- [x] 2.5 Test: `GET /api/matches/opponents` returns only the caller's distinct opponents and collapses case variants (`Kowalski` + `kowalski` yields one option)
 
 #### Manual
 
