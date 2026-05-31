@@ -36,3 +36,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+/.claude/prompts/m1l5-1-plan-integration.md
+/.claude/prompts/m1l5-2-constrain-approach.md
+/.claude/prompts/m1l5-3-extend-prerequisites.md
+/.claude/prompts/m1l5-4-store-plan.md
+/.claude/prompts/skill-explainer.md
