@@ -284,22 +284,22 @@ Negligible at MVP scale (PRD: low QPS, small data). BCrypt cost is intentionally
 
 #### Automated
 
-- [x] 2.1 `./mvnw test` passes with security on the classpath
-- [x] 2.2 Test: anonymous `GET /api/auth/me` → 401; `/actuator/health` → 200; `/` → 200
+- [x] 2.1 `./mvnw test` passes with security on the classpath — 219ed12
+- [x] 2.2 Test: anonymous `GET /api/auth/me` → 401; `/actuator/health` → 200; `/` → 200 — 219ed12
 
 #### Manual
 
-- [x] 2.3 `./run-local.sh` boots; `curl /actuator/health` → 200, `curl /` → 200
-- [x] 2.4 `curl /api/auth/me` (no session) → 401 with JSON body (not HTML/Basic challenge)
+- [x] 2.3 `./run-local.sh` boots; `curl /actuator/health` → 200, `curl /` → 200 — 219ed12
+- [x] 2.4 `curl /api/auth/me` (no session) → 401 with JSON body (not HTML/Basic challenge) — 219ed12
 
 ### Phase 3: Auth endpoints, current-user accessor & error contract
 
 #### Automated
 
-- [ ] 3.1 `./mvnw test` passes incl. Testcontainers integration test (register/login/me/logout + error matrix)
-- [ ] 3.2 `./mvnw -DskipTests package` succeeds
+- [x] 3.1 `./mvnw test` passes incl. Testcontainers integration test (register/login/me/logout + error matrix)
+- [x] 3.2 `./mvnw -DskipTests package` succeeds
 
 #### Manual
 
-- [ ] 3.3 `curl` full register → login → me → logout flow works; `passwordHash` never in any response
-- [ ] 3.4 Duplicate registration → 409 `ApiError`; short password → 400 field error
+- [x] 3.3 `curl` full register → login → me → logout flow works; `passwordHash` never in any response
+- [x] 3.4 Duplicate registration → 409 `ApiError`; short password → 400 field error
