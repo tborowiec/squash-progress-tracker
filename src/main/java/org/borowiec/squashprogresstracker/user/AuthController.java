@@ -1,10 +1,10 @@
-package com.example.squashprogresstracker.user;
+package org.borowiec.squashprogresstracker.user;
 
-import com.example.squashprogresstracker.security.AppUserDetails;
-import com.example.squashprogresstracker.security.CurrentUser;
-import com.example.squashprogresstracker.user.dto.LoginRequest;
-import com.example.squashprogresstracker.user.dto.RegisterRequest;
-import com.example.squashprogresstracker.user.dto.UserResponse;
+import org.borowiec.squashprogresstracker.security.AppUserDetails;
+import org.borowiec.squashprogresstracker.security.CurrentUser;
+import org.borowiec.squashprogresstracker.user.dto.LoginRequest;
+import org.borowiec.squashprogresstracker.user.dto.RegisterRequest;
+import org.borowiec.squashprogresstracker.user.dto.UserResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;

@@ -1,4 +1,4 @@
-package com.example.squashprogresstracker.user;
+package org.borowiec.squashprogresstracker.user;
 
 import jakarta.persistence.*;
 import java.time.OffsetDateTime;

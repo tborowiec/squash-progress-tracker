@@ -1,4 +1,4 @@
-package com.example.squashprogresstracker.security;
+package org.borowiec.squashprogresstracker.security;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.example.squashprogresstracker.security;
+package org.borowiec.squashprogresstracker.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

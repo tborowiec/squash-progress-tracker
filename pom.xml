@@ -8,7 +8,7 @@
 		<version>4.0.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>org.borowiec</groupId>
 	<artifactId>squash-progress-tracker</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>

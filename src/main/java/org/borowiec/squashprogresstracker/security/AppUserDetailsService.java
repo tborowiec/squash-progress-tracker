@@ -1,7 +1,7 @@
-package com.example.squashprogresstracker.security;
+package org.borowiec.squashprogresstracker.security;
 
-import com.example.squashprogresstracker.user.User;
-import com.example.squashprogresstracker.user.UserRepository;
+import org.borowiec.squashprogresstracker.user.User;
+import org.borowiec.squashprogresstracker.user.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

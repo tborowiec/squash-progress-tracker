@@ -1,6 +1,6 @@
-package com.example.squashprogresstracker.user.dto;
+package org.borowiec.squashprogresstracker.user.dto;
 
-import com.example.squashprogresstracker.user.User;
+import org.borowiec.squashprogresstracker.user.User;
 
 public record UserResponse(Long id, String email) {
 

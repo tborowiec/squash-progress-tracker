@@ -1,4 +1,4 @@
-package com.example.squashprogresstracker.user;
+package org.borowiec.squashprogresstracker.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;

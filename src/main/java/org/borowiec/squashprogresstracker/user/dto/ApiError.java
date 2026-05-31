@@ -1,4 +1,4 @@
-package com.example.squashprogresstracker.user.dto;
+package org.borowiec.squashprogresstracker.user.dto;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package com.example.squashprogresstracker.user.dto;
+package org.borowiec.squashprogresstracker.user.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;

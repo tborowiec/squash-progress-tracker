@@ -12,7 +12,7 @@ Squash Progress Tracker is a Java 21 / Spring Boot 4.0.6 web app where squash pl
 
 ## Project Structure
 
-Standard Maven layout: source in `src/main/java/com/example/squashprogresstracker/`, tests mirror that path under `src/test/java/`. Spring config lives in `src/main/resources/application.properties`. The `context/` tree holds 10x workflow files (`foundation/`, `changes/`, `archive/`) — do not edit `context/archive/`.
+Standard Maven layout: source in `src/main/java/org/borowiec/squashprogresstracker/`, tests mirror that path under `src/test/java/`. Spring config lives in `src/main/resources/application.properties`. The `context/` tree holds 10x workflow files (`foundation/`, `changes/`, `archive/`) — do not edit `context/archive/`.
 
 See `@context/foundation/prd.md` for user stories and acceptance criteria; `@context/foundation/tech-stack.md` for stack rationale.
 
@@ -27,7 +27,7 @@ Use `./mvnw` (wrapper) rather than a locally installed `mvn` so the Maven versio
 
 ## Coding Style & Naming Conventions
 
-Java 21. Package root is `com.example.squashprogresstracker`. No linter or formatter is configured yet.
+Java 21. Package root is `org.borowiec.squashprogresstracker`. No linter or formatter is configured yet.
 
 All REST endpoints should be available under paths prefixed with `/api`.
 

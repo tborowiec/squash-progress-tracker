@@ -1,6 +1,6 @@
-package com.example.squashprogresstracker.user;
+package org.borowiec.squashprogresstracker.user;
 
-import com.example.squashprogresstracker.user.dto.ApiError;
+import org.borowiec.squashprogresstracker.user.dto.ApiError;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;

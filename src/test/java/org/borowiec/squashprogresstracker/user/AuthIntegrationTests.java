@@ -1,4 +1,4 @@
-package com.example.squashprogresstracker.user;
+package org.borowiec.squashprogresstracker.user;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

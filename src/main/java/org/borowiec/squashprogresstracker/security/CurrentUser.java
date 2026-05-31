@@ -1,4 +1,4 @@
-package com.example.squashprogresstracker.security;
+package org.borowiec.squashprogresstracker.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

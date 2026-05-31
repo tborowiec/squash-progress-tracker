@@ -1,4 +1,4 @@
-package com.example.squashprogresstracker.security;
+package org.borowiec.squashprogresstracker.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
