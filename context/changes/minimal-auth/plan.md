@@ -271,26 +271,26 @@ Negligible at MVP scale (PRD: low QPS, small data). BCrypt cost is intentionally
 
 #### Automated
 
-- [x] 1.1 Compiles & context loads: `./mvnw test` (existing `contextLoads` passes against Postgres-backed context)
-- [x] 1.2 Flyway applies cleanly and `ddl-auto=validate` passes on boot
-- [x] 1.3 Package builds: `./mvnw -DskipTests package`
+- [x] 1.1 Compiles & context loads: `./mvnw test` (existing `contextLoads` passes against Postgres-backed context) — d4799ee
+- [x] 1.2 Flyway applies cleanly and `ddl-auto=validate` passes on boot — d4799ee
+- [x] 1.3 Package builds: `./mvnw -DskipTests package` — d4799ee
 
 #### Manual
 
-- [x] 1.4 `./run-local.sh` boots; logs show Flyway migrating `V1`; `flyway_schema_history` + `users` table exist
-- [x] 1.5 `/actuator/health` returns 200 (DB UP)
+- [x] 1.4 `./run-local.sh` boots; logs show Flyway migrating `V1`; `flyway_schema_history` + `users` table exist — d4799ee
+- [x] 1.5 `/actuator/health` returns 200 (DB UP) — d4799ee
 
 ### Phase 2: Security filter chain & password hashing
 
 #### Automated
 
-- [ ] 2.1 `./mvnw test` passes with security on the classpath
-- [ ] 2.2 Test: anonymous `GET /api/auth/me` → 401; `/actuator/health` → 200; `/` → 200
+- [x] 2.1 `./mvnw test` passes with security on the classpath
+- [x] 2.2 Test: anonymous `GET /api/auth/me` → 401; `/actuator/health` → 200; `/` → 200
 
 #### Manual
 
-- [ ] 2.3 `./run-local.sh` boots; `curl /actuator/health` → 200, `curl /` → 200
-- [ ] 2.4 `curl /api/auth/me` (no session) → 401 with JSON body (not HTML/Basic challenge)
+- [x] 2.3 `./run-local.sh` boots; `curl /actuator/health` → 200, `curl /` → 200
+- [x] 2.4 `curl /api/auth/me` (no session) → 401 with JSON body (not HTML/Basic challenge)
 
 ### Phase 3: Auth endpoints, current-user accessor & error contract
 
