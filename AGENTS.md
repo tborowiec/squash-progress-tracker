@@ -6,6 +6,7 @@ Squash Progress Tracker is a Java 21 / Spring Boot 4.0.6 web app where squash pl
 
 - Never write to `context/archive/` — archived changes are immutable; use `/10x-new` to open a new change.
 - Track project implementation progress both in the repository and in GitHub Issues
+- Use the `frontend-design` skill when building frontend
 - Always show the AI parse result to the player for confirmation before saving any match record. No silent mis-save.
 - Enforce the auth boundary on every data-access query — one player's match history must never be readable by another.
 - Label every AI-generated game plan as AI-generated advice, not factual analysis.
