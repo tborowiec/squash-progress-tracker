@@ -2,6 +2,7 @@ package org.borowiec.squashprogresstracker.security;
 
 import tools.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
+import org.borowiec.squashprogresstracker.SpaRoutes;
 import org.borowiec.squashprogresstracker.user.dto.ApiError;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,9 +30,8 @@ public class SecurityConfig {
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
                 .requestMatchers(HttpMethod.GET,
-                        "/", "/index.html", "/favicon.ico", "/vite.svg",
-                        "/assets/**",
-                        "/login", "/register", "/history", "/matches/**").permitAll()
+                        "/", "/index.html", "/favicon.ico", "/vite.svg", "/assets/**").permitAll()
+                .requestMatchers(HttpMethod.GET, SpaRoutes.CLIENT_ROUTES).permitAll()
                 .anyRequest().authenticated()
             )
             .csrf(csrf -> csrf

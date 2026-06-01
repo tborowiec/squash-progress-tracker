@@ -22,3 +22,10 @@
 - **Problem**: The project board drifts out of sync with reality: issues stay "Todo" while work is in flight, or stay "In Progress" after merging, misleading anyone checking the board.
 - **Rule**: When `/10x-implement` begins on a change, move the corresponding GitHub issue to "In Progress" on the Squash MVP project board (`gh project item-edit`). When all phases are complete and `change.md` is set to `implemented`, move it to "Done".
 - **Applies to**: implement
+
+## Verify the Docker build context covers all build inputs, not just src/
+
+- **Context**: Any plan/implement phase that adds a new build input outside the standard source tree (e.g. a `frontend/` Vite project built by frontend-maven-plugin) while a multi-stage Dockerfile drives the build. Dockerfile:8.
+- **Problem**: The plan asserted three times that no Dockerfile change was needed ("build stage already runs ./mvnw clean package"). The premise was wrong: the Dockerfile only did `COPY src/ src/`, so the frontend-maven-plugin had no `frontend/` to build inside the image and `mvnw package` failed in Docker. Required a follow-up fix (commit 85322e9) adding `COPY frontend/ frontend/` plus a `.dockerignore`.
+- **Rule**: When adding a build input outside `src/`, audit the Dockerfile's `COPY` lines before claiming "no Dockerfile change needed" — the build *context*, not just the build *command*, must include every input the build consumes.
+- **Applies to**: plan, implement

@@ -39,8 +39,11 @@ class SecurityFilterChainTests {
 
     @Test
     void rootEndpointIsPublic() throws Exception {
-        // Security permits "/" — no 401. Static file not present in test classpath (built by Vite), so 404 is expected.
+        // Security permits "/" for the SPA shell. A stub index.html on the test classpath
+        // (src/test/resources/static/index.html) stands in for the Vite build output, so this
+        // asserts the real outcome — anonymous users get the SPA shell (200) — independent of
+        // whether `npm run build` ran.
         mockMvc.perform(get("/"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk());
     }
 }

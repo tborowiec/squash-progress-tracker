@@ -324,6 +324,10 @@ Data volumes are small (PRD: per-player, low QPS). The `(user_id, match_date)` a
 - CSRF + security: `src/main/java/org/borowiec/squashprogresstracker/security/SecurityConfig.java`
 - Build/deploy: `Dockerfile`, `render.yaml`, `run-local.sh`
 
+## Addendum (post-implementation)
+
+- **Dockerfile required a one-line change after all** — the plan stated three times (Current State, Critical Implementation Details, Migration Notes) that no Dockerfile change was needed because the build stage already runs `./mvnw clean package`. That premise was wrong: the Dockerfile only did `COPY src/ src/`, so `frontend-maven-plugin` had no `frontend/` to build inside the image. Commit `85322e9` added `COPY frontend/ frontend/` and a `.dockerignore` for `node_modules`/`dist`. The build *context*, not just the build *command*, must include every build input. Recorded as a recurring lesson in `context/foundation/lessons.md`.
+
 ## Progress
 
 > Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands. Do not rename step titles. See `references/progress-format.md`.
