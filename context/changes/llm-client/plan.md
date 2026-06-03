@@ -317,14 +317,14 @@ No data migration. New env var `LLM_API_KEY` must be set in Render (and locally)
 
 #### Automated
 
-- [x] 2.1 Compiles: `./mvnw -q compile`
-- [x] 2.2 Full suite passes: `./mvnw test`
+- [x] 2.1 Compiles: `./mvnw -q compile` — 32b29ab
+- [x] 2.2 Full suite passes: `./mvnw test` — 32b29ab
 - [ ] 2.3 `generateStructured` body includes `response_format.json_schema.strict=true`
 
 #### Manual
 
-- [x] 2.4 Wire format isolated to the adapter only
-- [x] 2.5 Base-url + model swap is config-only (read-through)
+- [x] 2.4 Wire format isolated to the adapter only — 32b29ab
+- [x] 2.5 Base-url + model swap is config-only (read-through) — 32b29ab
 
 ### Phase 3: Verification & Ops Wiring
 
