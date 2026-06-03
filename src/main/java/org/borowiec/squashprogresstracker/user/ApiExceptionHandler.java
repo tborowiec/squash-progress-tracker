@@ -1,6 +1,9 @@
 package org.borowiec.squashprogresstracker.user;
 
+import org.borowiec.squashprogresstracker.llm.client.LlmException;
 import org.borowiec.squashprogresstracker.user.dto.ApiError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,6 +17,16 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(ApiExceptionHandler.class);
+
+    @ExceptionHandler(LlmException.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public ApiError handleLlmException(LlmException ex) {
+        log.warn("LLM call failed, providerStatus={}", ex.providerStatus(), ex);
+        return ApiError.of(503, "AI service is temporarily unavailable");
+    }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
