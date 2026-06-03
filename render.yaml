@@ -31,6 +31,8 @@ services:
         fromDatabase:
           name: squash-db
           property: password
+      - key: LLM_API_KEY
+        sync: false
 
 databases:
   - name: squash-db

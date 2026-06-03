@@ -319,7 +319,7 @@ No data migration. New env var `LLM_API_KEY` must be set in Render (and locally)
 
 - [x] 2.1 Compiles: `./mvnw -q compile` — 32b29ab
 - [x] 2.2 Full suite passes: `./mvnw test` — 32b29ab
-- [ ] 2.3 `generateStructured` body includes `response_format.json_schema.strict=true`
+- [x] 2.3 `generateStructured` body includes `response_format.json_schema.strict=true`
 
 #### Manual
 
@@ -330,12 +330,12 @@ No data migration. New env var `LLM_API_KEY` must be set in Render (and locally)
 
 #### Automated
 
-- [ ] 3.1 Suite passes with no key (live smoke skipped, not failed)
-- [ ] 3.2 Mock-transport tests cover happy/structured/error/malformed/timeout-translation + bean-timeout-wiring assertion
-- [ ] 3.3 `render.yaml` parses with secret `LLM_API_KEY` entry
+- [x] 3.1 Suite passes with no key (live smoke skipped, not failed)
+- [x] 3.2 Mock-transport tests cover happy/structured/error/malformed/timeout-translation + bean-timeout-wiring assertion
+- [x] 3.3 `render.yaml` parses with secret `LLM_API_KEY` entry
 
 #### Manual
 
-- [ ] 3.4 Real-key smoke test returns a coherent Gemini completion within timeout
-- [ ] 3.5 Real/non-synthetic data uses the paid no-training tier
+- [x] 3.4 Real-key smoke test returns a coherent Gemini completion within timeout
+- [x] 3.5 Real/non-synthetic data uses the paid no-training tier
 - [ ] 3.6 (Optional) Groq base-url/model swap works with no code change
