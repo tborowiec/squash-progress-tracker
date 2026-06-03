@@ -301,30 +301,30 @@ No data migration. New env var `LLM_API_KEY` must be set in Render (and locally)
 
 #### Automated
 
-- [x] 1.1 Compiles: `./mvnw -q compile`
-- [x] 1.2 Full test suite passes: `./mvnw test`
-- [x] 1.3 Conventions unit-tested (`AiContent.of`, `LlmRequest.ofUser`)
-- [x] 1.4 No Jackson 2 imports in `llm` package
-- [x] 1.5 Properties bind + `llmRestClient` bean creatable
+- [x] 1.1 Compiles: `./mvnw -q compile` — 3d3a444
+- [x] 1.2 Full test suite passes: `./mvnw test` — 3d3a444
+- [x] 1.3 Conventions unit-tested (`AiContent.of`, `LlmRequest.ofUser`) — 3d3a444
+- [x] 1.4 No Jackson 2 imports in `llm` package — 3d3a444
+- [x] 1.5 Properties bind + `llmRestClient` bean creatable — 3d3a444
 
 #### Manual
 
-- [x] 1.6 `llm` package reads like `user/`/`match/`
-- [x] 1.7 `AiDisclaimer.TEXT` satisfies the advice-labelling hard rule
-- [x] 1.8 `LlmProgress` doc clarifies F-02 ships vocabulary, S-02 drives it
+- [x] 1.6 `llm` package reads like `user/`/`match/` — 3d3a444
+- [x] 1.7 `AiDisclaimer.TEXT` satisfies the advice-labelling hard rule — 3d3a444
+- [x] 1.8 `LlmProgress` doc clarifies F-02 ships vocabulary, S-02 drives it — 3d3a444
 
 ### Phase 2: OpenAI-Compatible Adapter
 
 #### Automated
 
-- [ ] 2.1 Compiles: `./mvnw -q compile`
-- [ ] 2.2 Full suite passes: `./mvnw test`
+- [x] 2.1 Compiles: `./mvnw -q compile`
+- [x] 2.2 Full suite passes: `./mvnw test`
 - [ ] 2.3 `generateStructured` body includes `response_format.json_schema.strict=true`
 
 #### Manual
 
-- [ ] 2.4 Wire format isolated to the adapter only
-- [ ] 2.5 Base-url + model swap is config-only (read-through)
+- [x] 2.4 Wire format isolated to the adapter only
+- [x] 2.5 Base-url + model swap is config-only (read-through)
 
 ### Phase 3: Verification & Ops Wiring
 
