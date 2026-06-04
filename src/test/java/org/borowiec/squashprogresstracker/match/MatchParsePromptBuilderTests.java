@@ -1,5 +1,6 @@
 package org.borowiec.squashprogresstracker.match;
 
+import org.borowiec.squashprogresstracker.llm.dto.LlmRequest;
 import org.borowiec.squashprogresstracker.llm.dto.LlmRole;
 import org.junit.jupiter.api.Test;
 
@@ -50,7 +51,7 @@ class MatchParsePromptBuilderTests {
         assertThat(sysMsg).containsIgnoringCase("invent");
     }
 
-    private String userMessage(org.borowiec.squashprogresstracker.llm.dto.LlmRequest request) {
+    private String userMessage(LlmRequest request) {
         return request.messages().stream()
                 .filter(m -> m.role() == LlmRole.USER)
                 .findFirst().orElseThrow().content();

@@ -8,6 +8,8 @@ import org.borowiec.squashprogresstracker.security.CurrentUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.borowiec.squashprogresstracker.llm.dto.LlmRequest;
+import org.borowiec.squashprogresstracker.llm.dto.LlmRole;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -70,10 +72,10 @@ class MatchParseServiceTests {
 
         service.parse("won today");
 
-        var captor = ArgumentCaptor.forClass(org.borowiec.squashprogresstracker.llm.dto.LlmRequest.class);
+        var captor = ArgumentCaptor.forClass(LlmRequest.class);
         verify(llmClient).generateStructured(captor.capture(), eq(MatchParseResult.class));
         var userMsg = captor.getValue().messages().stream()
-                .filter(m -> m.role() == org.borowiec.squashprogresstracker.llm.dto.LlmRole.USER)
+                .filter(m -> m.role() == LlmRole.USER)
                 .findFirst().orElseThrow().content();
         assertThat(userMsg).contains("Kowalski");
         // date is dynamic (LocalDate.now()), just verify it looks like an ISO date
