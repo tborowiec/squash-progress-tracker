@@ -23,6 +23,13 @@
 - **Rule**: When `/10x-implement` begins on a change, move the corresponding GitHub issue to "In Progress" on the Squash MVP project board (`gh project item-edit`). When all phases are complete and `change.md` is set to `implemented`, move it to "Done".
 - **Applies to**: implement
 
+## Never use fully qualified class names when an import suffices
+
+- **Context**: Any test or production class where a type is referenced inline (e.g. `ArgumentCaptor.forClass(org.example.Foo.class)`, `m.role() == org.example.LlmRole.USER`, or a method parameter typed as `org.example.LlmRequest`).
+- **Problem**: Fully qualified names were used in `MatchParseServiceTests` and `MatchParsePromptBuilderTests`, flagged in PR review. They make code harder to read and are inconsistent with the rest of the codebase which uses imports.
+- **Rule**: Always add an `import` statement for any type referenced in code. Use the short name everywhere. Reserve fully qualified names only for genuine ambiguity (two types with the same simple name in scope).
+- **Applies to**: implement, plan
+
 ## Verify the Docker build context covers all build inputs, not just src/
 
 - **Context**: Any plan/implement phase that adds a new build input outside the standard source tree (e.g. a `frontend/` Vite project built by frontend-maven-plugin) while a multi-stage Dockerfile drives the build. Dockerfile:8.
