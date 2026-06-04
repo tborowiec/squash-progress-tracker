@@ -231,14 +231,14 @@ None — no schema or data changes. The matches table and save path are unchange
 
 #### Automated
 
-- [x] 2.1 Frontend builds: `cd frontend && npm run build`
-- [x] 2.2 Backend test suite still green: `./mvnw test`
+- [x] 2.1 Frontend builds: `cd frontend && npm run build` — 8a1eaaa
+- [x] 2.2 Backend test suite still green: `./mvnw test` — 8a1eaaa
 
 #### Manual
 
-- [x] 2.3 AI/Manual toggle switches views; manual form unchanged
-- [x] 2.4 Parsing the example sentence pre-fills opponent, date, all sets, notes; live scoreline updates
-- [x] 2.5 Editing a pre-filled field then saving creates the match and lands on history
-- [x] 2.6 Vague input with empty opponent/no sets shows the warning banner; can be completed and saved
-- [x] 2.7 Parse while LLM unavailable shows the 503 error; form remains usable for manual entry
-- [x] 2.8 AI-parsed disclaimer visible in AI mode
+- [x] 2.3 AI/Manual toggle switches views; manual form unchanged — 8a1eaaa
+- [x] 2.4 Parsing the example sentence pre-fills opponent, date, all sets, notes; live scoreline updates — 8a1eaaa
+- [x] 2.5 Editing a pre-filled field then saving creates the match and lands on history — 8a1eaaa
+- [x] 2.6 Vague input with empty opponent/no sets shows the warning banner; can be completed and saved — 8a1eaaa
+- [x] 2.7 Parse while LLM unavailable shows the 503 error; form remains usable for manual entry — 8a1eaaa
+- [x] 2.8 AI-parsed disclaimer visible in AI mode — 8a1eaaa
