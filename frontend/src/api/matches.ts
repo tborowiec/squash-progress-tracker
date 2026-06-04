@@ -19,9 +19,6 @@ export interface CreateOrUpdateMatchRequest {
   sets: SetScoreRequest[]
 }
 
-/** @deprecated alias retained to avoid churn — use CreateOrUpdateMatchRequest */
-export type CreateMatchRequest = CreateOrUpdateMatchRequest
-
 export interface SetScoreResponse {
   setNumber: number
   playerScore: number
