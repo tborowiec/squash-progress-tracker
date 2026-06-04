@@ -1,6 +1,7 @@
 package org.borowiec.squashprogresstracker.user;
 
 import org.borowiec.squashprogresstracker.llm.client.LlmException;
+import org.borowiec.squashprogresstracker.match.gameplan.GamePlanUnavailableException;
 import org.borowiec.squashprogresstracker.user.dto.ApiError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,12 @@ public class ApiExceptionHandler {
         return ApiError.of(503, "AI service is temporarily unavailable");
     }
 
+
+    @ExceptionHandler(GamePlanUnavailableException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiError handleGamePlanUnavailable(GamePlanUnavailableException ex) {
+        return ApiError.of(404, "No match history for that opponent");
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

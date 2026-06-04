@@ -266,31 +266,31 @@ None — no schema changes, no new tables, nothing persisted.
 
 #### Automated
 
-- [x] 1.1 Build compiles (`./mvnw -q compile`)
-- [x] 1.2 Streaming **parse** test passes (ordered tokens, empty deltas ignored, `[DONE]` terminates — parsing only, not real incremental delivery)
-- [x] 1.3 Streaming error-path test passes (provider 5xx / malformed chunk → `LlmException`)
-- [x] 1.4 Full suite green (`./mvnw test`)
-- [x] 1.6 (optional) Parser-unit test drives the package-private SSE parser chunk-by-chunk; `onToken` fires before end-of-input
+- [x] 1.1 Build compiles (`./mvnw -q compile`) — 2470ad1
+- [x] 1.2 Streaming **parse** test passes (ordered tokens, empty deltas ignored, `[DONE]` terminates — parsing only, not real incremental delivery) — 2470ad1
+- [x] 1.3 Streaming error-path test passes (provider 5xx / malformed chunk → `LlmException`) — 2470ad1
+- [x] 1.4 Full suite green (`./mvnw test`) — 2470ad1
+- [x] 1.6 (optional) Parser-unit test drives the package-private SSE parser chunk-by-chunk; `onToken` fires before end-of-input — 2470ad1
 
 #### Manual
 
-- [ ] 1.5 Gated live smoke streams a short Gemini completion incrementally (skips without key)
+- [x] 1.5 Gated live smoke streams a short Gemini completion incrementally (skips without key)
 
 ### Phase 2: Game-plan API (service + SSE endpoint)
 
 #### Automated
 
-- [ ] 2.1 Build compiles (`./mvnw -q compile`)
-- [ ] 2.2 Prompt-builder test passes (scores + notes present; data-grounded SYSTEM; low-data only when < 3)
-- [ ] 2.3 Ownership test passes (user B → 404 for user A's opponent)
-- [ ] 2.4 SSE happy-path test passes (`meta` + ordered `token` events + `done`, `text/event-stream`)
-- [ ] 2.5 SSE error-path test passes (in-stream `error` event, not a 503)
-- [ ] 2.6 Full suite green (`./mvnw test`)
+- [x] 2.1 Build compiles (`./mvnw -q compile`)
+- [x] 2.2 Prompt-builder test passes (scores + notes present; data-grounded SYSTEM; low-data only when < 3)
+- [x] 2.3 Ownership test passes (user B → 404 for user A's opponent)
+- [x] 2.4 SSE happy-path test passes (`meta` + ordered `token` events + `done`, `text/event-stream`)
+- [x] 2.5 SSE error-path test passes (in-stream `error` event, not a 503)
+- [x] 2.6 Full suite green (`./mvnw test`)
 
 #### Manual
 
-- [ ] 2.7 `curl -N` streams `meta` → tokens → `done`; prose references logged scores/notes
-- [ ] 2.8 Opponent with no owned matches returns 404 with `ApiError` body
+- [x] 2.7 `curl -N` streams `meta` → tokens → `done`; prose references logged scores/notes
+- [x] 2.8 Opponent with no owned matches returns 404 with `ApiError` body
 
 ### Phase 3: Frontend game-plan page
 

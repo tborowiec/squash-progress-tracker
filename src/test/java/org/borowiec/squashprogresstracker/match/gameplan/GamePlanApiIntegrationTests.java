@@ -1,0 +1,197 @@
+package org.borowiec.squashprogresstracker.match.gameplan;
+
+import org.borowiec.squashprogresstracker.llm.client.LlmClient;
+import org.borowiec.squashprogresstracker.llm.client.LlmException;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.util.function.Consumer;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+@Testcontainers
+class GamePlanApiIntegrationTests {
+
+    @Container
+    @ServiceConnection
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17");
+
+    @Autowired
+    MockMvc mockMvc;
+
+    @MockitoBean
+    LlmClient llmClient;
+
+    // ── happy path ─────────────────────────────────────────────────────────────
+
+    @Test
+    void stream_happyPath_emitsMetaTokensDone() throws Exception {
+        stubTokens("Hello ", "World");
+        var session = registerAndLogin("gp_happy@example.com");
+        logMatch(session, "Kowalski");
+        logMatch(session, "Kowalski");
+        logMatch(session, "Kowalski");
+
+        var result = mockMvc.perform(get("/api/game-plans/stream")
+                        .param("opponent", "Kowalski")
+                        .session(session))
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mockMvc.perform(asyncDispatch(result));
+
+        var body = result.getResponse().getContentAsString();
+        assertThat(body).contains("event:meta");
+        assertThat(body).contains("\"disclaimer\"");
+        assertThat(body).contains("event:token");
+        assertThat(body).contains("Hello ");
+        assertThat(body).contains("event:done");
+        assertThat(result.getResponse().getContentType()).contains(MediaType.TEXT_EVENT_STREAM_VALUE);
+    }
+
+    @Test
+    void stream_lowDataFlag_trueForFewerThan3Matches() throws Exception {
+        stubTokens("plan");
+        var session = registerAndLogin("gp_lowdata@example.com");
+        logMatch(session, "Kowalski");
+
+        var result = mockMvc.perform(get("/api/game-plans/stream")
+                        .param("opponent", "Kowalski")
+                        .session(session))
+                .andExpect(request().asyncStarted())
+                .andReturn();
+        mockMvc.perform(asyncDispatch(result));
+
+        assertThat(result.getResponse().getContentAsString()).contains("\"lowData\":true");
+    }
+
+    @Test
+    void stream_lowDataFlag_falseForAtLeast3Matches() throws Exception {
+        stubTokens("plan");
+        var session = registerAndLogin("gp_nodataissue@example.com");
+        logMatch(session, "Kowalski");
+        logMatch(session, "Kowalski");
+        logMatch(session, "Kowalski");
+
+        var result = mockMvc.perform(get("/api/game-plans/stream")
+                        .param("opponent", "Kowalski")
+                        .session(session))
+                .andExpect(request().asyncStarted())
+                .andReturn();
+        mockMvc.perform(asyncDispatch(result));
+
+        assertThat(result.getResponse().getContentAsString()).contains("\"lowData\":false");
+    }
+
+    // ── error paths ────────────────────────────────────────────────────────────
+
+    @Test
+    void stream_noMatchHistory_returns404() throws Exception {
+        var session = registerAndLogin("gp_404@example.com");
+
+        mockMvc.perform(get("/api/game-plans/stream")
+                        .param("opponent", "NonExistent")
+                        .session(session))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void stream_llmFailure_emitsInStreamErrorEventNot503() throws Exception {
+        doThrow(new LlmException("provider down")).when(llmClient).generateStreaming(any(), any());
+        var session = registerAndLogin("gp_llmerr@example.com");
+        logMatch(session, "Kowalski");
+
+        var result = mockMvc.perform(get("/api/game-plans/stream")
+                        .param("opponent", "Kowalski")
+                        .session(session))
+                .andExpect(request().asyncStarted())
+                .andReturn();
+        mockMvc.perform(asyncDispatch(result));
+
+        var body = result.getResponse().getContentAsString();
+        assertThat(body).contains("event:error");
+        assertThat(body).doesNotContain("event:token");
+        assertThat(result.getResponse().getStatus()).isEqualTo(200);
+    }
+
+    // ── ownership ──────────────────────────────────────────────────────────────
+
+    @Test
+    void stream_ownershipBoundary_userBCannotGetUserAsPlan() throws Exception {
+        stubTokens("plan");
+        var sessionA = registerAndLogin("gp_owner_a@example.com");
+        logMatch(sessionA, "Kowalski");
+
+        var sessionB = registerAndLogin("gp_owner_b@example.com");
+        mockMvc.perform(get("/api/game-plans/stream")
+                        .param("opponent", "Kowalski")
+                        .session(sessionB))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void stream_unauthenticated_returns401() throws Exception {
+        mockMvc.perform(get("/api/game-plans/stream").param("opponent", "anyone"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    // ── helpers ────────────────────────────────────────────────────────────────
+
+    @SuppressWarnings("unchecked")
+    private void stubTokens(String... tokens) {
+        doAnswer(inv -> {
+            var consumer = (Consumer<String>) inv.getArgument(1);
+            for (var token : tokens) {
+                consumer.accept(token);
+            }
+            return null;
+        }).when(llmClient).generateStreaming(any(), any());
+    }
+
+    private MockHttpSession registerAndLogin(String email) throws Exception {
+        mockMvc.perform(post("/api/auth/register")
+                        .with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"" + email + "\",\"password\":\"password1\"}"))
+                .andExpect(status().isCreated());
+        return (MockHttpSession) mockMvc.perform(post("/api/auth/login")
+                        .with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"" + email + "\",\"password\":\"password1\"}"))
+                .andExpect(status().isOk())
+                .andReturn().getRequest().getSession(false);
+    }
+
+    private void logMatch(MockHttpSession session, String opponent) throws Exception {
+        mockMvc.perform(post("/api/matches")
+                        .with(csrf()).session(session)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "opponentName": "%s",
+                                  "matchDate": "2026-05-01",
+                                  "sets": [{"playerScore": 11, "opponentScore": 7}]
+                                }
+                                """.formatted(opponent)))
+                .andExpect(status().isCreated());
+    }
+}
