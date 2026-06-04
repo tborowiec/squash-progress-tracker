@@ -63,7 +63,7 @@ export default function GamePlanPage() {
   return (
     <div style={s.page}>
       <style>{CURSOR_STYLE}</style>
-      <NavHeader links={[{ label: 'Dashboard', to: '/' }, { label: 'History', to: '/history' }]} />
+      <NavHeader links={[{ label: 'Dashboard', to: '/' }, { label: 'Log match', to: '/matches/new' }, { label: 'History', to: '/history' }]} />
 
       <main style={s.main}>
         <div style={s.inner}>

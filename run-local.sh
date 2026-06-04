@@ -37,5 +37,8 @@ if ! nc -z "$DB_HOST" "$DB_PORT" 2>/dev/null; then
   echo " ready."
 fi
 
+echo "Building frontend..."
+(cd frontend && npm install --silent && npm run build)
+
 echo "Connecting to postgres://$DB_USER@$DB_HOST:$DB_PORT/$DB_NAME"
 exec ./mvnw spring-boot:run
