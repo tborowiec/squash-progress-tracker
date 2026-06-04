@@ -1,7 +1,7 @@
 package org.borowiec.squashprogresstracker.match;
 
 import jakarta.validation.Valid;
-import org.borowiec.squashprogresstracker.match.dto.CreateMatchRequest;
+import org.borowiec.squashprogresstracker.match.dto.CreateOrUpdateMatchRequest;
 import org.borowiec.squashprogresstracker.match.dto.MatchParseResult;
 import org.borowiec.squashprogresstracker.match.dto.MatchResponse;
 import org.borowiec.squashprogresstracker.match.dto.ParseMatchRequest;
@@ -24,7 +24,7 @@ public class MatchController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MatchResponse create(@Valid @RequestBody CreateMatchRequest request) {
+    public MatchResponse create(@Valid @RequestBody CreateOrUpdateMatchRequest request) {
         return matchService.create(request);
     }
 
@@ -41,5 +41,21 @@ public class MatchController {
     @GetMapping("/opponents")
     public List<String> opponents() {
         return matchService.listOpponents();
+    }
+
+    @GetMapping("/{id}")
+    public MatchResponse get(@PathVariable Long id) {
+        return matchService.get(id);
+    }
+
+    @PutMapping("/{id}")
+    public MatchResponse update(@PathVariable Long id, @Valid @RequestBody CreateOrUpdateMatchRequest request) {
+        return matchService.update(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        matchService.delete(id);
     }
 }

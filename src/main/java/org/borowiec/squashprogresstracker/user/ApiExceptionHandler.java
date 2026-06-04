@@ -1,6 +1,7 @@
 package org.borowiec.squashprogresstracker.user;
 
 import org.borowiec.squashprogresstracker.llm.client.LlmException;
+import org.borowiec.squashprogresstracker.match.MatchNotFoundException;
 import org.borowiec.squashprogresstracker.match.gameplan.GamePlanUnavailableException;
 import org.borowiec.squashprogresstracker.user.dto.ApiError;
 import org.slf4j.Logger;
@@ -33,6 +34,12 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handleGamePlanUnavailable(GamePlanUnavailableException ex) {
         return ApiError.of(404, "No match history for that opponent");
+    }
+
+    @ExceptionHandler(MatchNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiError handleMatchNotFound(MatchNotFoundException ex) {
+        return ApiError.of(404, "Match not found");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

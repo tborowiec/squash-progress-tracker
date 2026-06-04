@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
-public record CreateMatchRequest(
+public record CreateOrUpdateMatchRequest(
         @NotBlank @Size(max = 255) String opponentName,
         @NotNull @PastOrPresent LocalDate matchDate,
         @Size(max = 2000) String notes,
