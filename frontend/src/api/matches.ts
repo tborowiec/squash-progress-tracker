@@ -12,12 +12,15 @@ export interface MatchParseResult {
   sets: { playerScore: number; opponentScore: number }[]
 }
 
-export interface CreateMatchRequest {
+export interface CreateOrUpdateMatchRequest {
   opponentName: string
   matchDate: string
   notes?: string
   sets: SetScoreRequest[]
 }
+
+/** @deprecated alias retained to avoid churn — use CreateOrUpdateMatchRequest */
+export type CreateMatchRequest = CreateOrUpdateMatchRequest
 
 export interface SetScoreResponse {
   setNumber: number
@@ -36,8 +39,14 @@ export interface MatchResponse {
   result: 'WON' | 'LOST' | 'DRAW'
 }
 
-export const createMatch = (data: CreateMatchRequest) =>
+export const createMatch = (data: CreateOrUpdateMatchRequest) =>
   client.post<MatchResponse>('/api/matches', data).then(r => r.data)
+
+export const getMatch = (id: number) =>
+  client.get<MatchResponse>(`/api/matches/${id}`).then(r => r.data)
+
+export const updateMatch = (id: number, data: CreateOrUpdateMatchRequest) =>
+  client.put<MatchResponse>(`/api/matches/${id}`, data).then(r => r.data)
 
 export const listMatches = (opponent?: string) =>
   client.get<MatchResponse[]>('/api/matches', { params: opponent ? { opponent } : {} }).then(r => r.data)

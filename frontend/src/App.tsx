@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import HomePage from './pages/HomePage'
 import LogMatchPage from './pages/LogMatchPage'
+import EditMatchPage from './pages/EditMatchPage'
 import HistoryPage from './pages/HistoryPage'
 import GamePlanPage from './pages/GamePlanPage'
 
@@ -17,6 +18,7 @@ export default function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/matches/new" element={<LogMatchPage />} />
+          <Route path="/matches/:id/edit" element={<EditMatchPage />} />
           <Route path="/history" element={<HistoryPage />} />
           <Route path="/game-plan" element={<GamePlanPage />} />
         </Route>

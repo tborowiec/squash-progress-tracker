@@ -267,27 +267,27 @@ No schema migration. `created_at` is immutable and untouched by update.
 
 #### Automated
 
-- [x] 1.1 Build compiles: `./mvnw -q compile`
-- [x] 1.2 Full test suite passes: `./mvnw test`
-- [x] 1.3 New ownership tests pass: `./mvnw test -Dtest=MatchApiIntegrationTests`
+- [x] 1.1 Build compiles: `./mvnw -q compile` — a595e91
+- [x] 1.2 Full test suite passes: `./mvnw test` — a595e91
+- [x] 1.3 New ownership tests pass: `./mvnw test -Dtest=MatchApiIntegrationTests` — a595e91
 
 #### Manual
 
-- [x] 1.4 PUT/DELETE of a non-owned id returns 404 (two sessions), not 403 or 200
-- [x] 1.5 Updating a match's sets leaves no orphaned `match_sets` rows
+- [x] 1.4 PUT/DELETE of a non-owned id returns 404 (two sessions), not 403 or 200 — a595e91
+- [x] 1.5 Updating a match's sets leaves no orphaned `match_sets` rows — a595e91
 
 ### Phase 2: Frontend — shared form + edit flow
 
 #### Automated
 
-- [ ] 2.1 Frontend builds: `cd frontend && npm run build`
+- [x] 2.1 Frontend builds: `cd frontend && npm run build`
 
 #### Manual
 
-- [ ] 2.2 `/matches/new` still creates a match exactly as before
-- [ ] 2.3 Edit page shows the form prefilled with current values
-- [ ] 2.4 Editing any field and saving persists and returns to updated history
-- [ ] 2.5 `/matches/:id/edit` for a non-owned/nonexistent id shows the not-found state, not a crash
+- [x] 2.2 `/matches/new` still creates a match exactly as before
+- [x] 2.3 Edit page shows the form prefilled with current values
+- [x] 2.4 Editing any field and saving persists and returns to updated history
+- [x] 2.5 `/matches/:id/edit` for a non-owned/nonexistent id shows the not-found state, not a crash
 
 ### Phase 3: Frontend — history card actions (edit + inline-confirm delete)
 
