@@ -12,8 +12,11 @@ import org.springframework.web.client.RestClient;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
+import java.io.BufferedReader;
+import java.io.StringReader;
 import java.net.SocketTimeoutException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.*;
@@ -46,7 +49,7 @@ class OpenAiCompatLlmClientTests {
         mockServer.expect(requestTo(COMPLETIONS_URL))
                 .andExpect(method(HttpMethod.POST))
                 .andExpect(header("Authorization", "Bearer test-key"))
-                .andExpect(bodyJson(json -> assertThat(json.path("model").asText()).isEqualTo("test-model")))
+                .andExpect(bodyJson(json -> assertThat(json.path("model").asString()).isEqualTo("test-model")))
                 .andRespond(withSuccess(completionJson("hello world"), MediaType.APPLICATION_JSON));
 
         assertThat(client.generate(LlmRequest.ofUser("ping"))).isEqualTo("hello world");
@@ -57,8 +60,8 @@ class OpenAiCompatLlmClientTests {
     void generateStructured_sendsJsonSchemaWithStrictTrue_andDeserializes() {
         mockServer.expect(requestTo(COMPLETIONS_URL))
                 .andExpect(bodyJson(json -> {
-                    assertThat(json.path("model").asText()).isEqualTo("test-model");
-                    assertThat(json.path("response_format").path("type").asText()).isEqualTo("json_schema");
+                    assertThat(json.path("model").asString()).isEqualTo("test-model");
+                    assertThat(json.path("response_format").path("type").asString()).isEqualTo("json_schema");
                     assertThat(json.path("response_format").path("json_schema").path("strict").asBoolean()).isTrue();
                 }))
                 .andRespond(withSuccess(
@@ -75,7 +78,7 @@ class OpenAiCompatLlmClientTests {
     @Test
     void generate_blankStructuredModel_fallsBackToModel() {
         mockServer.expect(requestTo(COMPLETIONS_URL))
-                .andExpect(bodyJson(json -> assertThat(json.path("model").asText()).isEqualTo("test-model")))
+                .andExpect(bodyJson(json -> assertThat(json.path("model").asString()).isEqualTo("test-model")))
                 .andRespond(withSuccess(completionJson("{\"word\":\"ok\"}"), MediaType.APPLICATION_JSON));
 
         var result = client.generateStructured(LlmRequest.ofUser("ping"), Pong.class);
@@ -137,6 +140,63 @@ class OpenAiCompatLlmClientTests {
     void llmRestClient_beanCreatedWithConfiguredTimeout() {
         var props = new LlmClientProperties("key", BASE_URL, "model", "", Duration.ofSeconds(15));
         assertThatCode(() -> new LlmClientConfig().llmRestClient(props)).doesNotThrowAnyException();
+    }
+
+    @Test
+    void generateStreaming_happyPath_orderedTokensAndIgnoresEmptyDelta() {
+        var sseBody = "data: {\"choices\":[{\"delta\":{\"content\":\"Hello\"}}]}\n" +
+                      "data: {\"choices\":[{\"delta\":{\"content\":\" World\"}}]}\n" +
+                      "data: {\"choices\":[{\"delta\":{}}]}\n" +
+                      "data: [DONE]\n";
+        mockServer.expect(requestTo(COMPLETIONS_URL))
+                .andExpect(method(HttpMethod.POST))
+                .andExpect(bodyJson(json -> {
+                    assertThat(json.path("model").asString()).isEqualTo("test-model");
+                    assertThat(json.path("stream").asBoolean()).isTrue();
+                }))
+                .andRespond(withSuccess(sseBody, MediaType.TEXT_EVENT_STREAM));
+
+        var tokens = new ArrayList<String>();
+        client.generateStreaming(LlmRequest.ofUser("ping"), tokens::add);
+
+        assertThat(tokens).containsExactly("Hello", " World");
+        mockServer.verify();
+    }
+
+    @Test
+    void generateStreaming_http5xx_throwsLlmExceptionWithStatus() {
+        mockServer.expect(requestTo(COMPLETIONS_URL))
+                .andRespond(withServerError());
+
+        assertThatThrownBy(() -> client.generateStreaming(LlmRequest.ofUser("test"), token -> {}))
+                .isInstanceOf(LlmException.class)
+                .satisfies(e -> assertThat(((LlmException) e).providerStatus()).isEqualTo(500));
+    }
+
+    @Test
+    void generateStreaming_malformedChunk_throwsLlmException() {
+        var sseBody = "data: not-valid-json\n";
+        mockServer.expect(requestTo(COMPLETIONS_URL))
+                .andRespond(withSuccess(sseBody, MediaType.TEXT_EVENT_STREAM));
+
+        assertThatThrownBy(() -> client.generateStreaming(LlmRequest.ofUser("test"), token -> {}))
+                .isInstanceOf(LlmException.class);
+    }
+
+    @Test
+    void parseSseStream_onTokenFiresInOrder() throws Exception {
+        var sseBody = "data: {\"choices\":[{\"delta\":{\"content\":\"A\"}}]}\n" +
+                      "data: {\"choices\":[{\"delta\":{\"content\":\"B\"}}]}\n" +
+                      "data: {\"choices\":[{\"delta\":{}}]}\n" +
+                      "data: [DONE]\n" +
+                      "data: {\"choices\":[{\"delta\":{\"content\":\"after-done\"}}]}\n";
+        var tokens = new ArrayList<String>();
+        OpenAiCompatLlmClient.parseSseStream(
+                new BufferedReader(new StringReader(sseBody)),
+                tokens::add,
+                objectMapper
+        );
+        assertThat(tokens).containsExactly("A", "B");
     }
 
     private org.springframework.test.web.client.RequestMatcher bodyJson(Consumer<JsonNode> assertions) {

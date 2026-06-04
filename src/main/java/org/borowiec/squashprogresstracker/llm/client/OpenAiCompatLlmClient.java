@@ -11,10 +11,19 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.function.Consumer;
 
 @Service
 public class OpenAiCompatLlmClient implements LlmClient {
+
+    private static final String COMPLETIONS_PATH = "/chat/completions";
+    private static final String SSE_DATA_PREFIX = "data: ";
+    private static final String SSE_DONE_SENTINEL = "[DONE]";
 
     private final RestClient restClient;
     private final LlmClientProperties properties;
@@ -81,7 +90,7 @@ public class OpenAiCompatLlmClient implements LlmClient {
         try {
             var client = timeoutOverride != null ? clientWithTimeout(timeoutOverride) : restClient;
             var response = client.post()
-                    .uri("/chat/completions")
+                    .uri(COMPLETIONS_PATH)
                     .body(body)
                     .retrieve()
                     .body(JsonNode.class);
@@ -103,7 +112,54 @@ public class OpenAiCompatLlmClient implements LlmClient {
         if (contentNode.isMissingNode() || contentNode.isNull()) {
             throw new LlmException("Missing content in LLM response choices");
         }
-        return contentNode.asText();
+        return contentNode.asString();
+    }
+
+    @Override
+    public void generateStreaming(LlmRequest request, Consumer<String> onToken) {
+        var body = buildBody(request, properties.model());
+        body.put("stream", true);
+        try {
+            restClient.post()
+                    .uri(COMPLETIONS_PATH)
+                    .body(body)
+                    .<Void>exchange((httpReq, res) -> {
+                        if (res.getStatusCode().isError()) {
+                            throw new LlmException("Provider error: " + res.getStatusCode(), null, res.getStatusCode().value());
+                        }
+                        try (var reader = new BufferedReader(new InputStreamReader(res.getBody(), StandardCharsets.UTF_8))) {
+                            parseSseStream(reader, onToken, objectMapper);
+                        } catch (IOException e) {
+                            throw new LlmException("IO error during streaming", e);
+                        }
+                        return null;
+                    });
+        } catch (LlmException e) {
+            throw e;
+        } catch (RestClientResponseException e) {
+            throw new LlmException("Provider error: " + e.getStatusCode(), e, e.getStatusCode().value());
+        } catch (Exception e) {
+            throw new LlmException("LLM streaming call failed", e);
+        }
+    }
+
+    static void parseSseStream(BufferedReader reader, Consumer<String> onToken, ObjectMapper objectMapper) throws IOException {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            if (!line.startsWith(SSE_DATA_PREFIX)) continue;
+            var payload = line.substring(SSE_DATA_PREFIX.length()).trim();
+            if (SSE_DONE_SENTINEL.equals(payload)) break;
+            JsonNode node;
+            try {
+                node = objectMapper.readTree(payload);
+            } catch (Exception e) {
+                throw new LlmException("Failed to parse SSE chunk", e);
+            }
+            var content = node.path("choices").path(0).path("delta").path("content");
+            if (!content.isMissingNode() && !content.isNull() && !content.asString().isEmpty()) {
+                onToken.accept(content.asString());
+            }
+        }
     }
 
     private RestClient clientWithTimeout(Duration timeout) {

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import tools.jackson.databind.ObjectMapper;
 
 import java.time.Duration;
+import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,6 +31,17 @@ class LlmClientLiveSmokeTest {
     void liveGenerate_returnsCoherentCompletion() {
         var response = buildClient().generate(LlmRequest.ofUser("Reply with the single word: pong"));
         assertThat(response).isNotBlank();
+    }
+
+    @Test
+    void liveGenerateStreaming_receivesIncrementalTokens() {
+        var tokens = new ArrayList<String>();
+        buildClient().generateStreaming(
+                LlmRequest.ofUser("Reply with the single word: pong"),
+                tokens::add
+        );
+        assertThat(tokens).isNotEmpty();
+        assertThat(String.join("", tokens)).isNotBlank();
     }
 
     @Test
