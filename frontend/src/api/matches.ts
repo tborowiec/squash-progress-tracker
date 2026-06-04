@@ -48,6 +48,9 @@ export const getMatch = (id: number) =>
 export const updateMatch = (id: number, data: CreateOrUpdateMatchRequest) =>
   client.put<MatchResponse>(`/api/matches/${id}`, data).then(r => r.data)
 
+export const deleteMatch = (id: number) =>
+  client.delete(`/api/matches/${id}`).then(() => undefined)
+
 export const listMatches = (opponent?: string) =>
   client.get<MatchResponse[]>('/api/matches', { params: opponent ? { opponent } : {} }).then(r => r.data)
 

@@ -280,25 +280,25 @@ No schema migration. `created_at` is immutable and untouched by update.
 
 #### Automated
 
-- [x] 2.1 Frontend builds: `cd frontend && npm run build`
+- [x] 2.1 Frontend builds: `cd frontend && npm run build` — cc1d139
 
 #### Manual
 
-- [x] 2.2 `/matches/new` still creates a match exactly as before
-- [x] 2.3 Edit page shows the form prefilled with current values
-- [x] 2.4 Editing any field and saving persists and returns to updated history
-- [x] 2.5 `/matches/:id/edit` for a non-owned/nonexistent id shows the not-found state, not a crash
+- [x] 2.2 `/matches/new` still creates a match exactly as before — cc1d139
+- [x] 2.3 Edit page shows the form prefilled with current values — cc1d139
+- [x] 2.4 Editing any field and saving persists and returns to updated history — cc1d139
+- [x] 2.5 `/matches/:id/edit` for a non-owned/nonexistent id shows the not-found state, not a crash — cc1d139
 
 ### Phase 3: Frontend — history card actions (edit + inline-confirm delete)
 
 #### Automated
 
-- [ ] 3.1 Frontend builds: `cd frontend && npm run build`
+- [x] 3.1 Frontend builds: `cd frontend && npm run build`
 
 #### Manual
 
-- [ ] 3.2 Each card shows Edit and Delete without dominating the read view
-- [ ] 3.3 Delete shows an inline Confirm/Cancel step; Cancel aborts
-- [ ] 3.4 Confirming delete removes the match and refreshes with filter intact
-- [ ] 3.5 Edit navigates to the prefilled edit page
-- [ ] 3.6 A failed delete shows an inline error and leaves the card in place
+- [x] 3.2 Each card shows Edit and Delete without dominating the read view
+- [x] 3.3 Delete shows an inline Confirm/Cancel step; Cancel aborts
+- [x] 3.4 Confirming delete removes the match and refreshes with filter intact
+- [x] 3.5 Edit navigates to the prefilled edit page
+- [x] 3.6 A failed delete shows an inline error and leaves the card in place
