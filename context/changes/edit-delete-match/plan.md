@@ -293,12 +293,12 @@ No schema migration. `created_at` is immutable and untouched by update.
 
 #### Automated
 
-- [x] 3.1 Frontend builds: `cd frontend && npm run build`
+- [x] 3.1 Frontend builds: `cd frontend && npm run build` — f996d4b
 
 #### Manual
 
-- [x] 3.2 Each card shows Edit and Delete without dominating the read view
-- [x] 3.3 Delete shows an inline Confirm/Cancel step; Cancel aborts
-- [x] 3.4 Confirming delete removes the match and refreshes with filter intact
-- [x] 3.5 Edit navigates to the prefilled edit page
-- [x] 3.6 A failed delete shows an inline error and leaves the card in place
+- [x] 3.2 Each card shows Edit and Delete without dominating the read view — f996d4b
+- [x] 3.3 Delete shows an inline Confirm/Cancel step; Cancel aborts — f996d4b
+- [x] 3.4 Confirming delete removes the match and refreshes with filter intact — f996d4b
+- [x] 3.5 Edit navigates to the prefilled edit page — f996d4b
+- [x] 3.6 A failed delete shows an inline error and leaves the card in place — f996d4b
