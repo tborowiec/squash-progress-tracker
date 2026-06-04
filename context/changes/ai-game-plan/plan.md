@@ -296,14 +296,14 @@ None — no schema changes, no new tables, nothing persisted.
 
 #### Automated
 
-- [x] 3.1 Frontend builds clean (typecheck + bundle via `./mvnw -q package` or `npm run build`)
-- [x] 3.2 Full backend suite still green (`./mvnw test`)
+- [x] 3.1 Frontend builds clean (typecheck + bundle via `./mvnw -q package` or `npm run build`) — c3688fd
+- [x] 3.2 Full backend suite still green (`./mvnw test`) — c3688fd
 
 #### Manual
 
-- [x] 3.3 History → opponent → "Generate game plan" lands on `/game-plan` pre-selected; plan streams token-by-token
-- [x] 3.4 Advice banner always shown; low-data caveat shows for < 3 matches
-- [x] 3.5 Regenerate / navigate-away mid-stream closes the prior stream cleanly (no interleave/leak)
-- [x] 3.6 Simulated LLM failure shows a friendly error state, no freeze
-- [x] 3.7 Deep link / hard refresh to `/game-plan` loads the SPA (SpaRoutes forwarding)
-- [x] 3.8 Ownership holds end-to-end (picker shows only the signed-in player's opponents)
+- [x] 3.3 History → opponent → "Generate game plan" lands on `/game-plan` pre-selected; plan streams token-by-token — c3688fd
+- [x] 3.4 Advice banner always shown; low-data caveat shows for < 3 matches — c3688fd
+- [x] 3.5 Regenerate / navigate-away mid-stream closes the prior stream cleanly (no interleave/leak) — c3688fd
+- [x] 3.6 Simulated LLM failure shows a friendly error state, no freeze — c3688fd
+- [x] 3.7 Deep link / hard refresh to `/game-plan` loads the SPA (SpaRoutes forwarding) — c3688fd
+- [x] 3.8 Ownership holds end-to-end (picker shows only the signed-in player's opponents) — c3688fd
