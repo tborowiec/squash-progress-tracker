@@ -5,6 +5,13 @@ export interface SetScoreRequest {
   opponentScore: number
 }
 
+export interface MatchParseResult {
+  opponentName: string
+  matchDate: string
+  notes: string
+  sets: { playerScore: number; opponentScore: number }[]
+}
+
 export interface CreateMatchRequest {
   opponentName: string
   matchDate: string
@@ -37,3 +44,6 @@ export const listMatches = (opponent?: string) =>
 
 export const listOpponents = () =>
   client.get<string[]>('/api/matches/opponents').then(r => r.data)
+
+export const parseMatch = (text: string): Promise<MatchParseResult> =>
+  client.post<MatchParseResult>('/api/matches/parse', { text }).then(r => r.data)

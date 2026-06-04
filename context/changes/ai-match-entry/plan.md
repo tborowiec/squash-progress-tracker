@@ -215,30 +215,30 @@ None — no schema or data changes. The matches table and save path are unchange
 
 #### Automated
 
-- [x] 1.1 All tests pass: `./mvnw test`
-- [x] 1.2 `MatchParseService` unit test (mocked LlmClient): happy path, empty/partial fields, prompt includes today + known opponents, `LlmException` propagation
-- [x] 1.3 Controller slice: `POST /api/matches/parse` requires auth (401 anonymous), 400 on blank text
-- [x] 1.4 Env-guarded live integration test parses a representative sentence; auto-skips in CI
-- [x] 1.5 Package builds: `./mvnw package`
+- [x] 1.1 All tests pass: `./mvnw test` — 812d514
+- [x] 1.2 `MatchParseService` unit test (mocked LlmClient): happy path, empty/partial fields, prompt includes today + known opponents, `LlmException` propagation — 812d514
+- [x] 1.3 Controller slice: `POST /api/matches/parse` requires auth (401 anonymous), 400 on blank text — 812d514
+- [x] 1.4 Env-guarded live integration test parses a representative sentence; auto-skips in CI — 812d514
+- [x] 1.5 Package builds: `./mvnw package` — 812d514
 
 #### Manual
 
-- [x] 1.6 Parse of US-01 example sentence returns correct opponent, ISO date, four sets, notes
-- [x] 1.7 Relative date ("yesterday") resolves to the correct ISO date
-- [x] 1.8 Sentence omitting the date defaults `matchDate` to today
+- [x] 1.6 Parse of US-01 example sentence returns correct opponent, ISO date, four sets, notes — 812d514
+- [x] 1.7 Relative date ("yesterday") resolves to the correct ISO date — 812d514
+- [x] 1.8 Sentence omitting the date defaults `matchDate` to today — 812d514
 
 ### Phase 2: Frontend AI entry
 
 #### Automated
 
-- [ ] 2.1 Frontend builds: `cd frontend && npm run build`
-- [ ] 2.2 Backend test suite still green: `./mvnw test`
+- [x] 2.1 Frontend builds: `cd frontend && npm run build`
+- [x] 2.2 Backend test suite still green: `./mvnw test`
 
 #### Manual
 
-- [ ] 2.3 AI/Manual toggle switches views; manual form unchanged
-- [ ] 2.4 Parsing the example sentence pre-fills opponent, date, all sets, notes; live scoreline updates
-- [ ] 2.5 Editing a pre-filled field then saving creates the match and lands on history
-- [ ] 2.6 Vague input with empty opponent/no sets shows the warning banner; can be completed and saved
-- [ ] 2.7 Parse while LLM unavailable shows the 503 error; form remains usable for manual entry
-- [ ] 2.8 AI-parsed disclaimer visible in AI mode
+- [x] 2.3 AI/Manual toggle switches views; manual form unchanged
+- [x] 2.4 Parsing the example sentence pre-fills opponent, date, all sets, notes; live scoreline updates
+- [x] 2.5 Editing a pre-filled field then saving creates the match and lands on history
+- [x] 2.6 Vague input with empty opponent/no sets shows the warning banner; can be completed and saved
+- [x] 2.7 Parse while LLM unavailable shows the 503 error; form remains usable for manual entry
+- [x] 2.8 AI-parsed disclaimer visible in AI mode

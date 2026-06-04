@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { createMatch, SetScoreRequest } from '../api/matches'
+import { createMatch, parseMatch, SetScoreRequest } from '../api/matches'
 import { ApiError } from '../api/auth'
 import { AxiosError } from 'axios'
 import NavHeader from '../components/NavHeader'
@@ -31,10 +31,20 @@ const s: Record<string, React.CSSProperties> = {
   liveScoreLabel: { fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, letterSpacing: '0.08em' },
   banner:  { background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.3)', borderRadius: '2px', color: 'var(--error)', fontSize: '13px', padding: '0.6rem 0.85rem', marginBottom: '1.5rem' },
   submitBtn: { width: '100%', background: 'var(--teal)', color: '#080d18', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.05rem', letterSpacing: '0.05em', padding: '0.8rem', borderRadius: '2px', transition: 'background 0.15s', marginTop: '0.5rem' },
+  toggleRow: { display: 'flex', marginBottom: '2rem', borderRadius: '2px', overflow: 'hidden', border: '1px solid var(--border)', width: 'fit-content' as const },
+  toggleBtn: { padding: '0.45rem 1.4rem', fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase' as const, border: 'none', cursor: 'pointer', transition: 'background 0.15s, color 0.15s' },
+  aiTextarea: { width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '2px', padding: '0.7rem 0.9rem', color: 'var(--text)', fontSize: '15px', outline: 'none', resize: 'vertical' as const, minHeight: '100px', fontFamily: 'var(--font-body)', lineHeight: 1.6 },
+  parseBtn: { width: '100%', background: 'var(--teal)', color: '#080d18', fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.05rem', letterSpacing: '0.05em', padding: '0.8rem', borderRadius: '2px', transition: 'background 0.15s', marginTop: '0.75rem' },
+  caveat:  { borderLeft: '3px solid #f59e0b', background: 'rgba(245,158,11,0.06)', padding: '0.6rem 1rem', borderRadius: '2px', marginBottom: '1.5rem', fontFamily: 'var(--font-mono)', fontSize: '12px', letterSpacing: '0.06em', color: '#f59e0b' },
+  disclaimer: { fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--muted)', letterSpacing: '0.07em', marginTop: '0.5rem', textTransform: 'uppercase' as const },
 }
 
 export default function LogMatchPage() {
   const navigate = useNavigate()
+  const [mode, setMode] = useState<'ai' | 'manual'>('ai')
+  const [aiText, setAiText] = useState('')
+  const [parsing, setParsing] = useState(false)
+  const [parseWarning, setParseWarning] = useState(false)
   const [opponentName, setOpponentName] = useState('')
   const [matchDate, setMatchDate] = useState(today())
   const [notes, setNotes] = useState('')
@@ -42,6 +52,11 @@ export default function LogMatchPage() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [globalError, setGlobalError] = useState('')
   const [busy, setBusy] = useState(false)
+
+  const switchMode = (next: 'ai' | 'manual') => {
+    setMode(next)
+    if (next === 'ai') setParseWarning(false)
+  }
 
   const addSet = () => {
     if (sets.length < 5) setSets(prev => [...prev, { playerScore: '', opponentScore: '' }])
@@ -58,6 +73,33 @@ export default function LogMatchPage() {
   const hasScores = sets.some(s => s.playerScore !== '' || s.opponentScore !== '')
   const result = setsWon > setsLost ? 'WON' : setsLost > setsWon ? 'LOST' : 'DRAW'
   const resultColor = result === 'WON' ? 'var(--teal)' : result === 'LOST' ? 'var(--error)' : 'var(--muted)'
+
+  async function handleParse() {
+    setParsing(true)
+    setGlobalError('')
+    setParseWarning(false)
+    try {
+      const res = await parseMatch(aiText)
+      setOpponentName(res.opponentName)
+      setMatchDate(res.matchDate || today())
+      setNotes(res.notes)
+      setSets(
+        res.sets.length > 0
+          ? res.sets.slice(0, 5).map(s => ({
+              playerScore: String(s.playerScore),
+              opponentScore: String(s.opponentScore),
+            }))
+          : [{ playerScore: '', opponentScore: '' }]
+      )
+      setParseWarning(res.opponentName === '' || res.sets.length === 0)
+      setMode('manual')
+    } catch (err) {
+      const ae = (err as AxiosError<ApiError>).response?.data
+      setGlobalError(ae?.message ?? 'Could not parse match. Please try again.')
+    } finally {
+      setParsing(false)
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -90,118 +132,159 @@ export default function LogMatchPage() {
       <main style={s.main}>
         <div style={s.card}>
           {globalError && <div style={s.banner}>{globalError}</div>}
-
-          <form onSubmit={handleSubmit}>
-            {/* Match details */}
-            <div style={s.section}>
-              <h2 style={s.sectionHeading}>Match details</h2>
-
-              <div style={s.field}>
-                <label style={s.label} htmlFor="opponent">Opponent</label>
-                <input
-                  id="opponent"
-                  style={{ ...s.input, borderColor: fieldErrors.opponentName ? 'var(--error)' : undefined }}
-                  type="text"
-                  maxLength={255}
-                  value={opponentName}
-                  onChange={e => setOpponentName(e.target.value)}
-                  required
-                />
-                {fieldErrors.opponentName && <p style={s.fieldError}>{fieldErrors.opponentName}</p>}
-              </div>
-
-              <div style={s.field}>
-                <label style={s.label} htmlFor="date">Date</label>
-                <input
-                  id="date"
-                  style={{ ...s.input, borderColor: fieldErrors.matchDate ? 'var(--error)' : undefined }}
-                  type="date"
-                  value={matchDate}
-                  max={today()}
-                  onChange={e => setMatchDate(e.target.value)}
-                  required
-                />
-                {fieldErrors.matchDate && <p style={s.fieldError}>{fieldErrors.matchDate}</p>}
-              </div>
-
-              <div style={s.field}>
-                <label style={s.label} htmlFor="notes">Notes</label>
-                <textarea
-                  id="notes"
-                  style={{ ...s.textarea, borderColor: fieldErrors.notes ? 'var(--error)' : undefined }}
-                  placeholder="Optional notes…"
-                  value={notes}
-                  onChange={e => setNotes(e.target.value)}
-                />
-                {fieldErrors.notes && <p style={s.fieldError}>{fieldErrors.notes}</p>}
-              </div>
+          {parseWarning && mode === 'manual' && (
+            <div style={s.caveat}>
+              Some fields could not be parsed — review opponent and sets before saving.
             </div>
+          )}
 
-            {/* Set scores */}
+          <div style={s.toggleRow}>
+            <button
+              type="button"
+              style={{ ...s.toggleBtn, background: mode === 'ai' ? 'var(--teal)' : 'var(--surface)', color: mode === 'ai' ? '#080d18' : 'var(--muted)' }}
+              onClick={() => switchMode('ai')}
+            >AI</button>
+            <button
+              type="button"
+              style={{ ...s.toggleBtn, background: mode === 'manual' ? 'var(--teal)' : 'var(--surface)', color: mode === 'manual' ? '#080d18' : 'var(--muted)' }}
+              onClick={() => switchMode('manual')}
+            >Manual</button>
+          </div>
+
+          {mode === 'ai' && (
             <div style={s.section}>
-              <h2 style={s.sectionHeading}>Set scores</h2>
-
-              {sets.map((set, i) => (
-                <div key={i} style={s.setRow}>
-                  <span style={s.setLabel}>Set {i + 1}</span>
-                  <input
-                    style={{ ...s.scoreInput, borderColor: fieldErrors[`sets[${i}].playerScore`] ? 'var(--error)' : undefined }}
-                    type="number"
-                    min={0}
-                    max={99}
-                    placeholder="0"
-                    value={set.playerScore}
-                    onChange={e => updateSet(i, 'playerScore', e.target.value)}
-                    required
-                  />
-                  <span style={s.vs}>vs</span>
-                  <input
-                    style={{ ...s.scoreInput, borderColor: fieldErrors[`sets[${i}].opponentScore`] ? 'var(--error)' : undefined }}
-                    type="number"
-                    min={0}
-                    max={99}
-                    placeholder="0"
-                    value={set.opponentScore}
-                    onChange={e => updateSet(i, 'opponentScore', e.target.value)}
-                    required
-                  />
-                  <button
-                    type="button"
-                    style={{ ...s.removeBtn, opacity: sets.length === 1 ? 0.3 : 1 }}
-                    onClick={() => removeSet(i)}
-                    disabled={sets.length === 1}
-                    title="Remove set"
-                  >✕</button>
-                </div>
-              ))}
-
-              {fieldErrors.sets && <p style={s.fieldError}>{fieldErrors.sets}</p>}
-
+              <h2 style={s.sectionHeading}>Describe your match</h2>
+              <textarea
+                style={s.aiTextarea}
+                placeholder="e.g. beat Kowalski 3:1 (11:5, 6:11, 11:2, 11:1) on May 5th, struggled in the second set"
+                value={aiText}
+                onChange={e => setAiText(e.target.value)}
+              />
+              <p style={s.disclaimer}>AI-parsed — review all fields before saving</p>
               <button
                 type="button"
-                style={{ ...s.addBtn, opacity: sets.length >= 5 ? 0.4 : 1 }}
-                onClick={addSet}
-                disabled={sets.length >= 5}
+                style={{ ...s.parseBtn, opacity: parsing || !aiText.trim() ? 0.7 : 1 }}
+                onClick={handleParse}
+                disabled={parsing || !aiText.trim()}
               >
-                + Add set {sets.length < 5 ? `(${sets.length}/5)` : '(max)'}
+                {parsing ? 'Parsing…' : 'Parse with AI'}
               </button>
-
-              {hasScores && (
-                <div style={s.liveScore}>
-                  <span style={s.liveScoreNum}>{setsWon} – {setsLost}</span>
-                  <span style={{ ...s.liveScoreLabel, color: resultColor }}>{result}</span>
-                </div>
-              )}
             </div>
+          )}
 
-            <button
-              style={{ ...s.submitBtn, opacity: busy ? 0.7 : 1 }}
-              type="submit"
-              disabled={busy}
-            >
-              {busy ? 'Saving…' : 'Save match'}
-            </button>
-          </form>
+          {mode === 'manual' && (
+            <form onSubmit={handleSubmit}>
+              {/* Match details */}
+              <div style={s.section}>
+                <h2 style={s.sectionHeading}>Match details</h2>
+
+                <div style={s.field}>
+                  <label style={s.label} htmlFor="opponent">Opponent</label>
+                  <input
+                    id="opponent"
+                    style={{ ...s.input, borderColor: fieldErrors.opponentName ? 'var(--error)' : undefined }}
+                    type="text"
+                    maxLength={255}
+                    value={opponentName}
+                    onChange={e => setOpponentName(e.target.value)}
+                    required
+                  />
+                  {fieldErrors.opponentName && <p style={s.fieldError}>{fieldErrors.opponentName}</p>}
+                </div>
+
+                <div style={s.field}>
+                  <label style={s.label} htmlFor="date">Date</label>
+                  <input
+                    id="date"
+                    style={{ ...s.input, borderColor: fieldErrors.matchDate ? 'var(--error)' : undefined }}
+                    type="date"
+                    value={matchDate}
+                    max={today()}
+                    onChange={e => setMatchDate(e.target.value)}
+                    required
+                  />
+                  {fieldErrors.matchDate && <p style={s.fieldError}>{fieldErrors.matchDate}</p>}
+                </div>
+
+                <div style={s.field}>
+                  <label style={s.label} htmlFor="notes">Notes</label>
+                  <textarea
+                    id="notes"
+                    style={{ ...s.textarea, borderColor: fieldErrors.notes ? 'var(--error)' : undefined }}
+                    placeholder="Optional notes…"
+                    value={notes}
+                    onChange={e => setNotes(e.target.value)}
+                  />
+                  {fieldErrors.notes && <p style={s.fieldError}>{fieldErrors.notes}</p>}
+                </div>
+              </div>
+
+              {/* Set scores */}
+              <div style={s.section}>
+                <h2 style={s.sectionHeading}>Set scores</h2>
+
+                {sets.map((set, i) => (
+                  <div key={i} style={s.setRow}>
+                    <span style={s.setLabel}>Set {i + 1}</span>
+                    <input
+                      style={{ ...s.scoreInput, borderColor: fieldErrors[`sets[${i}].playerScore`] ? 'var(--error)' : undefined }}
+                      type="number"
+                      min={0}
+                      max={99}
+                      placeholder="0"
+                      value={set.playerScore}
+                      onChange={e => updateSet(i, 'playerScore', e.target.value)}
+                      required
+                    />
+                    <span style={s.vs}>vs</span>
+                    <input
+                      style={{ ...s.scoreInput, borderColor: fieldErrors[`sets[${i}].opponentScore`] ? 'var(--error)' : undefined }}
+                      type="number"
+                      min={0}
+                      max={99}
+                      placeholder="0"
+                      value={set.opponentScore}
+                      onChange={e => updateSet(i, 'opponentScore', e.target.value)}
+                      required
+                    />
+                    <button
+                      type="button"
+                      style={{ ...s.removeBtn, opacity: sets.length === 1 ? 0.3 : 1 }}
+                      onClick={() => removeSet(i)}
+                      disabled={sets.length === 1}
+                      title="Remove set"
+                    >✕</button>
+                  </div>
+                ))}
+
+                {fieldErrors.sets && <p style={s.fieldError}>{fieldErrors.sets}</p>}
+
+                <button
+                  type="button"
+                  style={{ ...s.addBtn, opacity: sets.length >= 5 ? 0.4 : 1 }}
+                  onClick={addSet}
+                  disabled={sets.length >= 5}
+                >
+                  + Add set {sets.length < 5 ? `(${sets.length}/5)` : '(max)'}
+                </button>
+
+                {hasScores && (
+                  <div style={s.liveScore}>
+                    <span style={s.liveScoreNum}>{setsWon} – {setsLost}</span>
+                    <span style={{ ...s.liveScoreLabel, color: resultColor }}>{result}</span>
+                  </div>
+                )}
+              </div>
+
+              <button
+                style={{ ...s.submitBtn, opacity: busy ? 0.7 : 1 }}
+                type="submit"
+                disabled={busy}
+              >
+                {busy ? 'Saving…' : 'Save match'}
+              </button>
+            </form>
+          )}
         </div>
       </main>
     </div>
