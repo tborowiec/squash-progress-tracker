@@ -280,30 +280,30 @@ None — no schema changes, no new tables, nothing persisted.
 
 #### Automated
 
-- [x] 2.1 Build compiles (`./mvnw -q compile`)
-- [x] 2.2 Prompt-builder test passes (scores + notes present; data-grounded SYSTEM; low-data only when < 3)
-- [x] 2.3 Ownership test passes (user B → 404 for user A's opponent)
-- [x] 2.4 SSE happy-path test passes (`meta` + ordered `token` events + `done`, `text/event-stream`)
-- [x] 2.5 SSE error-path test passes (in-stream `error` event, not a 503)
-- [x] 2.6 Full suite green (`./mvnw test`)
+- [x] 2.1 Build compiles (`./mvnw -q compile`) — aaa6a28
+- [x] 2.2 Prompt-builder test passes (scores + notes present; data-grounded SYSTEM; low-data only when < 3) — aaa6a28
+- [x] 2.3 Ownership test passes (user B → 404 for user A's opponent) — aaa6a28
+- [x] 2.4 SSE happy-path test passes (`meta` + ordered `token` events + `done`, `text/event-stream`) — aaa6a28
+- [x] 2.5 SSE error-path test passes (in-stream `error` event, not a 503) — aaa6a28
+- [x] 2.6 Full suite green (`./mvnw test`) — aaa6a28
 
 #### Manual
 
-- [x] 2.7 `curl -N` streams `meta` → tokens → `done`; prose references logged scores/notes
-- [x] 2.8 Opponent with no owned matches returns 404 with `ApiError` body
+- [x] 2.7 `curl -N` streams `meta` → tokens → `done`; prose references logged scores/notes — aaa6a28
+- [x] 2.8 Opponent with no owned matches returns 404 with `ApiError` body — aaa6a28
 
 ### Phase 3: Frontend game-plan page
 
 #### Automated
 
-- [ ] 3.1 Frontend builds clean (typecheck + bundle via `./mvnw -q package` or `npm run build`)
-- [ ] 3.2 Full backend suite still green (`./mvnw test`)
+- [x] 3.1 Frontend builds clean (typecheck + bundle via `./mvnw -q package` or `npm run build`)
+- [x] 3.2 Full backend suite still green (`./mvnw test`)
 
 #### Manual
 
-- [ ] 3.3 History → opponent → "Generate game plan" lands on `/game-plan` pre-selected; plan streams token-by-token
-- [ ] 3.4 Advice banner always shown; low-data caveat shows for < 3 matches
-- [ ] 3.5 Regenerate / navigate-away mid-stream closes the prior stream cleanly (no interleave/leak)
-- [ ] 3.6 Simulated LLM failure shows a friendly error state, no freeze
-- [ ] 3.7 Deep link / hard refresh to `/game-plan` loads the SPA (SpaRoutes forwarding)
-- [ ] 3.8 Ownership holds end-to-end (picker shows only the signed-in player's opponents)
+- [x] 3.3 History → opponent → "Generate game plan" lands on `/game-plan` pre-selected; plan streams token-by-token
+- [x] 3.4 Advice banner always shown; low-data caveat shows for < 3 matches
+- [x] 3.5 Regenerate / navigate-away mid-stream closes the prior stream cleanly (no interleave/leak)
+- [x] 3.6 Simulated LLM failure shows a friendly error state, no freeze
+- [x] 3.7 Deep link / hard refresh to `/game-plan` loads the SPA (SpaRoutes forwarding)
+- [x] 3.8 Ownership holds end-to-end (picker shows only the signed-in player's opponents)

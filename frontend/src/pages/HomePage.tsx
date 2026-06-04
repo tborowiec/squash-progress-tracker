@@ -73,7 +73,7 @@ export default function HomePage() {
 
   return (
     <div style={s.page}>
-      <NavHeader links={[{ label: 'History', to: '/history' }, { label: 'Log match', to: '/matches/new' }]} />
+      <NavHeader links={[{ label: 'History', to: '/history' }, { label: 'Game plan', to: '/game-plan' }, { label: 'Log match', to: '/matches/new' }]} />
 
       <main style={s.main}>
         <div style={s.welcome}>
@@ -87,6 +87,9 @@ export default function HomePage() {
           </button>
           <button style={s.secondaryBtn} onClick={() => navigate('/history')}>
             Match history
+          </button>
+          <button style={s.secondaryBtn} onClick={() => navigate('/game-plan')}>
+            Game plan
           </button>
         </div>
       </main>

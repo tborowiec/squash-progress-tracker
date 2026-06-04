@@ -17,6 +17,6 @@ public final class SpaRoutes {
     }
 
     public static final String[] CLIENT_ROUTES = {
-        "/login", "/register", "/history", "/matches/**"
+        "/login", "/register", "/history", "/matches/**", "/game-plan"
     };
 }

@@ -61,8 +61,8 @@ public class GamePlanController {
             emitter.send(SseEmitter.event().name("error")
                     .data("{\"message\":\"AI service is temporarily unavailable\"}"));
             emitter.complete();
-        } catch (IOException e) {
-            emitter.completeWithError(e);
+        } catch (Exception ignored) {
+            // Emitter may already be completed (client disconnected before error could be sent)
         }
     }
 

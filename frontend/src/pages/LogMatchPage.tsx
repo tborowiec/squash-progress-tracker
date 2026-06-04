@@ -85,7 +85,7 @@ export default function LogMatchPage() {
 
   return (
     <div style={s.page}>
-      <NavHeader links={[{ label: 'Dashboard', to: '/' }, { label: 'History', to: '/history' }]} />
+      <NavHeader links={[{ label: 'Dashboard', to: '/' }, { label: 'History', to: '/history' }, { label: 'Game plan', to: '/game-plan' }]} />
 
       <main style={s.main}>
         <div style={s.card}>

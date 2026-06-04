@@ -6,6 +6,7 @@ import RegisterPage from './pages/RegisterPage'
 import HomePage from './pages/HomePage'
 import LogMatchPage from './pages/LogMatchPage'
 import HistoryPage from './pages/HistoryPage'
+import GamePlanPage from './pages/GamePlanPage'
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/matches/new" element={<LogMatchPage />} />
           <Route path="/history" element={<HistoryPage />} />
+          <Route path="/game-plan" element={<GamePlanPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

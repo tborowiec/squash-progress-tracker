@@ -1,5 +1,6 @@
 package org.borowiec.squashprogresstracker.match.gameplan;
 
+import org.borowiec.squashprogresstracker.llm.dto.LlmRequest;
 import org.borowiec.squashprogresstracker.llm.dto.LlmRole;
 import org.borowiec.squashprogresstracker.match.Match;
 import org.borowiec.squashprogresstracker.match.MatchSet;
@@ -60,7 +61,7 @@ class GamePlanPromptBuilderTests {
         assertThat(userMessage(builder.build("K", List.of(lostMatch)))).contains("LOST");
     }
 
-    private String userMessage(org.borowiec.squashprogresstracker.llm.dto.LlmRequest request) {
+    private String userMessage(LlmRequest request) {
         return request.messages().stream()
                 .filter(m -> m.role() == LlmRole.USER)
                 .findFirst().orElseThrow().content();
