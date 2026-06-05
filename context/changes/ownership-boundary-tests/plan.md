@@ -309,30 +309,30 @@ None — additive test files plus a doc edit. No production code, schema, or dat
 
 #### Automated
 
-- [x] 1.1 New class compiles and runs: `./mvnw test -Dtest=MatchOwnershipBoundaryTests`
-- [x] 1.2 Foreign-id sweep asserts 404 (not 403/200) for every by-id route row
-- [x] 1.3 Anonymous sweep asserts 401 for every row
-- [x] 1.4 Full suite stays green: `./mvnw test`
+- [x] 1.1 New class compiles and runs: `./mvnw test -Dtest=MatchOwnershipBoundaryTests` — 591ad2b
+- [x] 1.2 Foreign-id sweep asserts 404 (not 403/200) for every by-id route row — 591ad2b
+- [x] 1.3 Anonymous sweep asserts 401 for every row — 591ad2b
+- [x] 1.4 Full suite stays green: `./mvnw test` — 591ad2b
 
 #### Manual
 
-- [ ] 1.5 A hypothetical new by-id route needs only a table row to gain IDOR coverage
-- [ ] 1.6 No fully qualified class names where an import suffices
+- [x] 1.5 A hypothetical new by-id route needs only a table row to gain IDOR coverage — 591ad2b
+- [x] 1.6 No fully qualified class names where an import suffices — 591ad2b
 
 ### Phase 2: No-mis-save persistence-fidelity
 
 #### Automated
 
-- [ ] 2.1 New class compiles and runs: `./mvnw test -Dtest=MatchNoMisSaveTests`
-- [ ] 2.2 Confirmed==saved (create) asserts opponentName/matchDate/notes + per-set scores in posted order on a fresh GET
-- [ ] 2.3 Confirmed==saved (update) asserts full equality after a PUT with a changed set count
-- [ ] 2.4 Parse-side-effect test shows the list empty before and after a stubbed parse
-- [ ] 2.5 Full suite stays green: `./mvnw test`
+- [x] 2.1 New class compiles and runs: `./mvnw test -Dtest=MatchNoMisSaveTests`
+- [x] 2.2 Confirmed==saved (create) asserts opponentName/matchDate/notes + per-set scores in posted order on a fresh GET
+- [x] 2.3 Confirmed==saved (update) asserts full equality after a PUT with a changed set count
+- [x] 2.4 Parse-side-effect test shows the list empty before and after a stubbed parse
+- [x] 2.5 Full suite stays green: `./mvnw test`
 
 #### Manual
 
-- [ ] 2.6 Every expected value traces to a test constant, never parser/LLM output
-- [ ] 2.7 id/userId/createdAt/setNumber excluded from equality; setNumber asserted as server-derived
+- [x] 2.6 Every expected value traces to a test constant, never parser/LLM output
+- [x] 2.7 id/userId/createdAt/setNumber excluded from equality; setNumber asserted as server-derived
 
 ### Phase 3: Cookbook + stack-note reconciliation
 
