@@ -338,10 +338,10 @@ None — additive test files plus a doc edit. No production code, schema, or dat
 
 #### Automated
 
-- [x] 3.1 §6.2 and §6.4 no longer contain "TBD"
-- [x] 3.2 §4 "backend security tests" row no longer contains "@WithMockUser"
+- [x] 3.1 §6.2 and §6.4 no longer contain "TBD" — cf8ea7e
+- [x] 3.2 §4 "backend security tests" row no longer contains "@WithMockUser" — cf8ea7e
 
 #### Manual
 
-- [x] 3.3 §6.2/§6.4 reference test names + run commands match the created classes
-- [x] 3.4 §4 stack note accurately describes the session-based harness
+- [x] 3.3 §6.2/§6.4 reference test names + run commands match the created classes — cf8ea7e
+- [x] 3.4 §4 stack note accurately describes the session-based harness — cf8ea7e
