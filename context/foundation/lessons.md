@@ -23,6 +23,13 @@
 - **Rule**: When `/10x-implement` begins on a change, move the corresponding GitHub issue to "In Progress" on the Squash MVP project board (`gh project item-edit`). When all phases are complete and `change.md` is set to `implemented`, move it to "Done".
 - **Applies to**: implement
 
+## Set the GitHub issue to "In Progress" when any work on a change begins
+
+- **Context**: The first hands-on activity on any change in this repo — not only `/10x-implement`, but also `/10x-frame`, `/10x-research`, or `/10x-plan`, or any other phase that opens real work on a change folder. Squash MVP project board (Projects v2, owner `tborowiec`).
+- **Problem**: The board drifts: an issue stays "Todo" while framing/research/planning is already in flight, so anyone checking the board can't tell what is actually being worked on. The prior rule only triggered at `/10x-implement`, leaving the frame→research→plan window invisible.
+- **Rule**: When you start any work on a change, set its corresponding GitHub issue to "In Progress" on the Squash MVP board if it is not already there — regardless of which workflow phase opened the work. Still move it to "Done" only when the change is complete.
+- **Applies to**: frame, research, plan, implement
+
 ## Never use fully qualified class names when an import suffices
 
 - **Context**: Any test or production class where a type is referenced inline (e.g. `ArgumentCaptor.forClass(org.example.Foo.class)`, `m.role() == org.example.LlmRole.USER`, or a method parameter typed as `org.example.LlmRequest`).
