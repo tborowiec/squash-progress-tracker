@@ -81,7 +81,7 @@ orchestrator updates Status as artifacts appear on disk.
 
 | # | Phase name | Goal (one line) | Risks covered | Test types | Status | Change folder |
 |---|---|---|---|---|---|---|
-| 1 | Ownership-boundary & no-mis-save (backend) | Prove cross-player access is rejected on every match endpoint and that confirmed == saved | #1, #3 | integration | not started | — |
+| 1 | Ownership-boundary & no-mis-save (backend) | Prove cross-player access is rejected on every match endpoint and that confirmed == saved | #1, #3 | integration | complete | context/changes/ownership-boundary-tests/ |
 | 2 | AI failure-path (backend) | Prove a transient/erroring provider surfaces a clean, retryable error (no fake success, no infinite spin) and advice-labelling holds | #2 | unit + integration | not started | — |
 | 3 | Frontend runner bootstrap + guard/contract | Stand up the frontend test runner; prove the route guard is correct and the api-client matches the backend contract | #4, #5 | unit/component + contract | not started | — |
 | 4 | Quality-gates wiring (CI) | Run both test suites + compile/typecheck in CI on every PR | cross-cutting | gates | not started | — |
@@ -99,7 +99,7 @@ The classic test base for this project. AI-native tools (if any) carry a
 | Layer | Tool | Version | Notes |
 |-------|------|---------|-------|
 | backend unit + integration | JUnit 5 (Jupiter) + Spring Boot Test | Boot 4.0.6 | **`meaningful`** — ~15 test files across security/user/match/llm/gameplan |
-| backend security tests | `spring-security-test` | (Boot-managed) | `@WithMockUser` / request-level auth assertions for the ownership boundary |
+| backend security tests | `spring-security-test` | (Boot-managed) | session-based auth: `registerAndLogin(email)` → `MockHttpSession`; two sessions (A/B) for cross-tenant tests; `.with(csrf())` on mutations |
 | backend integration DB | Testcontainers (PostgreSQL) | via `spring-boot-testcontainers` BOM | real Postgres for repository/API integration; matches prod engine |
 | LLM provider (under test) | Gemini `gemini-2.5-flash` via OpenAI-compat endpoint | `timeout 30s` | `OpenAiCompatLlmClient`; stub the transport for #2 |
 | frontend unit/component | none yet — see §3 Phase 3 | — | React 18.3 + Vite SPA; **0 test files, no runner** today |
@@ -146,8 +146,11 @@ the relevant rollout phase ships; before that, it reads "TBD — see §3 Phase <
 
 ### 6.2 Adding a backend integration test (auth boundary / persistence)
 
-- TBD — see §3 Phase 1 for the ownership-boundary (`#1`) and no-mis-save (`#3`) patterns. Reference today: `src/test/java/.../match/MatchApiIntegrationTests.java`, `.../security/SecurityFilterChainTests.java`, `.../user/AuthIntegrationTests.java`.
-- **Mocking policy**: real Postgres via Testcontainers; assert request → response shape AND persisted side-effects. Mock only the external HTTP edge (the LLM transport).
+- **Location**: `src/test/java/org/borowiec/squashprogresstracker/match/` (or the relevant package).
+- **Naming**: `<ClassName>Tests.java` (per AGENTS.md). **Run single class**: `./mvnw test -Dtest=MatchOwnershipBoundaryTests`. **Run single method**: `./mvnw test -Dtest=MatchOwnershipBoundaryTests#foreignIdReturns404`.
+- **Reference tests**: `MatchOwnershipBoundaryTests` (ownership boundary / IDOR contract) and `MatchNoMisSaveTests` (persistence fidelity — confirmed == saved on a fresh re-GET).
+- **Harness**: `@SpringBootTest` + `@AutoConfigureMockMvc` + `@Testcontainers` + `@Container @ServiceConnection PostgreSQLContainer`; session-based auth via `registerAndLogin(email)` → `MockHttpSession`; `.with(csrf())` on mutations.
+- **Mocking policy**: real Postgres via Testcontainers; stub only the LLM HTTP edge (`@MockitoBean LlmClient`) when the test touches the parse path; assert request → response shape **and** persisted side-effects on a fresh re-GET, not just the response echo.
 
 ### 6.3 Adding a frontend component test (route guard)
 
@@ -155,7 +158,10 @@ the relevant rollout phase ships; before that, it reads "TBD — see §3 Phase <
 
 ### 6.4 Adding a test for a new match API endpoint (ownership)
 
-- TBD — see §3 Phase 1. The canonical pattern: a second player's token must receive `404`/`403` for a resource it does not own, on get-one/update/delete/list-filter.
+- **Pattern**: add the new by-id route as a row in the `byIdRoutes()` `@MethodSource` table in `MatchOwnershipBoundaryTests`. Both the `foreignIdReturns404` and `anonymousReturns401` parameterized sweeps pick it up automatically, and the `byIdRoutesTableCoversAllRegisteredByIdEndpoints` guard will fail the suite if the row is missing.
+- **Assert 404, not 403** (enumeration-safe IDOR posture — "exists but not yours" is indistinguishable from "doesn't exist"). Do not assert 403.
+- **Also add a `case` branch** to the two `switch (method.name())` blocks inside `foreignIdReturns404` and `anonymousReturns401` for the new HTTP method.
+- **Run**: `./mvnw test -Dtest=MatchOwnershipBoundaryTests`.
 
 ### 6.5 Adding a frontend api-client contract test
 
@@ -167,7 +173,7 @@ the relevant rollout phase ships; before that, it reads "TBD — see §3 Phase <
 
 ### 6.7 Per-rollout-phase notes
 
-(Optional. After each phase lands, `/10x-implement` appends a 2–3 line note here capturing anything surprising the phase taught.)
+**Phase 1 (ownership-boundary-tests):** The durable-sweep pattern — a single `@MethodSource` route table shared by both the cross-tenant 404 sweep and the anonymous 401 sweep — is more maintainable than per-endpoint one-offs, and the `RequestMappingHandlerMapping` guard makes an unsweeped endpoint a build failure. For persistence tests, always source expected values from named test constants, never from parser/LLM output (the oracle trap); and assert the full persisted record on a fresh re-GET, not just the response echo.
 
 ## 7. What We Deliberately Don't Test
 
