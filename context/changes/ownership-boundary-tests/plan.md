@@ -309,10 +309,10 @@ None — additive test files plus a doc edit. No production code, schema, or dat
 
 #### Automated
 
-- [ ] 1.1 New class compiles and runs: `./mvnw test -Dtest=MatchOwnershipBoundaryTests`
-- [ ] 1.2 Foreign-id sweep asserts 404 (not 403/200) for every by-id route row
-- [ ] 1.3 Anonymous sweep asserts 401 for every row
-- [ ] 1.4 Full suite stays green: `./mvnw test`
+- [x] 1.1 New class compiles and runs: `./mvnw test -Dtest=MatchOwnershipBoundaryTests`
+- [x] 1.2 Foreign-id sweep asserts 404 (not 403/200) for every by-id route row
+- [x] 1.3 Anonymous sweep asserts 401 for every row
+- [x] 1.4 Full suite stays green: `./mvnw test`
 
 #### Manual
 
