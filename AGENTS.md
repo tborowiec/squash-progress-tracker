@@ -40,6 +40,23 @@ Database table names are plural `snake_case` (e.g. `users`, `matches`). This als
 
 Test classes are named `<ClassName>Tests.java`. Run with `./mvnw test`.
 
+## GitHub Issues & Project Board
+
+Issues are tracked on the **Squash MVP** project board (Projects v2, owner `tborowiec`). `gh issue create` does **not** add an issue to the board on its own — always pass `--project "Squash MVP"` so it lands there automatically:
+
+```
+gh issue create --title "..." --body "..." --project "Squash MVP" --label "..."
+```
+
+New board items have an empty **Status**; set it to `Todo` (the board's other columns are `In Progress` and `Done`). The Status field is a project field, not a label, so it's set via the project API:
+
+```
+gh project item-edit --id <item-id> --project-id <project-id> \
+  --field-id <status-field-id> --single-select-option-id <Todo-option-id>
+```
+
+Resolve those ids with `gh project item-add 1 --owner tborowiec --url <issue-url> --format json` (returns the item id) and `gh project field-list 1 --owner tborowiec --format json` (returns the Status field id and its option ids).
+
 ## Commit Guidelines
 
 Lowercase descriptive phrases (e.g. `add match logging endpoint`, `wire spring security auth`). No conventional-commit prefixes in use. CI (GitHub Actions, auto-deploy to Render on merge to `main`) is planned but not yet wired.
