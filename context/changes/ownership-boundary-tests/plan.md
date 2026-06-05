@@ -323,25 +323,25 @@ None — additive test files plus a doc edit. No production code, schema, or dat
 
 #### Automated
 
-- [x] 2.1 New class compiles and runs: `./mvnw test -Dtest=MatchNoMisSaveTests`
-- [x] 2.2 Confirmed==saved (create) asserts opponentName/matchDate/notes + per-set scores in posted order on a fresh GET
-- [x] 2.3 Confirmed==saved (update) asserts full equality after a PUT with a changed set count
-- [x] 2.4 Parse-side-effect test shows the list empty before and after a stubbed parse
-- [x] 2.5 Full suite stays green: `./mvnw test`
+- [x] 2.1 New class compiles and runs: `./mvnw test -Dtest=MatchNoMisSaveTests` — 82405f4
+- [x] 2.2 Confirmed==saved (create) asserts opponentName/matchDate/notes + per-set scores in posted order on a fresh GET — 82405f4
+- [x] 2.3 Confirmed==saved (update) asserts full equality after a PUT with a changed set count — 82405f4
+- [x] 2.4 Parse-side-effect test shows the list empty before and after a stubbed parse — 82405f4
+- [x] 2.5 Full suite stays green: `./mvnw test` — 82405f4
 
 #### Manual
 
-- [x] 2.6 Every expected value traces to a test constant, never parser/LLM output
-- [x] 2.7 id/userId/createdAt/setNumber excluded from equality; setNumber asserted as server-derived
+- [x] 2.6 Every expected value traces to a test constant, never parser/LLM output — 82405f4
+- [x] 2.7 id/userId/createdAt/setNumber excluded from equality; setNumber asserted as server-derived — 82405f4
 
 ### Phase 3: Cookbook + stack-note reconciliation
 
 #### Automated
 
-- [ ] 3.1 §6.2 and §6.4 no longer contain "TBD"
-- [ ] 3.2 §4 "backend security tests" row no longer contains "@WithMockUser"
+- [x] 3.1 §6.2 and §6.4 no longer contain "TBD"
+- [x] 3.2 §4 "backend security tests" row no longer contains "@WithMockUser"
 
 #### Manual
 
-- [ ] 3.3 §6.2/§6.4 reference test names + run commands match the created classes
-- [ ] 3.4 §4 stack note accurately describes the session-based harness
+- [x] 3.3 §6.2/§6.4 reference test names + run commands match the created classes
+- [x] 3.4 §4 stack note accurately describes the session-based harness
