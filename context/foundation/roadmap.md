@@ -82,7 +82,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unlocks:** S-02 (game plan), S-03 (AI text parsing)
 - **Prerequisites:** —
 - **Parallel with:** F-01, S-01
-- **Blockers:** LLM provider + API key not yet chosen — stakeholder decision pending (see Open Roadmap Question 1; user leaning Gemini). Planning proceeds provider-agnostically; the provider must be locked before this foundation is implemented and verified.
+- **Blockers:** resolved — LLM provider chosen (Google Gemini `gemini-2.5-flash` via OpenAI-compat endpoint; research 2026-06-03 / issue #2). F-02 is implemented; the client is provider-agnostic behind `LLM_API_KEY` / `LLM_BASE_URL`.
 - **Unknowns:** —
 - **Risk:** Both AI must-haves (FR-003, FR-010) share one client. Building it once as a thin enabler avoids duplicating provider wiring and the progress/labelling plumbing across two slices. Risk if built too eagerly: over-design ahead of a real caller — keep it minimal and let S-02 shape it.
 - **Status:** proposed
@@ -108,7 +108,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **PRD refs:** FR-010, US-02, NFR (continuous progress feedback), guardrail (advice labelling)
 - **Prerequisites:** F-01, S-01, F-02
 - **Parallel with:** S-03, S-04
-- **Blockers:** LLM provider not yet chosen (see Open Roadmap Question 1) — the abstraction can be planned now, but verifying real game-plan output needs the chosen provider/key.
+- **Blockers:** none — LLM provider resolved (Gemini via OpenAI-compat, see F-02); real game-plan output is verifiable against the wired provider.
 - **Unknowns:**
   - Thin data (a single match) may yield generic advice — is that acceptable for launch, or does the slice need a minimum-matches threshold? — Owner: user. Block: no. (PRD resolves this toward labelling-not-suppression; flagged so /10x-plan confirms.)
 - **Risk:** The north star — the validation milestone for the core hypothesis (AI advice over a player's own history beats a spreadsheet). Placed as early as its prerequisites allow. Thin-data advice is mitigated by the PRD's advice-labelling guardrail, not by suppressing output.
@@ -121,7 +121,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **PRD refs:** FR-003, FR-004, FR-005, US-01, NFR (<5s perceived parse; progress feedback), guardrail (confirm before save — no silent mis-save)
 - **Prerequisites:** F-01, S-01, F-02
 - **Parallel with:** S-02, S-04
-- **Blockers:** LLM provider not yet chosen (see Open Roadmap Question 1).
+- **Blockers:** none — LLM provider resolved (Gemini via OpenAI-compat, see F-02).
 - **Unknowns:** —
 - **Risk:** Delivers the frictionless-recording path the secondary success criteria target (≥75% AI entry, ≥90% parse accuracy). Reuses S-01's match entity and history. The confirm/edit step is the guardrail against silent mis-save. Sequenced after the north star because, under the speed goal, the value hypothesis (game plan) is validated first; AI entry then reduces friction on an already-proven loop.
 - **Status:** proposed
@@ -143,17 +143,17 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | Roadmap ID | Change ID                  | Suggested issue title                                        | Ready for `/10x-plan` | Notes |
 | ---------- | -------------------------- | ------------------------------------------------------------ | --------------------- | ----- |
 | F-01       | minimal-auth               | Wire email+password auth and per-player ownership boundary   | yes                   | Start here. Unblocks every other item. |
-| F-02       | llm-client                 | Add provider-agnostic LLM client with progress + advice labelling | no               | Plannable provider-agnostically; resolve Open Roadmap Q1 (provider) before implementing. |
-| S-01       | manual-match-and-history   | Manual match logging form + history view with opponent filter | no                   | Needs F-01 done. |
-| S-02       | ai-game-plan               | AI-generated game plan for a selected opponent (north star)  | no                    | Needs F-01, S-01, F-02 + provider chosen. |
-| S-03       | ai-match-entry             | Natural-language match entry with AI-parsed confirm preview  | no                    | Needs F-01, S-01, F-02 + provider chosen. |
+| F-02       | llm-client                 | Add provider-agnostic LLM client with progress + advice labelling | yes              | Provider resolved (Gemini via OpenAI-compat); implemented. |
+| S-01       | manual-match-and-history   | Manual match logging form + history view with opponent filter | yes                  | Needs F-01 done. |
+| S-02       | ai-game-plan               | AI-generated game plan for a selected opponent (north star)  | yes                   | Needs F-01, S-01, F-02 done (all resolved). |
+| S-03       | ai-match-entry             | Natural-language match entry with AI-parsed confirm preview  | yes                   | Needs F-01, S-01, F-02 done (all resolved). |
 | S-04       | edit-delete-match          | Edit and delete saved match records                          | no                    | Needs F-01, S-01 done. |
 
 This table is the clean handoff to Jira/Linear or any MCP-backed backlog. One row per `F-NN`/`S-NN`.
 
 ## Open Roadmap Questions
 
-1. **Which LLM provider (and integration path) backs the AI features — Anthropic, Google Gemini, or OpenAI; Spring AI vs a direct vendor Java SDK?** — Owner: user (leaning Gemini per prior notes). Block: `F-02`, and transitively `S-02` (north star) and `S-03`. The client abstraction can be planned provider-agnostically, but the provider and key must be locked before F-02 is implemented and the AI slices can be verified. This is the single highest-leverage decision on the roadmap: resolving it clears the path to the north star. (`infrastructure.md` keeps everything provider-agnostic under `LLM_API_KEY` until then.)
+1. **~~Which LLM provider (and integration path) backs the AI features?~~ RESOLVED 2026-06-03 (issue #2):** **Google Gemini** (`gemini-2.5-flash`) via its **OpenAI-compatible endpoint**, behind a **thin direct adapter** (not Spring AI — Boot 4 lacked a GA Spring AI at decision time). Wired in `application.properties` (`llm.base-url` / `llm.model`) and `OpenAiCompatLlmClient`. The OpenAI wire format keeps the provider swappable under `LLM_API_KEY` / `LLM_BASE_URL`. Caveat carried forward: Gemini's free tier trains on prompts (no opt-out) — synthetic data for dev, paid/no-training tier for real user data.
 
 ## Parked
 
