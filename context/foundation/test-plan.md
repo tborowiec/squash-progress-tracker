@@ -82,8 +82,8 @@ orchestrator updates Status as artifacts appear on disk.
 | # | Phase name | Goal (one line) | Risks covered | Test types | Status | Change folder |
 |---|---|---|---|---|---|---|
 | 1 | Ownership-boundary & no-mis-save (backend) | Prove cross-player access is rejected on every match endpoint and that confirmed == saved | #1, #3 | integration | complete | context/changes/ownership-boundary-tests/ |
-| 2 | AI failure-path (backend) | Prove a transient/erroring provider surfaces a clean, retryable error (no fake success, no infinite spin) and advice-labelling holds | #2 | unit + integration | not started | — |
-| 3 | Frontend runner bootstrap + guard/contract | Stand up the frontend test runner; prove the route guard is correct and the api-client matches the backend contract | #4, #5 | unit/component + contract | not started | — |
+| 2 | AI failure-path (backend) | Prove a transient/erroring provider surfaces a clean, retryable error (no fake success, no infinite spin) and advice-labelling holds | #2 | unit + integration | complete | context/changes/ai-failure-path-tests/ |
+| 3 | Frontend runner bootstrap + guard/contract | Stand up the frontend test runner; prove the route guard is correct and the api-client matches the backend contract | #4, #5 | unit/component + contract | change opened | context/changes/frontend-runner-bootstrap-tests/ |
 | 4 | Quality-gates wiring (CI) | Run both test suites + compile/typecheck in CI on every PR | cross-cutting | gates | not started | — |
 | 5 | Container smoke + critical-flow e2e | Build, boot, and HTTP-smoke the Docker image; one browser happy-path (login → log match → history) against the running app | #6 (+ exercises #4/#5 at the deployed layer) | container smoke + e2e (browser) | not started | — |
 
@@ -154,7 +154,11 @@ the relevant rollout phase ships; before that, it reads "TBD — see §3 Phase <
 
 ### 6.3 Adding a frontend component test (route guard)
 
-- TBD — see §3 Phase 3 (runner bootstrap: Vitest + Testing Library; route-guard pattern for `#4`).
+- **Runner**: `cd frontend && npm run test:run` (Vitest 3 + jsdom; `npm run test` for watch mode).
+- **Pattern**: mount `ProtectedRoute` under `MemoryRouter` + `Routes` with sentinel child and `/login` sentinel. Do **not** mock `ProtectedRoute` itself — only mock `useAuth` (via `vi.mock('../contexts/AuthContext', async () => ({ ...await vi.importActual(...), useAuth: vi.fn() }))`) to supply the three pure logic states synchronously: `{loading:true}` → renders nothing; `{loading:false, user:null}` → redirects to `/login`; `{loading:false, user:{…}}` → renders the Outlet. Also mock `../api/auth` (`me: vi.fn()`) to prevent any real network call escaping jsdom.
+- **In-flight test**: for the never-bounced loading case, restore the real `useAuth` via `(await vi.importActual('../contexts/AuthContext')).useAuth` and wrap with the real `AuthProvider` with `me()` mocked to `new Promise<never>(() => {})` — proves the `loading` check fires before the `!user` redirect.
+- **Redirect**: assert the destination sentinel text (`'login-page'`) is in the document; the redirect carries no `from` state (current behavior — assert, don't fix here).
+- **Reference**: `frontend/src/components/ProtectedRoute.test.tsx`.
 
 ### 6.4 Adding a test for a new match API endpoint (ownership)
 
@@ -165,7 +169,12 @@ the relevant rollout phase ships; before that, it reads "TBD — see §3 Phase <
 
 ### 6.5 Adding a frontend api-client contract test
 
-- TBD — see §3 Phase 3 (api-client vs backend DTO contract, `#5`).
+- **Goal**: pin that the api-client decodes the backend's real JSON into the expected shape at runtime — not just that the TypeScript types agree (that's the named anti-pattern for `#5`).
+- **Transport stub**: `vi.mock('./client', () => ({ default: { get: vi.fn(), post: vi.fn() } }))` — stubs the axios singleton; no MSW or axios-mock-adapter needed.
+- **Fixtures**: hand-written in `src/api/__fixtures__/match-contract.ts`, typed against the exported TS interfaces, sourced from the backend integration test as the oracle (cite `MatchApiIntegrationTests.java` lines). Do not record fixtures from a live backend.
+- **Assertions**: read field **values**, not `typeof`. Assert `sets[0]` as a full per-set integer-pair object (`{ setNumber, playerScore, opponentScore }`); assert `result` as a bare `'WON'|'LOST'|'DRAW'` string. One success decode per api function (`createMatch`, `listMatches`); one `ApiError`/503 error-body assertion on rejection (`response.data.status === 503`).
+- **`noExplicitAny`**: disabled on `**/*.test.{ts,tsx}` in `biome.json` overrides — `as any` is expected for `mockResolvedValue` when the full `AxiosResponse` shape is not needed.
+- **Reference**: `frontend/src/api/matches.contract.test.tsx`, `frontend/src/api/__fixtures__/match-contract.ts`.
 
 ### 6.6 Adding a container-smoke / e2e test
 
