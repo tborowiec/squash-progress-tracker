@@ -22,3 +22,9 @@ CI is GitHub Actions (auto-deploy to Render on merge to `main`); per
 tech-stack.md it is "planned but not yet wired" — this change wires the
 PR-time gate, not the deploy step. Container-smoke + browser e2e gates are
 out of scope here (they land in Phase 5).
+
+Branch protection on `main` requires the `ci-success` status check (strict,
+branches must be up to date) — this blocks any merge that does not pass all
+four gate jobs, and therefore blocks the Render auto-deploy for red builds.
+Repository visibility was set to public (required for branch protection on
+GitHub Free). Applied via `gh api PUT .../branches/main/protection`.
