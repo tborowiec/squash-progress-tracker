@@ -12,9 +12,7 @@ interface Handlers {
 }
 
 export function streamGamePlan(opponentName: string, handlers: Handlers): () => void {
-  const es = new EventSource(
-    '/api/game-plans/stream?opponent=' + encodeURIComponent(opponentName)
-  )
+  const es = new EventSource(`/api/game-plans/stream?opponent=${encodeURIComponent(opponentName)}`)
 
   es.addEventListener('meta', e => {
     handlers.onMeta(JSON.parse(e.data))
@@ -29,7 +27,7 @@ export function streamGamePlan(opponentName: string, handlers: Handlers): () => 
     handlers.onDone()
   })
 
-  es.addEventListener('error', e => {
+  es.addEventListener('error', _e => {
     es.close()
     handlers.onError()
   })

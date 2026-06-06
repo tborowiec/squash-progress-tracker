@@ -1,21 +1,29 @@
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --bg:        #080d18;
-  --surface:   #0f1624;
-  --border:    #1a2540;
-  --teal:      #00c9a7;
-  --teal-dim:  #009f85;
-  --sky:       #38bdf8;
-  --text:      #e8eeff;
-  --muted:     #7a86a0;
-  --error:     #f87171;
-  --font-display: 'Barlow Condensed', sans-serif;
-  --font-body:    'DM Sans', sans-serif;
-  --font-mono:    'DM Mono', monospace;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-html, body, #root {
+:root {
+  --bg: #080d18;
+  --surface: #0f1624;
+  --border: #1a2540;
+  --teal: #00c9a7;
+  --teal-dim: #009f85;
+  --sky: #38bdf8;
+  --text: #e8eeff;
+  --muted: #7a86a0;
+  --error: #f87171;
+  --font-display: "Barlow Condensed", sans-serif;
+  --font-body: "DM Sans", sans-serif;
+  --font-mono: "DM Mono", monospace;
+}
+
+html,
+body,
+#root {
   height: 100%;
 }
 
@@ -30,7 +38,7 @@ body {
 
 /* Court grid background */
 body::before {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   background-image:
@@ -42,10 +50,18 @@ body::before {
   z-index: 0;
 }
 
-#root { position: relative; z-index: 1; }
+#root {
+  position: relative;
+  z-index: 1;
+}
 
-a { color: var(--teal); text-decoration: none; }
-a:hover { color: var(--sky); }
+a {
+  color: var(--teal);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--sky);
+}
 
 button {
   cursor: pointer;

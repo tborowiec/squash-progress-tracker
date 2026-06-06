@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { me, UserResponse } from '../api/auth'
+import { me, type UserResponse } from '../api/auth'
 
 interface AuthState {
   user: UserResponse | null
@@ -20,11 +20,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .finally(() => setLoading(false))
   }, [])
 
-  return (
-    <AuthContext.Provider value={{ user, loading, setUser }}>
-      {children}
-    </AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={{ user, loading, setUser }}>{children}</AuthContext.Provider>
 }
 
 export function useAuth(): AuthState {
