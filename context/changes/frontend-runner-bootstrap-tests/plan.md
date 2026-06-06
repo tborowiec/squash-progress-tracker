@@ -392,26 +392,26 @@ behavior changes (`vite build` ignores the `test` block).
 
 #### Automated
 
-- [x] 2.1 Guard tests pass: `cd frontend && npm run test:run`
-- [x] 2.2 Typecheck passes: `cd frontend && npm run typecheck`
-- [x] 2.3 Biome reports no errors: `cd frontend && npx biome check src`
+- [x] 2.1 Guard tests pass: `cd frontend && npm run test:run` — c784c3c
+- [x] 2.2 Typecheck passes: `cd frontend && npm run typecheck` — c784c3c
+- [x] 2.3 Biome reports no errors: `cd frontend && npx biome check src` — c784c3c
 
 #### Manual
 
-- [x] 2.4 Reordered guard (`!user` before `loading`) makes the in-flight case FAIL
-- [x] 2.5 Guard itself is not mocked (only `useAuth` / `me`)
+- [x] 2.4 Reordered guard (`!user` before `loading`) makes the in-flight case FAIL — c784c3c
+- [x] 2.5 Guard itself is not mocked (only `useAuth` / `me`) — c784c3c
 
 ### Phase 3: API-Client Contract Tests (#5)
 
 #### Automated
 
-- [ ] 3.1 Contract tests pass: `cd frontend && npm run test:run`
-- [ ] 3.2 Full frontend suite green (smoke + guard + contract): `cd frontend && npm run test:run`
-- [ ] 3.3 Typecheck passes: `cd frontend && npm run typecheck`
-- [ ] 3.4 Biome reports no errors: `cd frontend && npx biome check src`
+- [x] 3.1 Contract tests pass: `cd frontend && npm run test:run`
+- [x] 3.2 Full frontend suite green (smoke + guard + contract): `cd frontend && npm run test:run`
+- [x] 3.3 Typecheck passes: `cd frontend && npm run typecheck`
+- [x] 3.4 Biome reports no errors: `cd frontend && npx biome check src`
 
 #### Manual
 
-- [ ] 3.5 Renamed fixture field (e.g. `setNumber`→`set_number`) makes the contract test FAIL
-- [ ] 3.6 §6.3 and §6.5 no longer read "TBD" and describe the shipped patterns
-- [ ] 3.7 Lefthook pre-commit gate passes on the staged test files
+- [x] 3.5 Renamed fixture field (e.g. `setNumber`→`set_number`) makes the contract test FAIL
+- [x] 3.6 §6.3 and §6.5 no longer read "TBD" and describe the shipped patterns
+- [x] 3.7 Lefthook pre-commit gate passes on the staged test files
