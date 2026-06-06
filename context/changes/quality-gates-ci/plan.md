@@ -281,15 +281,15 @@ confirmation that a red PR is actually blocked before closing the change.
 #### Automated
 
 - [x] 1.1 Workflow file passes actionlint (if available)
-- [ ] 1.2 All five checks complete on a PR (backend-lint, backend-test, frontend-lint, frontend-test, ci-success)
-- [ ] 1.3 backend-test green with no DB_*/LLM_API_KEY (Testcontainers up, live-smoke skipped)
-- [ ] 1.4 frontend-test shows tsc clean then vitest passing
+- [x] 1.2 All five checks complete on a PR (backend-lint, backend-test, frontend-lint, frontend-test, ci-success)
+- [x] 1.3 backend-test green with no DB_*/LLM_API_KEY (Testcontainers up, live-smoke skipped)
+- [x] 1.4 frontend-test shows tsc clean then vitest passing
 
 #### Manual
 
-- [ ] 1.5 Real PR shows full suite green and reports mergeable
-- [ ] 1.6 Backend log shows postgres:17 pulled and *LiveSmokeTest skipped
-- [ ] 1.7 No secret warnings; LLM_API_KEY absent from all job envs
+- [x] 1.5 Real PR shows full suite green and reports mergeable
+- [x] 1.6 Backend log shows postgres:17 pulled and *LiveSmokeTest skipped
+- [x] 1.7 No secret warnings; LLM_API_KEY absent from all job envs
 
 ### Phase 2: Branch Protection
 
