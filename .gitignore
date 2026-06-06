@@ -48,6 +48,7 @@ cookies.txt
 /.claude/prompts/m1l5-3-extend-prerequisites.md
 /.claude/prompts/m1l5-4-store-plan.md
 /.claude/prompts/skill-explainer.md
+/.claude/prompts/m3l2-ad-hoc-testing.md
 
 ### Java formatter (downloaded native binary; run .tools/install-formatter.sh)
 .tools/palantir-java-format
