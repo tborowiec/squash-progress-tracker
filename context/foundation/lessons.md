@@ -43,3 +43,10 @@
 - **Problem**: The plan asserted three times that no Dockerfile change was needed ("build stage already runs ./mvnw clean package"). The premise was wrong: the Dockerfile only did `COPY src/ src/`, so the frontend-maven-plugin had no `frontend/` to build inside the image and `mvnw package` failed in Docker. Required a follow-up fix (commit 85322e9) adding `COPY frontend/ frontend/` plus a `.dockerignore`.
 - **Rule**: When adding a build input outside `src/`, audit the Dockerfile's `COPY` lines before claiming "no Dockerfile change needed" — the build *context*, not just the build *command*, must include every input the build consumes.
 - **Applies to**: plan, implement
+
+## Add imports and their using code in one Edit/Write — never split across two steps
+
+- **Context**: Any phase that edits Java test or production files in this project where the palantir-java-format per-edit hook runs on every Write/Edit.
+- **Problem**: Adding imports in one Edit then the using code in a separate Edit causes the formatter hook to strip the imports as unused between steps — repeated edits loop without progress, wasting turns.
+- **Rule**: Always add new imports and the code that uses them in a single Edit or Write call to avoid the formatter stripping them as unused mid-step. If the import and its usage are far apart in the file, use Write to rewrite the whole file.
+- **Applies to**: all

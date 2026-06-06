@@ -11,7 +11,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
+import org.borowiec.squashprogresstracker.llm.AiDisclaimer;
 import org.borowiec.squashprogresstracker.llm.client.LlmClient;
 import org.borowiec.squashprogresstracker.llm.client.LlmException;
 import org.junit.jupiter.api.Test;
@@ -132,6 +134,33 @@ class GamePlanApiIntegrationTests {
         assertThat(body).contains("event:error");
         assertThat(body).doesNotContain("event:token");
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
+    }
+
+    @Test
+    void stream_llmFailureMidStream_stillDeliveredAdviceDisclaimerBeforeError() throws Exception {
+        doThrow(new LlmException("provider down", null, 503)).when(llmClient).generateStreaming(any(), any());
+        var session = registerAndLogin("gp_disclaimer@example.com");
+        logMatch(session, "Kowalski");
+
+        var result = mockMvc.perform(get("/api/game-plans/stream")
+                        .param("opponent", "Kowalski")
+                        .session(session))
+                .andExpect(request().asyncStarted())
+                .andReturn();
+        mockMvc.perform(asyncDispatch(result));
+
+        // Read with UTF-8 so the em dash in AiDisclaimer.TEXT survives the decode.
+        var body = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        // disclaimer arrives in the meta event before the error event
+        assertThat(body).contains("event:meta");
+        assertThat(body).contains(AiDisclaimer.TEXT);
+        assertThat(body).contains("event:error");
+        assertThat(body).contains("AI service is temporarily unavailable");
+        assertThat(result.getResponse().getStatus()).isEqualTo(200);
+
+        // meta must precede error in the stream
+        assertThat(body.indexOf("event:meta")).isLessThan(body.indexOf("event:error"));
     }
 
     // ── ownership ──────────────────────────────────────────────────────────────

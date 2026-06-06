@@ -2,6 +2,7 @@ package org.borowiec.squashprogresstracker.match;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -9,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 import org.borowiec.squashprogresstracker.llm.client.LlmClient;
+import org.borowiec.squashprogresstracker.llm.client.LlmException;
 import org.borowiec.squashprogresstracker.match.dto.MatchParseResult;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +101,29 @@ class MatchParseApiIntegrationTests {
                 .andExpect(jsonPath("$.opponentName").value("Kowalski"))
                 .andExpect(jsonPath("$.matchDate").value("2026-05-05"))
                 .andExpect(jsonPath("$.sets.length()").value(4));
+    }
+
+    // ── failure paths ───────────────────────────────────────────────────────
+
+    @Test
+    void parse_llmException_returns503CleanErrorWithoutRetrySignal() throws Exception {
+        doThrow(new LlmException("Provider error: 503 SERVICE_UNAVAILABLE", null, 503))
+                .when(llmClient)
+                .generateStructured(any(), any());
+
+        var session = registerAndLogin("parse_503@example.com");
+        mockMvc.perform(post("/api/matches/parse")
+                        .with(csrf())
+                        .session(session)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"text\":\"beat Kowalski 3:1\"}"))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(jsonPath("$.status").value(503))
+                .andExpect(jsonPath("$.message").value("AI service is temporarily unavailable"))
+                .andExpect(jsonPath("$.retryable").doesNotExist())
+                .andExpect(jsonPath("$.retryAfter").doesNotExist())
+                .andExpect(jsonPath("$.providerStatus").doesNotExist())
+                .andExpect(header().doesNotExist("Retry-After"));
     }
 
     // ── helpers ─────────────────────────────────────────────────────────────

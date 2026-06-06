@@ -371,26 +371,26 @@ None — tests only, no schema or data changes.
 
 #### Automated
 
-- [x] 2.1 New timeout test passes: `./mvnw test -Dtest=OpenAiCompatLlmClientTimeoutTests`
-- [x] 2.2 Full suite still green: `./mvnw test`
-- [x] 2.3 `mvnw` resolves `mockwebserver:4.12.0` with no version-management error
-- [x] 2.4 Formatting clean: `./mvnw spotless:check`
+- [x] 2.1 New timeout test passes: `./mvnw test -Dtest=OpenAiCompatLlmClientTimeoutTests` — ca99ec9
+- [x] 2.2 Full suite still green: `./mvnw test` — ca99ec9
+- [x] 2.3 `mvnw` resolves `mockwebserver:4.12.0` with no version-management error — ca99ec9
+- [x] 2.4 Formatting clean: `./mvnw spotless:check` — ca99ec9
 
 #### Manual
 
-- [x] 2.5 Test hangs/fails if `props.timeout()` is raised above body delay (confirms configured timeout exercised)
-- [x] 2.6 `change.md` note accurately reflects the added dependency
+- [x] 2.5 Test hangs/fails if `props.timeout()` is raised above body delay (confirms configured timeout exercised) — ca99ec9
+- [x] 2.6 `change.md` note accurately reflects the added dependency — ca99ec9
 
 ### Phase 3: API-layer failure oracles
 
 #### Automated
 
-- [ ] 3.1 Parse oracle passes: `./mvnw test -Dtest=MatchParseApiIntegrationTests`
-- [ ] 3.2 Game-plan oracle passes: `./mvnw test -Dtest=GamePlanApiIntegrationTests`
-- [ ] 3.3 Full suite green: `./mvnw test`
-- [ ] 3.4 Formatting clean: `./mvnw spotless:check`
+- [x] 3.1 Parse oracle passes: `./mvnw test -Dtest=MatchParseApiIntegrationTests`
+- [x] 3.2 Game-plan oracle passes: `./mvnw test -Dtest=GamePlanApiIntegrationTests`
+- [x] 3.3 Full suite green: `./mvnw test`
+- [x] 3.4 Formatting clean: `./mvnw spotless:check`
 
 #### Manual
 
-- [ ] 3.5 Parse oracle flips red if a retry signal leaks into the error response (gap-closing signal)
-- [ ] 3.6 Game-plan oracle flips red if the disclaimer event is moved after the LLM call or dropped
+- [x] 3.5 Parse oracle flips red if a retry signal leaks into the error response (gap-closing signal)
+- [x] 3.6 Game-plan oracle flips red if the disclaimer event is moved after the LLM call or dropped
