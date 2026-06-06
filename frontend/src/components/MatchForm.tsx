@@ -1,5 +1,5 @@
 import type { AxiosError } from 'axios'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { ApiError } from '../api/auth'
 import type { CreateOrUpdateMatchRequest, SetScoreRequest } from '../api/matches'
 
@@ -8,6 +8,13 @@ export const today = () => new Date().toISOString().split('T')[0]
 export interface SetRow {
   playerScore: string
   opponentScore: string
+}
+
+// Internal row shape: a stable client-side id so React keys survive add/remove of
+// rows. The positional index is still used for labels ("Set 1") and for matching
+// server-side field errors (keyed by position, e.g. "sets[0].playerScore").
+interface SetRowState extends SetRow {
+  id: string
 }
 
 export interface MatchFormInitial {
@@ -178,18 +185,21 @@ const s: Record<string, React.CSSProperties> = {
 }
 
 export default function MatchForm({ initial, onSubmit, submitLabel }: Props) {
+  const nextSetId = useRef(0)
+  const makeSet = (row: SetRow): SetRowState => ({ ...row, id: String(nextSetId.current++) })
+
   const [opponentName, setOpponentName] = useState(initial?.opponentName ?? '')
   const [matchDate, setMatchDate] = useState(initial?.matchDate ?? today())
   const [notes, setNotes] = useState(initial?.notes ?? '')
-  const [sets, setSets] = useState<SetRow[]>(
-    initial?.sets ?? [{ playerScore: '', opponentScore: '' }],
+  const [sets, setSets] = useState<SetRowState[]>(() =>
+    (initial?.sets ?? [{ playerScore: '', opponentScore: '' }]).map(makeSet),
   )
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [globalError, setGlobalError] = useState('')
   const [busy, setBusy] = useState(false)
 
   const addSet = () => {
-    if (sets.length < 5) setSets(prev => [...prev, { playerScore: '', opponentScore: '' }])
+    if (sets.length < 5) setSets(prev => [...prev, makeSet({ playerScore: '', opponentScore: '' })])
   }
   const removeSet = (i: number) => {
     if (sets.length > 1) setSets(prev => prev.filter((_, idx) => idx !== i))
@@ -305,7 +315,7 @@ export default function MatchForm({ initial, onSubmit, submitLabel }: Props) {
           <h2 style={s.sectionHeading}>Set scores</h2>
 
           {sets.map((set, i) => (
-            <div key={i} style={s.setRow}>
+            <div key={set.id} style={s.setRow}>
               <span style={s.setLabel}>Set {i + 1}</span>
               <input
                 style={{
