@@ -1,10 +1,10 @@
 ---
 change_id: llm-client
 title: Provider-agnostic LLM client
-status: implemented
+status: archived
 created: 2026-06-03
-updated: 2026-06-03
-archived_at: null
+updated: 2026-06-06
+archived_at: 2026-06-06T15:13:54Z
 ---
 
 ## Notes
