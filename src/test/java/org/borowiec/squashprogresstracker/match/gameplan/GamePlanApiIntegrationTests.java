@@ -1,6 +1,7 @@
 package org.borowiec.squashprogresstracker.match.gameplan;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
@@ -12,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.function.Consumer;
 import org.borowiec.squashprogresstracker.llm.AiDisclaimer;
 import org.borowiec.squashprogresstracker.llm.client.LlmClient;
@@ -128,10 +130,15 @@ class GamePlanApiIntegrationTests {
                         .session(session))
                 .andExpect(request().asyncStarted())
                 .andReturn();
-        mockMvc.perform(asyncDispatch(result));
+
+        // asyncDispatch races with the virtual thread on MockHttpServletResponse's
+        // non-thread-safe header map (ConcurrentModificationException) when
+        // generateStreaming throws immediately. Poll the response instead.
+        await().atMost(Duration.ofSeconds(5))
+                .untilAsserted(() ->
+                        assertThat(result.getResponse().getContentAsString()).contains("event:error"));
 
         var body = result.getResponse().getContentAsString();
-        assertThat(body).contains("event:error");
         assertThat(body).doesNotContain("event:token");
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
     }
