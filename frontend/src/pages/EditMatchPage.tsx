@@ -76,16 +76,16 @@ export default function EditMatchPage() {
                 ← Back to history
               </Link>
             </div>
-          ) : (
+          ) : initial ? (
             <MatchForm
-              initial={initial!}
+              initial={initial}
               submitLabel="Update match"
               onSubmit={async payload => {
                 await updateMatch(Number(id), payload)
                 navigate('/history')
               }}
             />
-          )}
+          ) : null}
         </div>
       </main>
     </div>

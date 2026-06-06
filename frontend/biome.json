@@ -11,13 +11,7 @@
     "enabled": true,
     "domains": { "react": "recommended" },
     "rules": {
-      "recommended": true,
-      "style": {
-        "noNonNullAssertion": "warn"
-      },
-      "suspicious": {
-        "noArrayIndexKey": "warn"
-      }
+      "recommended": true
     }
   },
   "javascript": {
