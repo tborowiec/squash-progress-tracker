@@ -112,6 +112,15 @@ class OpenAiCompatLlmClientTests {
     }
 
     @Test
+    void generate_http503_throwsLlmExceptionWithProviderStatus503() {
+        mockServer.expect(requestTo(COMPLETIONS_URL)).andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE));
+
+        assertThatThrownBy(() -> client.generate(LlmRequest.ofUser("test")))
+                .isInstanceOf(LlmException.class)
+                .satisfies(e -> assertThat(((LlmException) e).providerStatus()).isEqualTo(503));
+    }
+
+    @Test
     void generate_emptyChoices_throwsLlmException() {
         mockServer
                 .expect(requestTo(COMPLETIONS_URL))

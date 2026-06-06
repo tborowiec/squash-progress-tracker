@@ -359,13 +359,13 @@ None — tests only, no schema or data changes.
 
 #### Automated
 
-- [ ] 1.1 New 503 test passes: `./mvnw test -Dtest=OpenAiCompatLlmClientTests`
-- [ ] 1.2 Existing timeout-mapping test still present and green
-- [ ] 1.3 Formatting/lint clean: `./mvnw spotless:check`
+- [x] 1.1 New 503 test passes: `./mvnw test -Dtest=OpenAiCompatLlmClientTests`
+- [x] 1.2 Existing timeout-mapping test still present and green
+- [x] 1.3 Formatting/lint clean: `./mvnw spotless:check`
 
 #### Manual
 
-- [ ] 1.4 503 test goes red if the client stops capturing providerStatus
+- [x] 1.4 503 test goes red if the client stops capturing providerStatus
 
 ### Phase 2: Real wall-clock timeout test (new infra)
 
