@@ -385,12 +385,12 @@ None — tests only, no schema or data changes.
 
 #### Automated
 
-- [x] 3.1 Parse oracle passes: `./mvnw test -Dtest=MatchParseApiIntegrationTests`
-- [x] 3.2 Game-plan oracle passes: `./mvnw test -Dtest=GamePlanApiIntegrationTests`
-- [x] 3.3 Full suite green: `./mvnw test`
-- [x] 3.4 Formatting clean: `./mvnw spotless:check`
+- [x] 3.1 Parse oracle passes: `./mvnw test -Dtest=MatchParseApiIntegrationTests` — d8b1200
+- [x] 3.2 Game-plan oracle passes: `./mvnw test -Dtest=GamePlanApiIntegrationTests` — d8b1200
+- [x] 3.3 Full suite green: `./mvnw test` — d8b1200
+- [x] 3.4 Formatting clean: `./mvnw spotless:check` — d8b1200
 
 #### Manual
 
-- [x] 3.5 Parse oracle flips red if a retry signal leaks into the error response (gap-closing signal)
-- [x] 3.6 Game-plan oracle flips red if the disclaimer event is moved after the LLM call or dropped
+- [x] 3.5 Parse oracle flips red if a retry signal leaks into the error response (gap-closing signal) — d8b1200
+- [x] 3.6 Game-plan oracle flips red if the disclaimer event is moved after the LLM call or dropped — d8b1200
