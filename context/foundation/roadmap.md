@@ -3,7 +3,7 @@ project: "Squash Progress Tracker"
 version: 1
 status: draft
 created: 2026-05-30
-updated: 2026-05-30
+updated: 2026-06-06
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -29,12 +29,12 @@ Competitive squash players have no tool that turns match history into a pre-matc
 
 | ID    | Change ID                  | Outcome (user can …)                                                       | Prerequisites    | PRD refs                       | Status   |
 | ----- | -------------------------- | --------------------------------------------------------------------------- | ---------------- | ------------------------------ | -------- |
-| F-01  | minimal-auth               | (foundation) email+password auth, gated routes, per-player ownership boundary | —              | FR-001, FR-002                 | ready    |
-| F-02  | llm-client                 | (foundation) provider-agnostic LLM client + progress/labelling plumbing     | —                | NFR (progress, <5s parse)      | proposed |
-| S-01  | manual-match-and-history   | log a match via a structured form and view/filter history by opponent       | F-01             | FR-006, FR-007                 | proposed |
-| S-02  | ai-game-plan               | select an opponent and get an AI-generated game plan (north star)           | F-01, S-01, F-02 | FR-010, US-02                  | proposed |
-| S-03  | ai-match-entry             | log a match by typing free text, review the AI preview, confirm or reject   | F-01, S-01, F-02 | FR-003, FR-004, FR-005, US-01  | proposed |
-| S-04  | edit-delete-match          | edit or delete a saved match record                                         | F-01, S-01       | FR-008, FR-009                 | proposed |
+| F-01  | minimal-auth               | (foundation) email+password auth, gated routes, per-player ownership boundary | —              | FR-001, FR-002                 | done     |
+| F-02  | llm-client                 | (foundation) provider-agnostic LLM client + progress/labelling plumbing     | —                | NFR (progress, <5s parse)      | done     |
+| S-01  | manual-match-and-history   | log a match via a structured form and view/filter history by opponent       | F-01             | FR-006, FR-007                 | done     |
+| S-02  | ai-game-plan               | select an opponent and get an AI-generated game plan (north star)           | F-01, S-01, F-02 | FR-010, US-02                  | done     |
+| S-03  | ai-match-entry             | log a match by typing free text, review the AI preview, confirm or reject   | F-01, S-01, F-02 | FR-003, FR-004, FR-005, US-01  | done     |
+| S-04  | edit-delete-match          | edit or delete a saved match record                                         | F-01, S-01       | FR-008, FR-009                 | done     |
 
 ## Streams
 
@@ -72,7 +72,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** The auth + ownership boundary is the hard privacy guardrail. Sequenced first so every later slice inherits a correct per-player boundary instead of retrofitting one — a retrofit is the classic cross-tenant leak. Scope is deliberately minimal: it establishes the boundary and migration tooling only, not the match domain.
-- **Status:** ready
+- **Status:** done
 
 ### F-02: Provider-agnostic LLM client
 
@@ -85,7 +85,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** resolved — LLM provider chosen (Google Gemini `gemini-2.5-flash` via OpenAI-compat endpoint; research 2026-06-03 / issue #2). F-02 is implemented; the client is provider-agnostic behind `LLM_API_KEY` / `LLM_BASE_URL`.
 - **Unknowns:** —
 - **Risk:** Both AI must-haves (FR-003, FR-010) share one client. Building it once as a thin enabler avoids duplicating provider wiring and the progress/labelling plumbing across two slices. Risk if built too eagerly: over-design ahead of a real caller — keep it minimal and let S-02 shape it.
-- **Status:** proposed
+- **Status:** done
 
 ## Slices
 
@@ -99,7 +99,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** First user-visible vertical. Introduces the match entity, exercises the data layer through real create + read, and brings up the first rendered UI. Sequenced before the AI slices so the north star has real match data to reason over without depending on the undecided LLM provider. Under the speed goal, the manual form is the cheapest path to saved data.
-- **Status:** proposed
+- **Status:** done
 
 ### S-02: AI game plan for an opponent (north star)
 
@@ -112,7 +112,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Thin data (a single match) may yield generic advice — is that acceptable for launch, or does the slice need a minimum-matches threshold? — Owner: user. Block: no. (PRD resolves this toward labelling-not-suppression; flagged so /10x-plan confirms.)
 - **Risk:** The north star — the validation milestone for the core hypothesis (AI advice over a player's own history beats a spreadsheet). Placed as early as its prerequisites allow. Thin-data advice is mitigated by the PRD's advice-labelling guardrail, not by suppressing output.
-- **Status:** proposed
+- **Status:** done
 
 ### S-03: AI text-entry match logging
 
@@ -124,7 +124,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** none — LLM provider resolved (Gemini via OpenAI-compat, see F-02).
 - **Unknowns:** —
 - **Risk:** Delivers the frictionless-recording path the secondary success criteria target (≥75% AI entry, ≥90% parse accuracy). Reuses S-01's match entity and history. The confirm/edit step is the guardrail against silent mis-save. Sequenced after the north star because, under the speed goal, the value hypothesis (game plan) is validated first; AI entry then reduces friction on an already-proven loop.
-- **Status:** proposed
+- **Status:** done
 
 ### S-04: Edit & delete a saved match
 
@@ -136,7 +136,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Data hygiene on existing records; lowest validation value, so sequenced last under the speed goal. Independent of the AI slices, so a separate agent run can build it in parallel with S-02/S-03.
-- **Status:** proposed
+- **Status:** done
 
 ## Backlog Handoff
 
@@ -165,3 +165,10 @@ This table is the clean handoff to Jira/Linear or any MCP-backed backlog. One ro
 ## Done
 
 (Empty on first generation. `/10x-archive` appends entries here — and flips the matching item's `Status` to `done` — when a change whose `Change ID` matches a roadmap item is archived. Do NOT pre-populate.)
+
+- **F-01: (foundation) email+password registration, sign-in, and sign-out are wired via Spring Security; unauthenticated requests to gated routes redirect to sign-in; a per-player ownership boundary is established, along with the persistence + migration tooling needed to enforce it (the account table is the first migration). No match features yet.** — Archived 2026-06-06 → `context/archive/2026-05-30-minimal-auth/`. Lesson: —.
+- **F-02: (foundation) a thin, provider-agnostic LLM client is wired behind an abstraction (placeholder `LLM_API_KEY`), with the visible-progress plumbing and the "AI-generated advice" labelling convention that both AI features will reuse. Minimal — just enough for the first AI slice to call.** — Archived 2026-06-06 → `context/archive/2026-06-03-llm-client/`. Lesson: —.
+- **S-01: user can log a match via a structured form and view their match history, filtered by opponent.** — Archived 2026-06-06 → `context/archive/2026-05-31-manual-match-and-history/`. Lesson: —.
+- **S-02: user can select an opponent from their history and receive an AI-generated game plan for the next match, clearly labelled as AI-generated advice.** — Archived 2026-06-06 → `context/archive/2026-06-04-ai-game-plan/`. Lesson: —.
+- **S-03: user can log a match by typing a natural-language description; the AI returns a structured preview the user can edit, then confirm to save or reject to discard.** — Archived 2026-06-06 → `context/archive/2026-06-04-ai-match-entry/`. Lesson: —.
+- **S-04: user can edit a saved match record (e.g. fix a score typo) or delete it.** — Archived 2026-06-06 → `context/archive/2026-06-04-edit-delete-match/`. Lesson: —.
