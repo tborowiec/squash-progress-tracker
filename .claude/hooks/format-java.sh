@@ -34,7 +34,11 @@ before="$(sha256sum "$FILE" | cut -d' ' -f1)"
 
 # --palantir = 4-space Palantir style; --replace edits in place.
 # Default behaviour already sorts imports and removes unused ones.
-if ! "$FORMATTER" --palantir --replace "$FILE" 2>/tmp/format-java.err; then
+# --skip-reflowing-long-strings: the native CLI reflows over-long string literals
+# into "+"-concatenated pieces, but the Spotless palantirJavaFormat step (the
+# commit-gate source of truth) does not. Skipping it keeps the two in parity, e.g.
+# on long @Query strings.
+if ! "$FORMATTER" --palantir --skip-reflowing-long-strings --replace "$FILE" 2>/tmp/format-java.err; then
   echo "format-java hook: could not format $FILE (likely a syntax error mid-edit); skipping." >&2
   cat /tmp/format-java.err >&2 || true
   exit 0
