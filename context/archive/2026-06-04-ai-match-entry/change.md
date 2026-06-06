@@ -1,10 +1,10 @@
 ---
 change_id: ai-match-entry
 title: AI match entry
-status: implemented
+status: archived
 created: 2026-06-04
-updated: 2026-06-04
-archived_at: null
+updated: 2026-06-06
+archived_at: 2026-06-06T15:13:54Z
 ---
 
 ## Notes
