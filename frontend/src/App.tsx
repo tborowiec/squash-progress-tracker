@@ -1,13 +1,13 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { AuthProvider } from './contexts/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
-import LoginPage from './pages/LoginPage'
-import RegisterPage from './pages/RegisterPage'
-import HomePage from './pages/HomePage'
-import LogMatchPage from './pages/LogMatchPage'
+import { AuthProvider } from './contexts/AuthContext'
 import EditMatchPage from './pages/EditMatchPage'
-import HistoryPage from './pages/HistoryPage'
 import GamePlanPage from './pages/GamePlanPage'
+import HistoryPage from './pages/HistoryPage'
+import HomePage from './pages/HomePage'
+import LoginPage from './pages/LoginPage'
+import LogMatchPage from './pages/LogMatchPage'
+import RegisterPage from './pages/RegisterPage'
 
 export default function App() {
   return (

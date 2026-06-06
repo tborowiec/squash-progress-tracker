@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
 import NavHeader from '../components/NavHeader'
+import { useAuth } from '../contexts/AuthContext'
 
 const s: Record<string, React.CSSProperties> = {
   page: {
@@ -73,7 +73,13 @@ export default function HomePage() {
 
   return (
     <div style={s.page}>
-      <NavHeader links={[{ label: 'History', to: '/history' }, { label: 'Game plan', to: '/game-plan' }, { label: 'Log match', to: '/matches/new' }]} />
+      <NavHeader
+        links={[
+          { label: 'History', to: '/history' },
+          { label: 'Game plan', to: '/game-plan' },
+          { label: 'Log match', to: '/matches/new' },
+        ]}
+      />
 
       <main style={s.main}>
         <div style={s.welcome}>
@@ -82,13 +88,13 @@ export default function HomePage() {
         </div>
 
         <div style={s.actions}>
-          <button style={s.primaryBtn} onClick={() => navigate('/matches/new')}>
+          <button type="button" style={s.primaryBtn} onClick={() => navigate('/matches/new')}>
             Log match
           </button>
-          <button style={s.secondaryBtn} onClick={() => navigate('/history')}>
+          <button type="button" style={s.secondaryBtn} onClick={() => navigate('/history')}>
             Match history
           </button>
-          <button style={s.secondaryBtn} onClick={() => navigate('/game-plan')}>
+          <button type="button" style={s.secondaryBtn} onClick={() => navigate('/game-plan')}>
             Game plan
           </button>
         </div>

@@ -1,8 +1,8 @@
+import type { AxiosError } from 'axios'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { login, ApiError } from '../api/auth'
+import { type ApiError, login } from '../api/auth'
 import { useAuth } from '../contexts/AuthContext'
-import { AxiosError } from 'axios'
 
 const s: Record<string, React.CSSProperties> = {
   page: {
@@ -123,7 +123,9 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit}>
           <div style={s.field}>
-            <label style={s.label} htmlFor="email">Email</label>
+            <label style={s.label} htmlFor="email">
+              Email
+            </label>
             <input
               id="email"
               style={s.input}
@@ -135,7 +137,9 @@ export default function LoginPage() {
             />
           </div>
           <div style={s.field}>
-            <label style={s.label} htmlFor="password">Password</label>
+            <label style={s.label} htmlFor="password">
+              Password
+            </label>
             <input
               id="password"
               style={s.input}
@@ -146,11 +150,7 @@ export default function LoginPage() {
               required
             />
           </div>
-          <button
-            style={{ ...s.btn, opacity: busy ? 0.7 : 1 }}
-            type="submit"
-            disabled={busy}
-          >
+          <button style={{ ...s.btn, opacity: busy ? 0.7 : 1 }} type="submit" disabled={busy}>
             {busy ? 'Signing in…' : 'Sign in'}
           </button>
         </form>

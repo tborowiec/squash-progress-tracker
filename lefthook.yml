@@ -12,3 +12,24 @@ pre-commit:
       glob: "*.java"
       run: .tools/spotless-staged.sh {staged_files}
       fail_text: "Java formatting violations on staged files. Run: ./mvnw spotless:apply  then git add the files and commit again."
+
+    # Frontend formatting + lint gate. Safety net for edits that bypassed the
+    # per-edit Claude Code hook (.claude/hooks/format-frontend.sh). `root: frontend/`
+    # runs in that dir and passes {staged_files} relative to it, so Biome discovers
+    # frontend/biome.json. Blocks on formatting violations and lint errors (advisory
+    # warnings do not block). Source of truth is the same biome.json the per-edit
+    # hook uses, so the two never disagree.
+    biome-check:
+      root: "frontend/"
+      glob: "*.{ts,tsx,js,jsx,mjs,cjs,css,json,jsonc}"
+      run: node_modules/.bin/biome check {staged_files}
+      fail_text: "Frontend lint/format violations on staged files. Run: cd frontend && npm run format  then git add the files and commit again (unfixable lint errors must be fixed by hand)."
+
+    # TypeScript typecheck. Whole-project (tsc needs the full module graph, not just
+    # changed files), so it ignores {staged_files} and runs on the whole project —
+    # the glob only decides *whether* it runs (when a .ts/.tsx file is staged).
+    frontend-typecheck:
+      root: "frontend/"
+      glob: "*.{ts,tsx}"
+      run: node_modules/.bin/tsc --noEmit -p tsconfig.json
+      fail_text: "TypeScript type errors. Fix them, or run: cd frontend && npm run typecheck  to see the full list."

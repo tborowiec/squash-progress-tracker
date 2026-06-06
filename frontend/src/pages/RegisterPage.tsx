@@ -1,7 +1,7 @@
+import type { AxiosError } from 'axios'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { register, ApiError } from '../api/auth'
-import { AxiosError } from 'axios'
+import { type ApiError, register } from '../api/auth'
 
 const s: Record<string, React.CSSProperties> = {
   page: {
@@ -131,7 +131,9 @@ export default function RegisterPage() {
 
         <form onSubmit={handleSubmit}>
           <div style={s.field}>
-            <label style={s.label} htmlFor="email">Email</label>
+            <label style={s.label} htmlFor="email">
+              Email
+            </label>
             <input
               id="email"
               style={{
@@ -147,7 +149,9 @@ export default function RegisterPage() {
             {fieldErrors.email && <p style={s.fieldError}>{fieldErrors.email}</p>}
           </div>
           <div style={s.field}>
-            <label style={s.label} htmlFor="password">Password</label>
+            <label style={s.label} htmlFor="password">
+              Password
+            </label>
             <input
               id="password"
               style={{
@@ -162,11 +166,7 @@ export default function RegisterPage() {
             />
             {fieldErrors.password && <p style={s.fieldError}>{fieldErrors.password}</p>}
           </div>
-          <button
-            style={{ ...s.btn, opacity: busy ? 0.7 : 1 }}
-            type="submit"
-            disabled={busy}
-          >
+          <button style={{ ...s.btn, opacity: busy ? 0.7 : 1 }} type="submit" disabled={busy}>
             {busy ? 'Creating account…' : 'Create account'}
           </button>
         </form>
