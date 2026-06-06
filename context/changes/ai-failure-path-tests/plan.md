@@ -359,27 +359,27 @@ None — tests only, no schema or data changes.
 
 #### Automated
 
-- [x] 1.1 New 503 test passes: `./mvnw test -Dtest=OpenAiCompatLlmClientTests`
-- [x] 1.2 Existing timeout-mapping test still present and green
-- [x] 1.3 Formatting/lint clean: `./mvnw spotless:check`
+- [x] 1.1 New 503 test passes: `./mvnw test -Dtest=OpenAiCompatLlmClientTests` — b8fab4c
+- [x] 1.2 Existing timeout-mapping test still present and green — b8fab4c
+- [x] 1.3 Formatting/lint clean: `./mvnw spotless:check` — b8fab4c
 
 #### Manual
 
-- [x] 1.4 503 test goes red if the client stops capturing providerStatus
+- [x] 1.4 503 test goes red if the client stops capturing providerStatus — b8fab4c
 
 ### Phase 2: Real wall-clock timeout test (new infra)
 
 #### Automated
 
-- [ ] 2.1 New timeout test passes: `./mvnw test -Dtest=OpenAiCompatLlmClientTimeoutTests`
-- [ ] 2.2 Full suite still green: `./mvnw test`
-- [ ] 2.3 `mvnw` resolves `mockwebserver:4.12.0` with no version-management error
-- [ ] 2.4 Formatting clean: `./mvnw spotless:check`
+- [x] 2.1 New timeout test passes: `./mvnw test -Dtest=OpenAiCompatLlmClientTimeoutTests`
+- [x] 2.2 Full suite still green: `./mvnw test`
+- [x] 2.3 `mvnw` resolves `mockwebserver:4.12.0` with no version-management error
+- [x] 2.4 Formatting clean: `./mvnw spotless:check`
 
 #### Manual
 
-- [ ] 2.5 Test hangs/fails if `props.timeout()` is raised above body delay (confirms configured timeout exercised)
-- [ ] 2.6 `change.md` note accurately reflects the added dependency
+- [x] 2.5 Test hangs/fails if `props.timeout()` is raised above body delay (confirms configured timeout exercised)
+- [x] 2.6 `change.md` note accurately reflects the added dependency
 
 ### Phase 3: API-layer failure oracles
 

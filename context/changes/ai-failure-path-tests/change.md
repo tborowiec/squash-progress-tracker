@@ -18,7 +18,7 @@ success, no infinite spin — and that AI advice-labelling holds.
   shown identically to a permanent failure; player abandons an action that would
   have worked).
 - Test types: **unit + integration** (stub the transport to return `503`/slow).
-- Layer: backend, reusing the existing suite — no new infra.
+- Layer: backend, reusing the existing suite — one deliberate new infra exception: `com.squareup.okhttp3:mockwebserver:5.3.2` (test scope only) to exercise the real configured read timeout via a localhost delayed-response server.
 - Provider under test: Gemini `gemini-2.5-flash` via OpenAI-compat endpoint
   (`OpenAiCompatLlmClient`), `timeout 30s` vs the `<5s` parse NFR.
 - Risk Response Guidance (§2): a `503`/timeout maps to a clean, retryable-signalled
