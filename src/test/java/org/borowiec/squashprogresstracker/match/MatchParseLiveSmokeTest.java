@@ -1,5 +1,10 @@
 package org.borowiec.squashprogresstracker.match;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.Duration;
+import java.time.LocalDate;
+import java.util.List;
 import org.borowiec.squashprogresstracker.llm.client.LlmClientConfig;
 import org.borowiec.squashprogresstracker.llm.client.LlmClientProperties;
 import org.borowiec.squashprogresstracker.llm.client.OpenAiCompatLlmClient;
@@ -7,12 +12,6 @@ import org.borowiec.squashprogresstracker.match.dto.MatchParseResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import tools.jackson.databind.ObjectMapper;
-
-import java.time.Duration;
-import java.time.LocalDate;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Live parse smoke test — requires a real LLM_API_KEY. Auto-skips in CI.
@@ -43,8 +42,7 @@ class MatchParseLiveSmokeTest {
                 env.getOrDefault("LLM_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai"),
                 env.getOrDefault("LLM_MODEL", "gemini-2.5-flash-lite"),
                 env.getOrDefault("LLM_STRUCTURED_MODEL", ""),
-                Duration.ofSeconds(30)
-        );
+                Duration.ofSeconds(30));
         return new OpenAiCompatLlmClient(new LlmClientConfig().llmRestClient(props), props, new ObjectMapper());
     }
 }

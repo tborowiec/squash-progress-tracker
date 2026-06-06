@@ -1,5 +1,10 @@
 package org.borowiec.squashprogresstracker.user;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,14 +13,9 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,9 +33,12 @@ class AuthIntegrationTests {
 
     @Test
     void registerReturns201AndUserBody() throws Exception {
-        mockMvc.perform(post("/api/auth/register")
-                        .with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/auth/register")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"email":"alice@example.com","password":"password1"}
                                 """))
                 .andExpect(status().isCreated())
@@ -50,19 +53,26 @@ class AuthIntegrationTests {
                 {"email":"bob@example.com","password":"password1"}
                 """;
         mockMvc.perform(post("/api/auth/register")
-                        .with(csrf()).contentType(MediaType.APPLICATION_JSON).content(body))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
                 .andExpect(status().isCreated());
         mockMvc.perform(post("/api/auth/register")
-                        .with(csrf()).contentType(MediaType.APPLICATION_JSON).content(body))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.status").value(409));
     }
 
     @Test
     void registerWithInvalidEmailReturns400() throws Exception {
-        mockMvc.perform(post("/api/auth/register")
-                        .with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/auth/register")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"email":"not-an-email","password":"password1"}
                                 """))
                 .andExpect(status().isBadRequest())
@@ -71,9 +81,12 @@ class AuthIntegrationTests {
 
     @Test
     void registerWithShortPasswordReturns400() throws Exception {
-        mockMvc.perform(post("/api/auth/register")
-                        .with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/auth/register")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"email":"carol@example.com","password":"short"}
                                 """))
                 .andExpect(status().isBadRequest())
@@ -84,16 +97,22 @@ class AuthIntegrationTests {
 
     @Test
     void loginGoodCredentialsReturns200AndSession() throws Exception {
-        mockMvc.perform(post("/api/auth/register")
-                        .with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/auth/register")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"email":"dave@example.com","password":"password1"}
                                 """))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(post("/api/auth/login")
-                        .with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/auth/login")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"email":"dave@example.com","password":"password1"}
                                 """))
                 .andExpect(status().isOk())
@@ -104,9 +123,12 @@ class AuthIntegrationTests {
 
     @Test
     void loginBadCredentialsReturns401() throws Exception {
-        mockMvc.perform(post("/api/auth/login")
-                        .with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/auth/login")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"email":"nobody@example.com","password":"wrongpass"}
                                 """))
                 .andExpect(status().isUnauthorized());
@@ -116,20 +138,28 @@ class AuthIntegrationTests {
 
     @Test
     void meWithSessionReturns200AndCorrectIdentity() throws Exception {
-        mockMvc.perform(post("/api/auth/register")
-                        .with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/auth/register")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"email":"eve@example.com","password":"password1"}
                                 """))
                 .andExpect(status().isCreated());
 
-        var session = (MockHttpSession) mockMvc.perform(post("/api/auth/login")
-                        .with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        var session = (MockHttpSession) mockMvc.perform(
+                        post("/api/auth/login")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"email":"eve@example.com","password":"password1"}
                                 """))
                 .andExpect(status().isOk())
-                .andReturn().getRequest().getSession(false);
+                .andReturn()
+                .getRequest()
+                .getSession(false);
 
         mockMvc.perform(get("/api/auth/me").session(session))
                 .andExpect(status().isOk())
@@ -138,33 +168,38 @@ class AuthIntegrationTests {
 
     @Test
     void meWithoutSessionReturns401() throws Exception {
-        mockMvc.perform(get("/api/auth/me"))
-                .andExpect(status().isUnauthorized());
+        mockMvc.perform(get("/api/auth/me")).andExpect(status().isUnauthorized());
     }
 
     // ── logout ───────────────────────────────────────────────────────────────
 
     @Test
     void logoutThenMeReturns401() throws Exception {
-        mockMvc.perform(post("/api/auth/register")
-                        .with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/auth/register")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"email":"frank@example.com","password":"password1"}
                                 """))
                 .andExpect(status().isCreated());
 
-        var session = (MockHttpSession) mockMvc.perform(post("/api/auth/login")
-                        .with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        var session = (MockHttpSession) mockMvc.perform(
+                        post("/api/auth/login")
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"email":"frank@example.com","password":"password1"}
                                 """))
                 .andExpect(status().isOk())
-                .andReturn().getRequest().getSession(false);
+                .andReturn()
+                .getRequest()
+                .getSession(false);
 
-        mockMvc.perform(post("/api/auth/logout").with(csrf()).session(session))
-                .andExpect(status().isNoContent());
+        mockMvc.perform(post("/api/auth/logout").with(csrf()).session(session)).andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/api/auth/me").session(session))
-                .andExpect(status().isUnauthorized());
+        mockMvc.perform(get("/api/auth/me").session(session)).andExpect(status().isUnauthorized());
     }
 }

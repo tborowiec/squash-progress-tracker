@@ -1,12 +1,11 @@
 package org.borowiec.squashprogresstracker.match.gameplan;
 
+import java.util.function.Consumer;
 import org.borowiec.squashprogresstracker.llm.client.LlmClient;
 import org.borowiec.squashprogresstracker.match.MatchRepository;
 import org.borowiec.squashprogresstracker.security.CurrentUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.function.Consumer;
 
 @Service
 public class GamePlanService {
@@ -16,8 +15,11 @@ public class GamePlanService {
     private final LlmClient llmClient;
     private final GamePlanPromptBuilder promptBuilder;
 
-    public GamePlanService(MatchRepository matchRepository, CurrentUser currentUser,
-                           LlmClient llmClient, GamePlanPromptBuilder promptBuilder) {
+    public GamePlanService(
+            MatchRepository matchRepository,
+            CurrentUser currentUser,
+            LlmClient llmClient,
+            GamePlanPromptBuilder promptBuilder) {
         this.matchRepository = matchRepository;
         this.currentUser = currentUser;
         this.llmClient = llmClient;
@@ -32,8 +34,8 @@ public class GamePlanService {
     @Transactional(readOnly = true)
     public GamePlanContext prepare(String opponentName) {
         var userId = currentUser.currentUserId();
-        var matches = matchRepository
-                .findByUserIdAndOpponentNameIgnoreCaseOrderByMatchDateDescIdDesc(userId, opponentName);
+        var matches =
+                matchRepository.findByUserIdAndOpponentNameIgnoreCaseOrderByMatchDateDescIdDesc(userId, opponentName);
         if (matches.isEmpty()) {
             throw new GamePlanUnavailableException(opponentName);
         }

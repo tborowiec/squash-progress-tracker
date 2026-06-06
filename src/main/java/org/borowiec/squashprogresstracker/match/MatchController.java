@@ -1,14 +1,13 @@
 package org.borowiec.squashprogresstracker.match;
 
 import jakarta.validation.Valid;
+import java.util.List;
 import org.borowiec.squashprogresstracker.match.dto.CreateOrUpdateMatchRequest;
 import org.borowiec.squashprogresstracker.match.dto.MatchParseResult;
 import org.borowiec.squashprogresstracker.match.dto.MatchResponse;
 import org.borowiec.squashprogresstracker.match.dto.ParseMatchRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/matches")

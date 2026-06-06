@@ -1,20 +1,21 @@
 package org.borowiec.squashprogresstracker.llm.client;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JsonSchemaFactoryTests {
 
     private final JsonSchemaFactory factory = new JsonSchemaFactory(new ObjectMapper());
 
     record FlatRecord(String name, int score, boolean active) {}
+
     record NestedRecord(String label, FlatRecord details) {}
+
     record ListRecord(String title, List<String> tags) {}
 
     @Test
@@ -25,9 +26,11 @@ class JsonSchemaFactoryTests {
         assertThat(schema.path("properties").has("name")).isTrue();
         assertThat(schema.path("properties").path("name").path("type").asText()).isEqualTo("string");
         assertThat(schema.path("properties").has("score")).isTrue();
-        assertThat(schema.path("properties").path("score").path("type").asText()).isEqualTo("integer");
+        assertThat(schema.path("properties").path("score").path("type").asText())
+                .isEqualTo("integer");
         assertThat(schema.path("properties").has("active")).isTrue();
-        assertThat(schema.path("properties").path("active").path("type").asText()).isEqualTo("boolean");
+        assertThat(schema.path("properties").path("active").path("type").asText())
+                .isEqualTo("boolean");
         assertThat(schema.path("required").isArray()).isTrue();
         assertThat(schema.path("required")).hasSize(3);
     }

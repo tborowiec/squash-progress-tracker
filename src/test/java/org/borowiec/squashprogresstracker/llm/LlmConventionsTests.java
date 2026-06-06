@@ -1,11 +1,11 @@
 package org.borowiec.squashprogresstracker.llm;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.borowiec.squashprogresstracker.llm.dto.LlmMessage;
 import org.borowiec.squashprogresstracker.llm.dto.LlmRequest;
 import org.borowiec.squashprogresstracker.llm.dto.LlmRole;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class LlmConventionsTests {
 

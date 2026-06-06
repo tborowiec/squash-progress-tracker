@@ -1,5 +1,6 @@
 package org.borowiec.squashprogresstracker.match.gameplan;
 
+import java.io.IOException;
 import org.borowiec.squashprogresstracker.llm.AiDisclaimer;
 import org.borowiec.squashprogresstracker.llm.client.LlmException;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import tools.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/game-plans")
@@ -31,14 +30,16 @@ public class GamePlanController {
 
         Thread.ofVirtual().start(() -> {
             try {
-                emitter.send(SseEmitter.event().name("meta").data(
-                        objectMapper.writeValueAsString(new MetaPayload(
-                                AiDisclaimer.TEXT, context.matchCount(), context.lowData()))));
+                emitter.send(SseEmitter.event()
+                        .name("meta")
+                        .data(objectMapper.writeValueAsString(
+                                new MetaPayload(AiDisclaimer.TEXT, context.matchCount(), context.lowData()))));
 
                 service.stream(context, token -> {
                     try {
-                        emitter.send(SseEmitter.event().name("token").data(
-                                objectMapper.writeValueAsString(new TokenPayload(token))));
+                        emitter.send(SseEmitter.event()
+                                .name("token")
+                                .data(objectMapper.writeValueAsString(new TokenPayload(token))));
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -58,8 +59,8 @@ public class GamePlanController {
 
     private void sendErrorAndComplete(SseEmitter emitter) {
         try {
-            emitter.send(SseEmitter.event().name("error")
-                    .data("{\"message\":\"AI service is temporarily unavailable\"}"));
+            emitter.send(
+                    SseEmitter.event().name("error").data("{\"message\":\"AI service is temporarily unavailable\"}"));
             emitter.complete();
         } catch (Exception ignored) {
             // Emitter may already be completed (client disconnected before error could be sent)
@@ -67,5 +68,6 @@ public class GamePlanController {
     }
 
     record MetaPayload(String disclaimer, int matchCount, boolean lowData) {}
+
     record TokenPayload(String t) {}
 }

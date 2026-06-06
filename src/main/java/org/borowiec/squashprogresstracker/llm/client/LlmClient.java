@@ -1,8 +1,7 @@
 package org.borowiec.squashprogresstracker.llm.client;
 
-import org.borowiec.squashprogresstracker.llm.dto.LlmRequest;
-
 import java.util.function.Consumer;
+import org.borowiec.squashprogresstracker.llm.dto.LlmRequest;
 
 public interface LlmClient {
 

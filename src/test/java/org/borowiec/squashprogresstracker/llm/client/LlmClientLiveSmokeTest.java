@@ -1,14 +1,13 @@
 package org.borowiec.squashprogresstracker.llm.client;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.Duration;
+import java.util.ArrayList;
 import org.borowiec.squashprogresstracker.llm.dto.LlmRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import tools.jackson.databind.ObjectMapper;
-
-import java.time.Duration;
-import java.util.ArrayList;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Manual/local smoke test — requires a real LLM_API_KEY. Auto-skips in CI.
@@ -36,10 +35,7 @@ class LlmClientLiveSmokeTest {
     @Test
     void liveGenerateStreaming_receivesIncrementalTokens() {
         var tokens = new ArrayList<String>();
-        buildClient().generateStreaming(
-                LlmRequest.ofUser("Reply with the single word: pong"),
-                tokens::add
-        );
+        buildClient().generateStreaming(LlmRequest.ofUser("Reply with the single word: pong"), tokens::add);
         assertThat(tokens).isNotEmpty();
         assertThat(String.join("", tokens)).isNotBlank();
     }
@@ -60,8 +56,7 @@ class LlmClientLiveSmokeTest {
                 env.getOrDefault("LLM_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai"),
                 env.getOrDefault("LLM_MODEL", "gemini-2.5-flash-lite"),
                 env.getOrDefault("LLM_STRUCTURED_MODEL", ""),
-                Duration.ofSeconds(30)
-        );
+                Duration.ofSeconds(30));
         return new OpenAiCompatLlmClient(new LlmClientConfig().llmRestClient(props), props, new ObjectMapper());
     }
 }

@@ -1,5 +1,6 @@
 package org.borowiec.squashprogresstracker.user;
 
+import java.util.stream.Collectors;
 import org.borowiec.squashprogresstracker.llm.client.LlmException;
 import org.borowiec.squashprogresstracker.match.MatchNotFoundException;
 import org.borowiec.squashprogresstracker.match.gameplan.GamePlanUnavailableException;
@@ -15,8 +16,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.stream.Collectors;
-
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
@@ -28,7 +27,6 @@ public class ApiExceptionHandler {
         log.warn("LLM call failed, providerStatus={}", ex.providerStatus(), ex);
         return ApiError.of(503, "AI service is temporarily unavailable");
     }
-
 
     @ExceptionHandler(GamePlanUnavailableException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -49,8 +47,7 @@ public class ApiExceptionHandler {
                 .collect(Collectors.toMap(
                         FieldError::getField,
                         fe -> fe.getDefaultMessage() != null ? fe.getDefaultMessage() : "invalid",
-                        (a, b) -> a
-                ));
+                        (a, b) -> a));
         return ApiError.ofFields(400, "Validation failed", fieldErrors);
     }
 

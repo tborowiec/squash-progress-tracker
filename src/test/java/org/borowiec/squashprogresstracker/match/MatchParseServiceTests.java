@@ -1,21 +1,5 @@
 package org.borowiec.squashprogresstracker.match;
 
-import org.borowiec.squashprogresstracker.llm.client.LlmClient;
-import org.borowiec.squashprogresstracker.llm.client.LlmException;
-import org.borowiec.squashprogresstracker.match.dto.MatchParseResult;
-import org.borowiec.squashprogresstracker.match.dto.MatchParseResult.ParsedSet;
-import org.borowiec.squashprogresstracker.security.CurrentUser;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.borowiec.squashprogresstracker.llm.dto.LlmRequest;
-import org.borowiec.squashprogresstracker.llm.dto.LlmRole;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,12 +7,32 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
+import org.borowiec.squashprogresstracker.llm.client.LlmClient;
+import org.borowiec.squashprogresstracker.llm.client.LlmException;
+import org.borowiec.squashprogresstracker.llm.dto.LlmRequest;
+import org.borowiec.squashprogresstracker.llm.dto.LlmRole;
+import org.borowiec.squashprogresstracker.match.dto.MatchParseResult;
+import org.borowiec.squashprogresstracker.match.dto.MatchParseResult.ParsedSet;
+import org.borowiec.squashprogresstracker.security.CurrentUser;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 @ExtendWith(MockitoExtension.class)
 class MatchParseServiceTests {
 
-    @Mock LlmClient llmClient;
-    @Mock MatchRepository matchRepository;
-    @Mock CurrentUser currentUser;
+    @Mock
+    LlmClient llmClient;
+
+    @Mock
+    MatchRepository matchRepository;
+
+    @Mock
+    CurrentUser currentUser;
 
     MatchParseService service;
 
@@ -42,9 +46,10 @@ class MatchParseServiceTests {
     @Test
     void parse_happyPath_returnsLlmResult() {
         var expected = new MatchParseResult(
-                "Kowalski", "2026-05-05", "struggled in the second set",
-                List.of(new ParsedSet(11, 5), new ParsedSet(6, 11), new ParsedSet(11, 2), new ParsedSet(11, 1))
-        );
+                "Kowalski",
+                "2026-05-05",
+                "struggled in the second set",
+                List.of(new ParsedSet(11, 5), new ParsedSet(6, 11), new ParsedSet(11, 2), new ParsedSet(11, 1)));
         when(llmClient.generateStructured(any(), eq(MatchParseResult.class))).thenReturn(expected);
 
         var result = service.parse("beat Kowalski 3:1 on May 5th");
@@ -76,7 +81,9 @@ class MatchParseServiceTests {
         verify(llmClient).generateStructured(captor.capture(), eq(MatchParseResult.class));
         var userMsg = captor.getValue().messages().stream()
                 .filter(m -> m.role() == LlmRole.USER)
-                .findFirst().orElseThrow().content();
+                .findFirst()
+                .orElseThrow()
+                .content();
         assertThat(userMsg).contains("Kowalski");
         // date is dynamic (LocalDate.now()), just verify it looks like an ISO date
         assertThat(userMsg).matches("(?s).*\\d{4}-\\d{2}-\\d{2}.*");

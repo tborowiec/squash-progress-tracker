@@ -1,5 +1,13 @@
 package org.borowiec.squashprogresstracker.match;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,18 +16,9 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import com.jayway.jsonpath.JsonPath;
-
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -35,27 +34,35 @@ class MatchApiIntegrationTests {
 
     private MockHttpSession registerAndLogin(String email) throws Exception {
         mockMvc.perform(post("/api/auth/register")
-                        .with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"" + email + "\",\"password\":\"password1\"}"))
                 .andExpect(status().isCreated());
         return (MockHttpSession) mockMvc.perform(post("/api/auth/login")
-                        .with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"" + email + "\",\"password\":\"password1\"}"))
                 .andExpect(status().isOk())
-                .andReturn().getRequest().getSession(false);
+                .andReturn()
+                .getRequest()
+                .getSession(false);
     }
 
     private long createMatch(MockHttpSession session, String body) throws Exception {
         var json = mockMvc.perform(post("/api/matches")
-                        .with(csrf()).session(session)
+                        .with(csrf())
+                        .session(session)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isCreated())
-                .andReturn().getResponse().getContentAsString();
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
         return ((Number) JsonPath.read(json, "$.id")).longValue();
     }
 
-    private static final String VALID_MATCH = """
+    private static final String VALID_MATCH =
+            """
             {
               "opponentName": "Kowalski",
               "matchDate": "2026-05-01",
@@ -75,7 +82,8 @@ class MatchApiIntegrationTests {
     void createMatchReturns201AndDerivedScores() throws Exception {
         var session = registerAndLogin("match_create@example.com");
         mockMvc.perform(post("/api/matches")
-                        .with(csrf()).session(session)
+                        .with(csrf())
+                        .session(session)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(VALID_MATCH))
                 .andExpect(status().isCreated())
@@ -92,10 +100,13 @@ class MatchApiIntegrationTests {
     @Test
     void blankOpponentNameReturns400() throws Exception {
         var session = registerAndLogin("match_val1@example.com");
-        mockMvc.perform(post("/api/matches")
-                        .with(csrf()).session(session)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/matches")
+                                .with(csrf())
+                                .session(session)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"opponentName":"","matchDate":"2026-05-01","sets":[{"playerScore":11,"opponentScore":5}]}
                                 """))
                 .andExpect(status().isBadRequest())
@@ -105,10 +116,13 @@ class MatchApiIntegrationTests {
     @Test
     void futureMatchDateReturns400() throws Exception {
         var session = registerAndLogin("match_val2@example.com");
-        mockMvc.perform(post("/api/matches")
-                        .with(csrf()).session(session)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/matches")
+                                .with(csrf())
+                                .session(session)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"opponentName":"X","matchDate":"2099-01-01","sets":[{"playerScore":11,"opponentScore":5}]}
                                 """))
                 .andExpect(status().isBadRequest())
@@ -118,10 +132,13 @@ class MatchApiIntegrationTests {
     @Test
     void emptySetsReturns400() throws Exception {
         var session = registerAndLogin("match_val3@example.com");
-        mockMvc.perform(post("/api/matches")
-                        .with(csrf()).session(session)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/matches")
+                                .with(csrf())
+                                .session(session)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"opponentName":"X","matchDate":"2026-05-01","sets":[]}
                                 """))
                 .andExpect(status().isBadRequest())
@@ -131,10 +148,13 @@ class MatchApiIntegrationTests {
     @Test
     void sixSetsReturns400() throws Exception {
         var session = registerAndLogin("match_val4@example.com");
-        mockMvc.perform(post("/api/matches")
-                        .with(csrf()).session(session)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/matches")
+                                .with(csrf())
+                                .session(session)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"opponentName":"X","matchDate":"2026-05-01","sets":[
                                   {"playerScore":11,"opponentScore":5},
                                   {"playerScore":11,"opponentScore":5},
@@ -151,10 +171,13 @@ class MatchApiIntegrationTests {
     @Test
     void negativeScoreReturns400() throws Exception {
         var session = registerAndLogin("match_val5@example.com");
-        mockMvc.perform(post("/api/matches")
-                        .with(csrf()).session(session)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/matches")
+                                .with(csrf())
+                                .session(session)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"opponentName":"X","matchDate":"2026-05-01","sets":[{"playerScore":-1,"opponentScore":5}]}
                                 """))
                 .andExpect(status().isBadRequest())
@@ -167,7 +190,8 @@ class MatchApiIntegrationTests {
     void playerBCannotSeePlayerAsMatches() throws Exception {
         var sessionA = registerAndLogin("match_owner_a@example.com");
         mockMvc.perform(post("/api/matches")
-                        .with(csrf()).session(sessionA)
+                        .with(csrf())
+                        .session(sessionA)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(VALID_MATCH))
                 .andExpect(status().isCreated());
@@ -184,8 +208,7 @@ class MatchApiIntegrationTests {
 
     @Test
     void anonymousGetMatchesReturns401() throws Exception {
-        mockMvc.perform(get("/api/matches"))
-                .andExpect(status().isUnauthorized());
+        mockMvc.perform(get("/api/matches")).andExpect(status().isUnauthorized());
     }
 
     // ── opponents ────────────────────────────────────────────────────────────
@@ -193,17 +216,23 @@ class MatchApiIntegrationTests {
     @Test
     void opponentsCollapsesCase() throws Exception {
         var session = registerAndLogin("match_opp@example.com");
-        mockMvc.perform(post("/api/matches")
-                        .with(csrf()).session(session)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/matches")
+                                .with(csrf())
+                                .session(session)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"opponentName":"Kowalski","matchDate":"2026-04-01","sets":[{"playerScore":11,"opponentScore":5}]}
                                 """))
                 .andExpect(status().isCreated());
-        mockMvc.perform(post("/api/matches")
-                        .with(csrf()).session(session)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/matches")
+                                .with(csrf())
+                                .session(session)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"opponentName":"kowalski","matchDate":"2026-04-02","sets":[{"playerScore":5,"opponentScore":11}]}
                                 """))
                 .andExpect(status().isCreated());
@@ -216,10 +245,13 @@ class MatchApiIntegrationTests {
     @Test
     void opponentsReturnsOnlyCallerOwned() throws Exception {
         var sessionA = registerAndLogin("match_opp_a@example.com");
-        mockMvc.perform(post("/api/matches")
-                        .with(csrf()).session(sessionA)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/matches")
+                                .with(csrf())
+                                .session(sessionA)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"opponentName":"Smith","matchDate":"2026-04-01","sets":[{"playerScore":11,"opponentScore":5}]}
                                 """))
                 .andExpect(status().isCreated());
@@ -235,17 +267,23 @@ class MatchApiIntegrationTests {
     @Test
     void listReturnsNewestFirst() throws Exception {
         var session = registerAndLogin("match_order@example.com");
-        mockMvc.perform(post("/api/matches")
-                        .with(csrf()).session(session)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/matches")
+                                .with(csrf())
+                                .session(session)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"opponentName":"Alpha","matchDate":"2026-03-01","sets":[{"playerScore":11,"opponentScore":5}]}
                                 """))
                 .andExpect(status().isCreated());
-        mockMvc.perform(post("/api/matches")
-                        .with(csrf()).session(session)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        post("/api/matches")
+                                .with(csrf())
+                                .session(session)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"opponentName":"Beta","matchDate":"2026-04-01","sets":[{"playerScore":5,"opponentScore":11}]}
                                 """))
                 .andExpect(status().isCreated());
@@ -279,10 +317,13 @@ class MatchApiIntegrationTests {
         var session = registerAndLogin("match_update@example.com");
         var id = createMatch(session, VALID_MATCH);
 
-        mockMvc.perform(put("/api/matches/" + id)
-                        .with(csrf()).session(session)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        put("/api/matches/" + id)
+                                .with(csrf())
+                                .session(session)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {
                                   "opponentName": "Nowak",
                                   "matchDate": "2026-05-02",
@@ -317,8 +358,7 @@ class MatchApiIntegrationTests {
         mockMvc.perform(delete("/api/matches/" + id).with(csrf()).session(session))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/api/matches/" + id).session(session))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/api/matches/" + id).session(session)).andExpect(status().isNotFound());
     }
 
     // ── set replacement (flush-ordering guard) ───────────────────────────────
@@ -331,10 +371,13 @@ class MatchApiIntegrationTests {
         // must flush before the INSERTs or uq_match_sets_match_set is violated.
         var id = createMatch(session, VALID_MATCH);
 
-        mockMvc.perform(put("/api/matches/" + id)
-                        .with(csrf()).session(session)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        put("/api/matches/" + id)
+                                .with(csrf())
+                                .session(session)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {
                                   "opponentName": "Kowalski",
                                   "matchDate": "2026-05-01",
@@ -365,8 +408,7 @@ class MatchApiIntegrationTests {
         var id = createMatch(sessionA, VALID_MATCH);
 
         var sessionB = registerAndLogin("match_xget_b@example.com");
-        mockMvc.perform(get("/api/matches/" + id).session(sessionB))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/api/matches/" + id).session(sessionB)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -376,7 +418,8 @@ class MatchApiIntegrationTests {
 
         var sessionB = registerAndLogin("match_xput_b@example.com");
         mockMvc.perform(put("/api/matches/" + id)
-                        .with(csrf()).session(sessionB)
+                        .with(csrf())
+                        .session(sessionB)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(VALID_MATCH))
                 .andExpect(status().isNotFound());
@@ -405,8 +448,7 @@ class MatchApiIntegrationTests {
 
     @Test
     void anonymousDeleteReturns401() throws Exception {
-        mockMvc.perform(delete("/api/matches/1").with(csrf()))
-                .andExpect(status().isUnauthorized());
+        mockMvc.perform(delete("/api/matches/1").with(csrf())).andExpect(status().isUnauthorized());
     }
 
     // ── update validation ────────────────────────────────────────────────────
@@ -416,10 +458,13 @@ class MatchApiIntegrationTests {
         var session = registerAndLogin("match_updval@example.com");
         var id = createMatch(session, VALID_MATCH);
 
-        mockMvc.perform(put("/api/matches/" + id)
-                        .with(csrf()).session(session)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+        mockMvc.perform(
+                        put("/api/matches/" + id)
+                                .with(csrf())
+                                .session(session)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        """
                                 {"opponentName":"","matchDate":"2026-05-01","sets":[{"playerScore":11,"opponentScore":5}]}
                                 """))
                 .andExpect(status().isBadRequest())

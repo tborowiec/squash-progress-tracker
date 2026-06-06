@@ -13,10 +13,7 @@ package org.borowiec.squashprogresstracker;
  */
 public final class SpaRoutes {
 
-    private SpaRoutes() {
-    }
+    private SpaRoutes() {}
 
-    public static final String[] CLIENT_ROUTES = {
-        "/login", "/register", "/history", "/matches/**", "/game-plan"
-    };
+    public static final String[] CLIENT_ROUTES = {"/login", "/register", "/history", "/matches/**", "/game-plan"};
 }

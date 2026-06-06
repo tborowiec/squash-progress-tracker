@@ -1,5 +1,17 @@
 package org.borowiec.squashprogresstracker.match.gameplan;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.function.Consumer;
 import org.borowiec.squashprogresstracker.llm.client.LlmClient;
 import org.borowiec.squashprogresstracker.llm.client.LlmException;
 import org.junit.jupiter.api.Test;
@@ -11,22 +23,9 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.util.function.Consumer;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -161,37 +160,46 @@ class GamePlanApiIntegrationTests {
     @SuppressWarnings("unchecked")
     private void stubTokens(String... tokens) {
         doAnswer(inv -> {
-            var consumer = (Consumer<String>) inv.getArgument(1);
-            for (var token : tokens) {
-                consumer.accept(token);
-            }
-            return null;
-        }).when(llmClient).generateStreaming(any(), any());
+                    var consumer = (Consumer<String>) inv.getArgument(1);
+                    for (var token : tokens) {
+                        consumer.accept(token);
+                    }
+                    return null;
+                })
+                .when(llmClient)
+                .generateStreaming(any(), any());
     }
 
     private MockHttpSession registerAndLogin(String email) throws Exception {
         mockMvc.perform(post("/api/auth/register")
-                        .with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"" + email + "\",\"password\":\"password1\"}"))
                 .andExpect(status().isCreated());
         return (MockHttpSession) mockMvc.perform(post("/api/auth/login")
-                        .with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"" + email + "\",\"password\":\"password1\"}"))
                 .andExpect(status().isOk())
-                .andReturn().getRequest().getSession(false);
+                .andReturn()
+                .getRequest()
+                .getSession(false);
     }
 
     private void logMatch(MockHttpSession session, String opponent) throws Exception {
         mockMvc.perform(post("/api/matches")
-                        .with(csrf()).session(session)
+                        .with(csrf())
+                        .session(session)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+                        .content(
+                                """
                                 {
                                   "opponentName": "%s",
                                   "matchDate": "2026-05-01",
                                   "sets": [{"playerScore": 11, "opponentScore": 7}]
                                 }
-                                """.formatted(opponent)))
+                                """
+                                        .formatted(opponent)))
                 .andExpect(status().isCreated());
     }
 }

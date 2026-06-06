@@ -1,17 +1,17 @@
 package org.borowiec.squashprogresstracker.match;
 
+import java.time.LocalDate;
+import java.util.List;
 import org.borowiec.squashprogresstracker.llm.dto.LlmMessage;
 import org.borowiec.squashprogresstracker.llm.dto.LlmRequest;
 import org.borowiec.squashprogresstracker.llm.dto.LlmRole;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @Component
 public class MatchParsePromptBuilder {
 
-    private static final String SYSTEM_MESSAGE = """
+    private static final String SYSTEM_MESSAGE =
+            """
             You are a squash match parser. Extract structured match data from a player's free-text description.
             Rules:
             - Fill every field as best you can from the text. Never invent scores, opponents, or dates not implied by the text.
@@ -32,7 +32,8 @@ public class MatchParsePromptBuilder {
         sb.append("Today's date: ").append(today).append("\n");
         if (!knownOpponents.isEmpty()) {
             sb.append("Known opponents (snap to exact name if the text clearly refers to one of these): ")
-              .append(String.join(", ", knownOpponents)).append("\n");
+                    .append(String.join(", ", knownOpponents))
+                    .append("\n");
         }
         sb.append("\nMatch description:\n").append(text);
         return sb.toString();

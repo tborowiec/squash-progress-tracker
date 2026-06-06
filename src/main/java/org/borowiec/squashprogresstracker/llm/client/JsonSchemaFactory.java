@@ -1,12 +1,11 @@
 package org.borowiec.squashprogresstracker.llm.client;
 
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.node.ObjectNode;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 
 /**
  * Derives a JSON Schema ObjectNode from a Java record type.
@@ -24,7 +23,8 @@ class JsonSchemaFactory {
 
     JsonNode schemaFor(Class<?> type) {
         if (!type.isRecord()) {
-            throw new IllegalArgumentException("Only record types are supported for schema derivation: " + type.getName());
+            throw new IllegalArgumentException(
+                    "Only record types are supported for schema derivation: " + type.getName());
         }
         var schema = objectMapper.createObjectNode();
         schema.put("type", "object");
@@ -41,11 +41,9 @@ class JsonSchemaFactory {
         var node = objectMapper.createObjectNode();
         if (type == String.class) {
             node.put("type", "string");
-        } else if (type == int.class || type == Integer.class
-                || type == long.class || type == Long.class) {
+        } else if (type == int.class || type == Integer.class || type == long.class || type == Long.class) {
             node.put("type", "integer");
-        } else if (type == double.class || type == Double.class
-                || type == float.class || type == Float.class) {
+        } else if (type == double.class || type == Double.class || type == float.class || type == Float.class) {
             node.put("type", "number");
         } else if (type == boolean.class || type == Boolean.class) {
             node.put("type", "boolean");

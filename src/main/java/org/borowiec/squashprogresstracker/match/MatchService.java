@@ -1,13 +1,12 @@
 package org.borowiec.squashprogresstracker.match;
 
 import jakarta.persistence.EntityManager;
+import java.util.List;
 import org.borowiec.squashprogresstracker.match.dto.CreateOrUpdateMatchRequest;
 import org.borowiec.squashprogresstracker.match.dto.MatchResponse;
 import org.borowiec.squashprogresstracker.security.CurrentUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class MatchService {
@@ -66,7 +65,8 @@ public class MatchService {
     public List<MatchResponse> list(String opponentFilter) {
         var userId = currentUser.currentUserId();
         var matches = opponentFilter != null && !opponentFilter.isBlank()
-                ? matchRepository.findByUserIdAndOpponentNameIgnoreCaseOrderByMatchDateDescIdDesc(userId, opponentFilter)
+                ? matchRepository.findByUserIdAndOpponentNameIgnoreCaseOrderByMatchDateDescIdDesc(
+                        userId, opponentFilter)
                 : matchRepository.findByUserIdOrderByMatchDateDescIdDesc(userId);
         return matches.stream().map(MatchResponse::from).toList();
     }
@@ -77,7 +77,8 @@ public class MatchService {
     }
 
     private Match requireOwned(Long id) {
-        return matchRepository.findByIdAndUserId(id, currentUser.currentUserId())
+        return matchRepository
+                .findByIdAndUserId(id, currentUser.currentUserId())
                 .orElseThrow(() -> new MatchNotFoundException(id));
     }
 

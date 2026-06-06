@@ -45,24 +45,59 @@ public class Match {
         sets.add(set);
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getOpponentName() { return opponentName; }
-    public void setOpponentName(String opponentName) { this.opponentName = opponentName; }
+    public Long getUserId() {
+        return userId;
+    }
 
-    public LocalDate getMatchDate() { return matchDate; }
-    public void setMatchDate(LocalDate matchDate) { this.matchDate = matchDate; }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-    public String getNotes() { return notes; }
-    public void setNotes(String notes) { this.notes = notes; }
+    public String getOpponentName() {
+        return opponentName;
+    }
 
-    public OffsetDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(OffsetDateTime createdAt) { this.createdAt = createdAt; }
+    public void setOpponentName(String opponentName) {
+        this.opponentName = opponentName;
+    }
 
-    public List<MatchSet> getSets() { return sets; }
-    public void setSets(List<MatchSet> sets) { this.sets = sets; }
+    public LocalDate getMatchDate() {
+        return matchDate;
+    }
+
+    public void setMatchDate(LocalDate matchDate) {
+        this.matchDate = matchDate;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public List<MatchSet> getSets() {
+        return sets;
+    }
+
+    public void setSets(List<MatchSet> sets) {
+        this.sets = sets;
+    }
 }

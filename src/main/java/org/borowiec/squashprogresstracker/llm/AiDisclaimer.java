@@ -4,6 +4,5 @@ public final class AiDisclaimer {
 
     public static final String TEXT = "AI-generated advice — not factual analysis. Verify before relying on it.";
 
-    private AiDisclaimer() {
-    }
+    private AiDisclaimer() {}
 }

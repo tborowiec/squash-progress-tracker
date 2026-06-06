@@ -1,5 +1,11 @@
 package org.borowiec.squashprogresstracker.llm.client;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.function.Consumer;
 import org.borowiec.squashprogresstracker.llm.dto.LlmRequest;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -10,13 +16,6 @@ import org.springframework.web.client.RestClientResponseException;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.function.Consumer;
 
 @Service
 public class OpenAiCompatLlmClient implements LlmClient {
@@ -48,9 +47,8 @@ public class OpenAiCompatLlmClient implements LlmClient {
 
     @Override
     public <T> T generateStructured(LlmRequest request, Class<T> type) {
-        var model = StringUtils.hasText(properties.structuredModel())
-                ? properties.structuredModel()
-                : properties.model();
+        var model =
+                StringUtils.hasText(properties.structuredModel()) ? properties.structuredModel() : properties.model();
         var body = buildBody(request, model);
         body.set("response_format", buildResponseFormat(type));
         var content = extractContent(executePost(body, request.timeout()));
@@ -89,19 +87,19 @@ public class OpenAiCompatLlmClient implements LlmClient {
     private JsonNode executePost(ObjectNode body, Duration timeoutOverride) {
         try {
             var client = timeoutOverride != null ? clientWithTimeout(timeoutOverride) : restClient;
-            var response = client.post()
-                    .uri(COMPLETIONS_PATH)
-                    .body(body)
-                    .retrieve()
-                    .body(JsonNode.class);
-            if (response == null || !response.path("choices").isArray() || response.path("choices").isEmpty()) {
+            var response =
+                    client.post().uri(COMPLETIONS_PATH).body(body).retrieve().body(JsonNode.class);
+            if (response == null
+                    || !response.path("choices").isArray()
+                    || response.path("choices").isEmpty()) {
                 throw new LlmException("Empty or missing choices in LLM response");
             }
             return response;
         } catch (LlmException e) {
             throw e;
         } catch (RestClientResponseException e) {
-            throw new LlmException("Provider error: " + e.getStatusCode(), e, e.getStatusCode().value());
+            throw new LlmException(
+                    "Provider error: " + e.getStatusCode(), e, e.getStatusCode().value());
         } catch (Exception e) {
             throw new LlmException("LLM call failed", e);
         }
@@ -120,30 +118,32 @@ public class OpenAiCompatLlmClient implements LlmClient {
         var body = buildBody(request, properties.model());
         body.put("stream", true);
         try {
-            restClient.post()
-                    .uri(COMPLETIONS_PATH)
-                    .body(body)
-                    .<Void>exchange((httpReq, res) -> {
-                        if (res.getStatusCode().isError()) {
-                            throw new LlmException("Provider error: " + res.getStatusCode(), null, res.getStatusCode().value());
-                        }
-                        try (var reader = new BufferedReader(new InputStreamReader(res.getBody(), StandardCharsets.UTF_8))) {
-                            parseSseStream(reader, onToken, objectMapper);
-                        } catch (IOException e) {
-                            throw new LlmException("IO error during streaming", e);
-                        }
-                        return null;
-                    });
+            restClient.post().uri(COMPLETIONS_PATH).body(body).<Void>exchange((httpReq, res) -> {
+                if (res.getStatusCode().isError()) {
+                    throw new LlmException(
+                            "Provider error: " + res.getStatusCode(),
+                            null,
+                            res.getStatusCode().value());
+                }
+                try (var reader = new BufferedReader(new InputStreamReader(res.getBody(), StandardCharsets.UTF_8))) {
+                    parseSseStream(reader, onToken, objectMapper);
+                } catch (IOException e) {
+                    throw new LlmException("IO error during streaming", e);
+                }
+                return null;
+            });
         } catch (LlmException e) {
             throw e;
         } catch (RestClientResponseException e) {
-            throw new LlmException("Provider error: " + e.getStatusCode(), e, e.getStatusCode().value());
+            throw new LlmException(
+                    "Provider error: " + e.getStatusCode(), e, e.getStatusCode().value());
         } catch (Exception e) {
             throw new LlmException("LLM streaming call failed", e);
         }
     }
 
-    static void parseSseStream(BufferedReader reader, Consumer<String> onToken, ObjectMapper objectMapper) throws IOException {
+    static void parseSseStream(BufferedReader reader, Consumer<String> onToken, ObjectMapper objectMapper)
+            throws IOException {
         String line;
         while ((line = reader.readLine()) != null) {
             if (!line.startsWith(SSE_DATA_PREFIX)) continue;
@@ -156,7 +156,9 @@ public class OpenAiCompatLlmClient implements LlmClient {
                 throw new LlmException("Failed to parse SSE chunk", e);
             }
             var content = node.path("choices").path(0).path("delta").path("content");
-            if (!content.isMissingNode() && !content.isNull() && !content.asString().isEmpty()) {
+            if (!content.isMissingNode()
+                    && !content.isNull()
+                    && !content.asString().isEmpty()) {
                 onToken.accept(content.asString());
             }
         }

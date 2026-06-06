@@ -1,6 +1,5 @@
 package org.borowiec.squashprogresstracker.security;
 
-import tools.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.borowiec.squashprogresstracker.SpaRoutes;
 import org.borowiec.squashprogresstracker.user.dto.ApiError;
@@ -18,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import tools.jackson.databind.ObjectMapper;
 
 @Configuration
 @EnableWebSecurity
@@ -25,29 +25,26 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, ObjectMapper objectMapper) {
-        http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/actuator/health").permitAll()
-                .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                .requestMatchers(HttpMethod.GET,
-                        "/", "/index.html", "/favicon.ico", "/vite.svg", "/assets/**").permitAll()
-                .requestMatchers(HttpMethod.GET, SpaRoutes.CLIENT_ROUTES).permitAll()
-                .anyRequest().authenticated()
-            )
-            .csrf(csrf -> csrf
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-            )
-            .addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class)
-            .exceptionHandling(ex -> ex
-                .authenticationEntryPoint((request, response, authException) -> {
+        http.authorizeHttpRequests(auth -> auth.requestMatchers("/actuator/health")
+                        .permitAll()
+                        .requestMatchers("/api/auth/register", "/api/auth/login")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/", "/index.html", "/favicon.ico", "/vite.svg", "/assets/**")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, SpaRoutes.CLIENT_ROUTES)
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
+                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
+                .addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class)
+                .exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, authException) -> {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                     response.getWriter().write(objectMapper.writeValueAsString(ApiError.of(401, "Unauthorized")));
-                })
-            )
-            .formLogin(form -> form.disable())
-            .httpBasic(basic -> basic.disable());
+                }))
+                .formLogin(form -> form.disable())
+                .httpBasic(basic -> basic.disable());
 
         return http.build();
     }

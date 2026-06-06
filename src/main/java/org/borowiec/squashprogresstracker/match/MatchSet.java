@@ -23,18 +23,43 @@ public class MatchSet {
     @Column(name = "opponent_score", nullable = false)
     private Integer opponentScore;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Match getMatch() { return match; }
-    public void setMatch(Match match) { this.match = match; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Integer getSetNumber() { return setNumber; }
-    public void setSetNumber(Integer setNumber) { this.setNumber = setNumber; }
+    public Match getMatch() {
+        return match;
+    }
 
-    public Integer getPlayerScore() { return playerScore; }
-    public void setPlayerScore(Integer playerScore) { this.playerScore = playerScore; }
+    public void setMatch(Match match) {
+        this.match = match;
+    }
 
-    public Integer getOpponentScore() { return opponentScore; }
-    public void setOpponentScore(Integer opponentScore) { this.opponentScore = opponentScore; }
+    public Integer getSetNumber() {
+        return setNumber;
+    }
+
+    public void setSetNumber(Integer setNumber) {
+        this.setNumber = setNumber;
+    }
+
+    public Integer getPlayerScore() {
+        return playerScore;
+    }
+
+    public void setPlayerScore(Integer playerScore) {
+        this.playerScore = playerScore;
+    }
+
+    public Integer getOpponentScore() {
+        return opponentScore;
+    }
+
+    public void setOpponentScore(Integer opponentScore) {
+        this.opponentScore = opponentScore;
+    }
 }

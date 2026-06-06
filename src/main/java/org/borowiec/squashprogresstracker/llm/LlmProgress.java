@@ -8,7 +8,6 @@ package org.borowiec.squashprogresstracker.llm;
  * contract over SSE; F-02 itself is synchronous.
  */
 public enum LlmProgress {
-
     SUBMITTED("Submitted"),
     GENERATING("Generating"),
     COMPLETED("Completed"),
