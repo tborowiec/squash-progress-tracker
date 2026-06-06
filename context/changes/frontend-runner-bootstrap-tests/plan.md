@@ -378,28 +378,28 @@ behavior changes (`vite build` ignores the `test` block).
 
 #### Automated
 
-- [x] 1.1 Deps install cleanly: `cd frontend && npm install`
-- [x] 1.2 Runner runs green: `cd frontend && npm run test:run`
-- [x] 1.3 Typecheck passes (vitest + jest-dom types resolve): `cd frontend && npm run typecheck`
-- [x] 1.4 Biome reports no errors: `cd frontend && npx biome check src`
+- [x] 1.1 Deps install cleanly: `cd frontend && npm install` — fbc8f79
+- [x] 1.2 Runner runs green: `cd frontend && npm run test:run` — fbc8f79
+- [x] 1.3 Typecheck passes (vitest + jest-dom types resolve): `cd frontend && npm run typecheck` — fbc8f79
+- [x] 1.4 Biome reports no errors: `cd frontend && npx biome check src` — fbc8f79
 
 #### Manual
 
-- [x] 1.5 `npm run test` (watch mode) starts and re-runs on change, exits cleanly with `q`
-- [x] 1.6 `git status` shows `package-lock.json` updated and `node_modules/` still ignored
+- [x] 1.5 `npm run test` (watch mode) starts and re-runs on change, exits cleanly with `q` — fbc8f79
+- [x] 1.6 `git status` shows `package-lock.json` updated and `node_modules/` still ignored — fbc8f79
 
 ### Phase 2: Route-Guard Tests (#4)
 
 #### Automated
 
-- [ ] 2.1 Guard tests pass: `cd frontend && npm run test:run`
-- [ ] 2.2 Typecheck passes: `cd frontend && npm run typecheck`
-- [ ] 2.3 Biome reports no errors: `cd frontend && npx biome check src`
+- [x] 2.1 Guard tests pass: `cd frontend && npm run test:run`
+- [x] 2.2 Typecheck passes: `cd frontend && npm run typecheck`
+- [x] 2.3 Biome reports no errors: `cd frontend && npx biome check src`
 
 #### Manual
 
-- [ ] 2.4 Reordered guard (`!user` before `loading`) makes the in-flight case FAIL
-- [ ] 2.5 Guard itself is not mocked (only `useAuth` / `me`)
+- [x] 2.4 Reordered guard (`!user` before `loading`) makes the in-flight case FAIL
+- [x] 2.5 Guard itself is not mocked (only `useAuth` / `me`)
 
 ### Phase 3: API-Client Contract Tests (#5)
 
