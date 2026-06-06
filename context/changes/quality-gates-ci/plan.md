@@ -280,25 +280,25 @@ confirmation that a red PR is actually blocked before closing the change.
 
 #### Automated
 
-- [x] 1.1 Workflow file passes actionlint (if available)
-- [x] 1.2 All five checks complete on a PR (backend-lint, backend-test, frontend-lint, frontend-test, ci-success)
-- [x] 1.3 backend-test green with no DB_*/LLM_API_KEY (Testcontainers up, live-smoke skipped)
-- [x] 1.4 frontend-test shows tsc clean then vitest passing
+- [x] 1.1 Workflow file passes actionlint (if available) — aea8dfb
+- [x] 1.2 All five checks complete on a PR (backend-lint, backend-test, frontend-lint, frontend-test, ci-success) — aea8dfb
+- [x] 1.3 backend-test green with no DB_*/LLM_API_KEY (Testcontainers up, live-smoke skipped) — aea8dfb
+- [x] 1.4 frontend-test shows tsc clean then vitest passing — aea8dfb
 
 #### Manual
 
-- [x] 1.5 Real PR shows full suite green and reports mergeable
-- [x] 1.6 Backend log shows postgres:17 pulled and *LiveSmokeTest skipped
-- [x] 1.7 No secret warnings; LLM_API_KEY absent from all job envs
+- [x] 1.5 Real PR shows full suite green and reports mergeable — aea8dfb
+- [x] 1.6 Backend log shows postgres:17 pulled and *LiveSmokeTest skipped — aea8dfb
+- [x] 1.7 No secret warnings; LLM_API_KEY absent from all job envs — aea8dfb
 
 ### Phase 2: Branch Protection
 
 #### Automated
 
-- [ ] 2.1 required_status_checks contains ci-success with strict: true
+- [x] 2.1 required_status_checks contains ci-success with strict: true
 
 #### Manual
 
-- [ ] 2.2 Deliberately-red PR shows ci-success red and merge blocked
-- [ ] 2.3 Revert makes ci-success green and PR mergeable
-- [ ] 2.4 Confirmed no red build can reach main / trigger deploy
+- [x] 2.2 Deliberately-red PR shows ci-success red and merge blocked
+- [x] 2.3 Revert makes ci-success green and PR mergeable
+- [x] 2.4 Confirmed no red build can reach main / trigger deploy
