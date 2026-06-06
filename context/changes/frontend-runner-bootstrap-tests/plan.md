@@ -405,13 +405,13 @@ behavior changes (`vite build` ignores the `test` block).
 
 #### Automated
 
-- [x] 3.1 Contract tests pass: `cd frontend && npm run test:run`
-- [x] 3.2 Full frontend suite green (smoke + guard + contract): `cd frontend && npm run test:run`
-- [x] 3.3 Typecheck passes: `cd frontend && npm run typecheck`
-- [x] 3.4 Biome reports no errors: `cd frontend && npx biome check src`
+- [x] 3.1 Contract tests pass: `cd frontend && npm run test:run` — 2c0a8d7
+- [x] 3.2 Full frontend suite green (smoke + guard + contract): `cd frontend && npm run test:run` — 2c0a8d7
+- [x] 3.3 Typecheck passes: `cd frontend && npm run typecheck` — 2c0a8d7
+- [x] 3.4 Biome reports no errors: `cd frontend && npx biome check src` — 2c0a8d7
 
 #### Manual
 
-- [x] 3.5 Renamed fixture field (e.g. `setNumber`→`set_number`) makes the contract test FAIL
-- [x] 3.6 §6.3 and §6.5 no longer read "TBD" and describe the shipped patterns
-- [x] 3.7 Lefthook pre-commit gate passes on the staged test files
+- [x] 3.5 Renamed fixture field (e.g. `setNumber`→`set_number`) makes the contract test FAIL — 2c0a8d7
+- [x] 3.6 §6.3 and §6.5 no longer read "TBD" and describe the shipped patterns — 2c0a8d7
+- [x] 3.7 Lefthook pre-commit gate passes on the staged test files — 2c0a8d7
