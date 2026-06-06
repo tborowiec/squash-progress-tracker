@@ -1,10 +1,10 @@
 ---
 change_id: ownership-boundary-tests
 title: Ownership-boundary & no-mis-save backend tests (test-plan Phase 1)
-status: implemented
+status: archived
 created: 2026-06-05
-updated: 2026-06-05
-archived_at: null
+updated: 2026-06-06
+archived_at: 2026-06-06T15:13:54Z
 ---
 
 ## Notes
