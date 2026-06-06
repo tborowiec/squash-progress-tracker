@@ -1,0 +1,14 @@
+# Pre-commit git hook (lefthook). Enforces palantir-java-format on staged Java
+# files — the safety net for edits that bypassed the per-edit Claude Code hook
+# (.claude/hooks/format-java.sh): manual edits, a teammate's commit, files changed
+# outside the agent. Source of truth is the Spotless plugin in pom.xml; this runs
+# the same formatter, scoped to {staged_files}.
+#
+# Setup (once per clone): .tools/install-lefthook.sh   (fetches the binary, runs install)
+# Fix violations:         ./mvnw spotless:apply         (then re-stage and commit)
+pre-commit:
+  commands:
+    spotless-check:
+      glob: "*.java"
+      run: .tools/spotless-staged.sh {staged_files}
+      fail_text: "Java formatting violations on staged files. Run: ./mvnw spotless:apply  then git add the files and commit again."

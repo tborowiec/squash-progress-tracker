@@ -28,7 +28,7 @@ Use `./mvnw` (wrapper) rather than a locally installed `mvn` so the Maven versio
 
 ## Coding Style & Naming Conventions
 
-Java 21. Package root is `org.borowiec.squashprogresstracker`. No linter or formatter is configured yet.
+Java 21. Package root is `org.borowiec.squashprogresstracker`. Formatting is **palantir-java-format** (Palantir 4-space style; sorts imports, removes unused). Source of truth is the Spotless plugin in `pom.xml` (`./mvnw spotless:apply` / `spotless:check`). Two layers run it automatically: (1) a per-edit Claude Code hook (`.claude/hooks/format-java.sh`) auto-formats each `.java` file on Write/Edit using the native binary (`.tools/palantir-java-format`, ~20ms) — run `.tools/install-formatter.sh` once after cloning to fetch it; (2) a lefthook pre-commit gate (`lefthook.yml`) runs `spotless:check` on staged Java files — run `.tools/install-lefthook.sh` once after cloning to fetch the binary and install the git hooks. Both layers produce byte-identical output to the Spotless source of truth.
 
 Use `var` for all local variable declarations where the type is inferred from the right-hand side.
 
