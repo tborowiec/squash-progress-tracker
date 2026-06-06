@@ -378,15 +378,15 @@ behavior changes (`vite build` ignores the `test` block).
 
 #### Automated
 
-- [ ] 1.1 Deps install cleanly: `cd frontend && npm install`
-- [ ] 1.2 Runner runs green: `cd frontend && npm run test:run`
-- [ ] 1.3 Typecheck passes (vitest + jest-dom types resolve): `cd frontend && npm run typecheck`
-- [ ] 1.4 Biome reports no errors: `cd frontend && npx biome check src`
+- [x] 1.1 Deps install cleanly: `cd frontend && npm install`
+- [x] 1.2 Runner runs green: `cd frontend && npm run test:run`
+- [x] 1.3 Typecheck passes (vitest + jest-dom types resolve): `cd frontend && npm run typecheck`
+- [x] 1.4 Biome reports no errors: `cd frontend && npx biome check src`
 
 #### Manual
 
-- [ ] 1.5 `npm run test` (watch mode) starts and re-runs on change, exits cleanly with `q`
-- [ ] 1.6 `git status` shows `package-lock.json` updated and `node_modules/` still ignored
+- [x] 1.5 `npm run test` (watch mode) starts and re-runs on change, exits cleanly with `q`
+- [x] 1.6 `git status` shows `package-lock.json` updated and `node_modules/` still ignored
 
 ### Phase 2: Route-Guard Tests (#4)
 
