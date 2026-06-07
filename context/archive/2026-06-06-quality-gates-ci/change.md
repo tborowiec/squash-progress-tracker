@@ -1,10 +1,10 @@
 ---
 change_id: quality-gates-ci
 title: Wire CI quality gates — run both test suites + compile/typecheck on every PR
-status: implemented
+status: archived
 created: 2026-06-06
-updated: 2026-06-06
-archived_at: null
+updated: 2026-06-07
+archived_at: 2026-06-07T20:12:43Z
 ---
 
 ## Notes
