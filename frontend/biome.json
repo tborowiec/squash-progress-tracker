@@ -1,6 +1,9 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
-  "files": { "ignoreUnknown": true, "includes": ["src/**/*"] },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": ["src/**/*", "e2e/**/*", "playwright.config.ts", "vite.config.ts"]
+  },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",

@@ -30,6 +30,14 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
+      - name: Pre-pull Testcontainers images
+        run: |
+          for i in 1 2 3; do
+            docker pull postgres:17 && break
+            [ "$i" -eq 3 ] && echo "Failed to pull postgres:17 after 3 attempts" && exit 1
+            echo "Pull attempt $i failed, retrying in 15s..."
+            sleep 15
+          done
       - run: ./mvnw -B test
 
   frontend-lint:
@@ -63,8 +71,58 @@ jobs:
       - run: npm run typecheck
       - run: npm run test:run
 
+  container-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run container smoke harness
+        run: ./smoke-container.sh
+      - name: Save Docker image as artifact
+        run: docker save squash-app:smoke | gzip > image.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-image
+          path: image.tar.gz
+          retention-days: 1
+
+  e2e:
+    needs: container-smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-image
+      - name: Load Docker image
+        run: docker load -i image.tar.gz
+      - name: Start Postgres and app
+        run: ./start-e2e-app.sh
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.14.0'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install npm deps
+        run: npm ci
+        working-directory: frontend
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+        working-directory: frontend
+      - name: Run E2E tests
+        run: npm run e2e
+        working-directory: frontend
+        env:
+          E2E_BASE_URL: http://localhost:8080
+          CI: 'true'
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/
+          retention-days: 7
+
   ci-success:
-    needs: [backend-lint, backend-test, frontend-lint, frontend-test]
+    needs: [backend-lint, backend-test, frontend-lint, frontend-test, container-smoke, e2e]
     if: always()
     runs-on: ubuntu-latest
     steps:

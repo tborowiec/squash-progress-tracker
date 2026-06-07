@@ -55,3 +55,11 @@ cookies.txt
 
 ### lefthook (downloaded binary; run .tools/install-lefthook.sh)
 .tools/lefthook
+
+playwright/.auth/
+frontend/e2e/.auth/
+frontend/playwright-report/
+frontend/test-results/
+
+### Playwright CLI / MCP agentic-browser artifacts (per-run ARIA snapshots + console logs)
+.playwright-cli/
