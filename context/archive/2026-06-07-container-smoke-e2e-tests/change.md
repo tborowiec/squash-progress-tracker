@@ -1,10 +1,10 @@
 ---
 change_id: container-smoke-e2e-tests
 title: "Phase 5: container smoke + critical-flow e2e (test rollout)"
-status: implemented
+status: archived
 created: 2026-06-07
-updated: 2026-06-08
-archived_at: null
+updated: 2026-06-07
+archived_at: 2026-06-07T20:12:43Z
 ---
 
 ## Notes
