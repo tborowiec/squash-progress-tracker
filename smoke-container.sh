@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# shellcheck source=docker-helpers.sh
+. "$(dirname "$0")/docker-helpers.sh"
+
 SMOKE_NETWORK="squash-smoke-net"
 POSTGRES_CONTAINER="squash-smoke-postgres"
 APP_CONTAINER="squash-smoke-app"
@@ -34,20 +37,7 @@ docker run -d \
   -e POSTGRES_DB="$DB_NAME" \
   postgres:17
 
-echo -n "==> Waiting for Postgres to be ready..."
-MAX_TRIES=30
-TRIES=0
-until docker exec "$POSTGRES_CONTAINER" pg_isready -U "$DB_USER" -d "$DB_NAME" -q 2>/dev/null; do
-  TRIES=$((TRIES + 1))
-  if [ "$TRIES" -ge "$MAX_TRIES" ]; then
-    echo " TIMEOUT"
-    echo "ERROR: Postgres did not become ready in time." >&2
-    exit 1
-  fi
-  echo -n "."
-  sleep 1
-done
-echo " ready."
+wait_for_postgres "$POSTGRES_CONTAINER" "$DB_USER" "$DB_NAME"
 
 # ── image build ───────────────────────────────────────────────────────────────
 echo "==> Building Docker image $APP_IMAGE..."
@@ -68,24 +58,9 @@ docker run -d \
   -p "${APP_PORT}:${APP_PORT}" \
   "$APP_IMAGE"
 
-# ── health poll (from inside the container) ───────────────────────────────────
 # We use docker exec so assertions work regardless of whether the host's
 # IP forwarding / docker-proxy path is functional (dev boxes vary).
-echo -n "==> Waiting for app to be healthy..."
-MAX_TRIES=30
-TRIES=0
-until docker exec "$APP_CONTAINER" curl -s "http://localhost:${APP_PORT}/actuator/health" 2>/dev/null | grep -q '"status":"UP"'; do
-  TRIES=$((TRIES + 1))
-  if [ "$TRIES" -ge "$MAX_TRIES" ]; then
-    echo " TIMEOUT"
-    echo "ERROR: App did not become healthy in time. Docker logs:" >&2
-    docker logs "$APP_CONTAINER" >&2
-    exit 1
-  fi
-  echo -n "."
-  sleep 2
-done
-echo " UP."
+wait_for_app "$APP_CONTAINER" "$APP_PORT"
 
 # ── helper: run curl inside the app container ─────────────────────────────────
 app_curl() {

@@ -253,23 +253,23 @@ Fix the two factual errors the research uncovered in the foundation doc that dro
 
 #### Automated
 
-- [x] 1.1 Script is executable and lints clean (`bash -n` on both)
-- [x] 1.2 Harness passes end-to-end locally — `./smoke-container.sh` exits 0, all three assertions green
-- [x] 1.3 Cleanup is idempotent — `./stop-smoke-container.sh` twice both exit 0
-- [x] 1.4 No leftover containers/network after a run
+- [x] 1.1 Script is executable and lints clean (`bash -n` on both) — 5f54b77
+- [x] 1.2 Harness passes end-to-end locally — `./smoke-container.sh` exits 0, all three assertions green — 5f54b77
+- [x] 1.3 Cleanup is idempotent — `./stop-smoke-container.sh` twice both exit 0 — 5f54b77
+- [x] 1.4 No leftover containers/network after a run — 5f54b77
 
 #### Manual
 
-- [x] 1.5 Immediate re-run succeeds (no port/name/network collision)
-- [x] 1.6 Ctrl-C mid-run leaves no orphans (trap fires)
-- [x] 1.7 Broken image fails loudly with `docker logs`, not a silent hang
+- [x] 1.5 Immediate re-run succeeds (no port/name/network collision) — 5f54b77
+- [x] 1.6 Ctrl-C mid-run leaves no orphans (trap fires) — 5f54b77
+- [x] 1.7 Broken image fails loudly with `docker logs`, not a silent hang — 5f54b77
 
 ### Phase 2: CI Wiring (build once, share via artifact)
 
 #### Automated
 
-- [ ] 2.1 Workflow is valid YAML / parses (or `actionlint` clean)
-- [ ] 2.2 `ci-success.needs` includes `container-smoke` and `e2e`
+- [x] 2.1 Workflow is valid YAML / parses (or `actionlint` clean)
+- [x] 2.2 `ci-success.needs` includes `container-smoke` and `e2e`
 - [ ] 2.3 PR: `container-smoke` builds image, runs harness, uploads image artifact (green)
 - [ ] 2.4 PR: `e2e` loads shared image, boots it, Playwright spec passes (green)
 - [ ] 2.5 Image built exactly once (e2e log shows `docker load`, not `docker build`)
