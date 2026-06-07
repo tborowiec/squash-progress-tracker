@@ -1,10 +1,10 @@
 ---
 change_id: ai-failure-path-tests
 title: AI failure-path tests — transient provider errors surface cleanly (Phase 2)
-status: implemented
+status: archived
 created: 2026-06-06
-updated: 2026-06-06
-archived_at: null
+updated: 2026-06-07
+archived_at: 2026-06-07T20:12:43Z
 ---
 
 ## Notes
