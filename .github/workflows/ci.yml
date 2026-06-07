@@ -30,6 +30,14 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
+      - name: Pre-pull Testcontainers images
+        run: |
+          for i in 1 2 3; do
+            docker pull postgres:17 && break
+            [ "$i" -eq 3 ] && echo "Failed to pull postgres:17 after 3 attempts" && exit 1
+            echo "Pull attempt $i failed, retrying in 15s..."
+            sleep 15
+          done
       - run: ./mvnw -B test
 
   frontend-lint:
