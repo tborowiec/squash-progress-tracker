@@ -104,7 +104,7 @@ test('player logs a match via AI parse, confirms it, and sees it in history (ris
   // any save (the AGENTS hard rule / risk #3 boundary). Asserting the parsed opponent
   // landed in the form, and that a Save button is now present, proves the preview is
   // what the player confirms — not a silent save.
-  await expect(page.getByLabel('Opponent')).toHaveValue('opponent')
+  await expect(page.getByLabel('Opponent')).toHaveValue(opponent)
   const saveButton = page.getByRole('button', { name: 'Save match' })
   await expect(saveButton).toBeVisible()
 
