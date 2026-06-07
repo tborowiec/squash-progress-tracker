@@ -1,10 +1,10 @@
 ---
 change_id: frontend-runner-bootstrap-tests
 title: Frontend runner bootstrap + route-guard & api-client contract tests (test-plan Phase 3)
-status: implemented
+status: archived
 created: 2026-06-06
-updated: 2026-06-06
-archived_at: null
+updated: 2026-06-07
+archived_at: 2026-06-07T20:12:43Z
 ---
 
 ## Notes
