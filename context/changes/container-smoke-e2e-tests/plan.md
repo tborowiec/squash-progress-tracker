@@ -284,9 +284,9 @@ Fix the two factual errors the research uncovered in the foundation doc that dro
 
 #### Automated
 
-- [x] 3.1 Stale terms gone — grep for `DATABASE_URL\|SPRING_DATASOURCE\|gated redirect` returns nothing
-- [x] 3.2 Corrected terms present — grep shows `401`/`/api/auth/me`/`DB_HOST` in Phase 5 / gates rows
+- [x] 3.1 Stale terms gone — grep for `DATABASE_URL\|SPRING_DATASOURCE\|gated redirect` returns nothing — 00a7571
+- [x] 3.2 Corrected terms present — grep shows `401`/`/api/auth/me`/`DB_HOST` in Phase 5 / gates rows — 00a7571
 
 #### Manual
 
-- [x] 3.3 §3 Phase 5 and §5 gates row read coherently with corrected facts
+- [x] 3.3 §3 Phase 5 and §5 gates row read coherently with corrected facts — 00a7571
