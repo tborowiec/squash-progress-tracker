@@ -6,7 +6,7 @@
 >
 > Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
 >
-> Last updated: 2026-06-05 (added Phase 5: container smoke + critical-flow e2e)
+> Last updated: 2026-06-07 (reconciled §3: Phases 4 & 5 marked complete — rollout finished)
 
 ## 1. Strategy
 
@@ -84,8 +84,8 @@ orchestrator updates Status as artifacts appear on disk.
 | 1 | Ownership-boundary & no-mis-save (backend) | Prove cross-player access is rejected on every match endpoint and that confirmed == saved | #1, #3 | integration | complete | context/changes/ownership-boundary-tests/ |
 | 2 | AI failure-path (backend) | Prove a transient/erroring provider surfaces a clean, retryable error (no fake success, no infinite spin) and advice-labelling holds | #2 | unit + integration | complete | context/changes/ai-failure-path-tests/ |
 | 3 | Frontend runner bootstrap + guard/contract | Stand up the frontend test runner; prove the route guard is correct and the api-client matches the backend contract | #4, #5 | unit/component + contract | complete | context/changes/frontend-runner-bootstrap-tests/ |
-| 4 | Quality-gates wiring (CI) | Run both test suites + compile/typecheck in CI on every PR | cross-cutting | gates | not started | — |
-| 5 | Container smoke + critical-flow e2e | Build, boot, and HTTP-smoke the Docker image; one browser happy-path (login → log match → history) against the running app | #6 (+ exercises #4/#5 at the deployed layer) | container smoke + e2e (browser) | not started | — |
+| 4 | Quality-gates wiring (CI) | Run both test suites + compile/typecheck in CI on every PR | cross-cutting | gates | complete | context/changes/quality-gates-ci/ |
+| 5 | Container smoke + critical-flow e2e | Build, boot, and HTTP-smoke the Docker image; one browser happy-path (login → log match → history) against the running app | #6 (+ exercises #4/#5 at the deployed layer) | container smoke + e2e (browser) | complete | context/changes/container-smoke-e2e-tests/ |
 
 **Status vocabulary** (fixed — parser literals): `not started` → `change opened` → `researched` → `planned` → `implementing` → `complete`.
 
