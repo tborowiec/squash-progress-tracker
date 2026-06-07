@@ -268,25 +268,25 @@ Fix the two factual errors the research uncovered in the foundation doc that dro
 
 #### Automated
 
-- [x] 2.1 Workflow is valid YAML / parses (or `actionlint` clean)
-- [x] 2.2 `ci-success.needs` includes `container-smoke` and `e2e`
-- [ ] 2.3 PR: `container-smoke` builds image, runs harness, uploads image artifact (green)
-- [ ] 2.4 PR: `e2e` loads shared image, boots it, Playwright spec passes (green)
-- [ ] 2.5 Image built exactly once (e2e log shows `docker load`, not `docker build`)
+- [x] 2.1 Workflow is valid YAML / parses (or `actionlint` clean) — 7b7b105
+- [x] 2.2 `ci-success.needs` includes `container-smoke` and `e2e` — 7b7b105
+- [x] 2.3 PR: `container-smoke` builds image, runs harness, uploads image artifact (green) — 4cd907a
+- [x] 2.4 PR: `e2e` loads shared image, boots it, Playwright spec passes (green) — 4cd907a
+- [x] 2.5 Image built exactly once (e2e log shows `docker load`, not `docker build`) — 4cd907a
 
 #### Manual
 
-- [ ] 2.6 Broken Dockerfile / missing frontend makes `container-smoke` fail and blocks `ci-success`
-- [ ] 2.7 Failing e2e blocks `ci-success`; uploaded Playwright report shows the failure
-- [ ] 2.8 CI wall-clock acceptable (build paid once; e2e gated behind smoke)
+- [x] 2.6 Broken Dockerfile / missing frontend makes `container-smoke` fail and blocks `ci-success` — 4cd907a
+- [x] 2.7 Failing e2e blocks `ci-success`; uploaded Playwright report shows the failure — 4cd907a
+- [x] 2.8 CI wall-clock acceptable (build paid once; e2e gated behind smoke) — 4cd907a
 
 ### Phase 3: Correct test-plan.md
 
 #### Automated
 
-- [ ] 3.1 Stale terms gone — grep for `DATABASE_URL\|SPRING_DATASOURCE\|gated redirect` returns nothing
-- [ ] 3.2 Corrected terms present — grep shows `401`/`/api/auth/me`/`DB_HOST` in Phase 5 / gates rows
+- [x] 3.1 Stale terms gone — grep for `DATABASE_URL\|SPRING_DATASOURCE\|gated redirect` returns nothing
+- [x] 3.2 Corrected terms present — grep shows `401`/`/api/auth/me`/`DB_HOST` in Phase 5 / gates rows
 
 #### Manual
 
-- [ ] 3.3 §3 Phase 5 and §5 gates row read coherently with corrected facts
+- [x] 3.3 §3 Phase 5 and §5 gates row read coherently with corrected facts
