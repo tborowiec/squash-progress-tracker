@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
@@ -27,6 +26,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
@@ -62,9 +62,7 @@ class GamePlanApiIntegrationTests {
                 .andExpect(request().asyncStarted())
                 .andReturn();
 
-        mockMvc.perform(asyncDispatch(result));
-
-        var body = result.getResponse().getContentAsString();
+        var body = awaitStreamBody(result);
         assertThat(body).contains("event:meta");
         assertThat(body).contains("\"disclaimer\"");
         assertThat(body).contains("event:token");
@@ -84,9 +82,8 @@ class GamePlanApiIntegrationTests {
                         .session(session))
                 .andExpect(request().asyncStarted())
                 .andReturn();
-        mockMvc.perform(asyncDispatch(result));
 
-        assertThat(result.getResponse().getContentAsString()).contains("\"lowData\":true");
+        assertThat(awaitStreamBody(result)).contains("\"lowData\":true");
     }
 
     @Test
@@ -102,9 +99,8 @@ class GamePlanApiIntegrationTests {
                         .session(session))
                 .andExpect(request().asyncStarted())
                 .andReturn();
-        mockMvc.perform(asyncDispatch(result));
 
-        assertThat(result.getResponse().getContentAsString()).contains("\"lowData\":false");
+        assertThat(awaitStreamBody(result)).contains("\"lowData\":false");
     }
 
     // ── error paths ────────────────────────────────────────────────────────────
@@ -154,10 +150,9 @@ class GamePlanApiIntegrationTests {
                         .session(session))
                 .andExpect(request().asyncStarted())
                 .andReturn();
-        mockMvc.perform(asyncDispatch(result));
 
-        // Read with UTF-8 so the em dash in AiDisclaimer.TEXT survives the decode.
-        var body = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+        // awaitStreamBody reads with UTF-8 so the em dash in AiDisclaimer.TEXT survives the decode.
+        var body = awaitStreamBody(result);
 
         // disclaimer arrives in the meta event before the error event
         assertThat(body).contains("event:meta");
@@ -192,6 +187,21 @@ class GamePlanApiIntegrationTests {
     }
 
     // ── helpers ────────────────────────────────────────────────────────────────
+
+    /**
+     * Wait for the virtual streaming thread to finish writing the SSE response, then return its
+     * body (decoded as UTF-8 so the em dash in {@link AiDisclaimer#TEXT} survives). We must NOT call
+     * {@code asyncDispatch} here: that runs on the test thread and races the streaming thread on
+     * MockHttpServletResponse's non-thread-safe header map (ConcurrentModificationException). Polling
+     * until a terminal event ({@code done}/{@code error}) appears lets the streaming thread own every
+     * write.
+     */
+    private String awaitStreamBody(MvcResult result) throws Exception {
+        await().atMost(Duration.ofSeconds(5))
+                .untilAsserted(() -> assertThat(result.getResponse().getContentAsString(StandardCharsets.UTF_8))
+                        .containsPattern("event:(done|error)"));
+        return result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+    }
 
     @SuppressWarnings("unchecked")
     private void stubTokens(String... tokens) {
