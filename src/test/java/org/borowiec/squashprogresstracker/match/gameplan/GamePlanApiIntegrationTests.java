@@ -127,14 +127,8 @@ class GamePlanApiIntegrationTests {
                 .andExpect(request().asyncStarted())
                 .andReturn();
 
-        // asyncDispatch races with the virtual thread on MockHttpServletResponse's
-        // non-thread-safe header map (ConcurrentModificationException) when
-        // generateStreaming throws immediately. Poll the response instead.
-        await().atMost(Duration.ofSeconds(5))
-                .untilAsserted(() ->
-                        assertThat(result.getResponse().getContentAsString()).contains("event:error"));
-
-        var body = result.getResponse().getContentAsString();
+        var body = awaitStreamBody(result);
+        assertThat(body).contains("event:error");
         assertThat(body).doesNotContain("event:token");
         assertThat(result.getResponse().getStatus()).isEqualTo(200);
     }
