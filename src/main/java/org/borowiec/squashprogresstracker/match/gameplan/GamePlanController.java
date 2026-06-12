@@ -3,6 +3,8 @@ package org.borowiec.squashprogresstracker.match.gameplan;
 import java.io.IOException;
 import org.borowiec.squashprogresstracker.llm.AiDisclaimer;
 import org.borowiec.squashprogresstracker.llm.client.LlmException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +15,8 @@ import tools.jackson.databind.ObjectMapper;
 @RestController
 @RequestMapping("/api/game-plans")
 public class GamePlanController {
+
+    private static final Logger log = LoggerFactory.getLogger(GamePlanController.class);
 
     private final GamePlanService service;
     private final ObjectMapper objectMapper;
@@ -61,9 +65,19 @@ public class GamePlanController {
         try {
             emitter.send(
                     SseEmitter.event().name("error").data("{\"message\":\"AI service is temporarily unavailable\"}"));
-            emitter.complete();
-        } catch (Exception ignored) {
-            // Emitter may already be completed (client disconnected before error could be sent)
+        } catch (Exception e) {
+            // Emitter likely already terminal (client disconnected before the error event could be sent).
+            // Nothing actionable here — the originating LlmException is what mattered — but log so an
+            // unexpected (non-disconnect) failure isn't completely invisible.
+            log.debug("Could not deliver SSE error event; emitter already closed", e);
+        } finally {
+            // Guarantee completion even if send() threw: the emitter has no timeout (-1L), so a leaked,
+            // never-completed emitter would otherwise hang.
+            try {
+                emitter.complete();
+            } catch (Exception ignored) {
+                // Already terminal.
+            }
         }
     }
 
