@@ -19,6 +19,7 @@ public class MatchParsePromptBuilder {
             - For matchDate: resolve relative phrases ("yesterday", "last Monday", "May 5th") using today's date provided in the user message. If no date is mentioned, default to today.
             - For sets: parse each set score as playerScore vs opponentScore in the order played.
             - For notes: include any context, observations, or remarks from the text.
+			- Also for notes: do not translate anything to other language, keep the original language used.
             - If a field cannot be determined, return an empty string (opponentName, matchDate, notes) or an empty array (sets). Do not omit fields.""";
 
     public LlmRequest build(String text, LocalDate today, List<String> knownOpponents) {
