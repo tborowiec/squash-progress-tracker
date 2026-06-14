@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 import org.borowiec.squashprogresstracker.llm.client.LlmClient;
 import org.borowiec.squashprogresstracker.match.MatchRepository;
 import org.borowiec.squashprogresstracker.security.CurrentUser;
+import org.borowiec.squashprogresstracker.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,16 +15,19 @@ public class GamePlanService {
     private final CurrentUser currentUser;
     private final LlmClient llmClient;
     private final GamePlanPromptBuilder promptBuilder;
+    private final UserRepository userRepository;
 
     public GamePlanService(
             MatchRepository matchRepository,
             CurrentUser currentUser,
             LlmClient llmClient,
-            GamePlanPromptBuilder promptBuilder) {
+            GamePlanPromptBuilder promptBuilder,
+            UserRepository userRepository) {
         this.matchRepository = matchRepository;
         this.currentUser = currentUser;
         this.llmClient = llmClient;
         this.promptBuilder = promptBuilder;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -34,14 +38,16 @@ public class GamePlanService {
     @Transactional(readOnly = true)
     public GamePlanContext prepare(String opponentName) {
         var userId = currentUser.currentUserId();
+        var user = userRepository.findById(userId).orElseThrow();
+        var locale = user.getLocale();
         var matches =
                 matchRepository.findByUserIdAndOpponentNameIgnoreCaseOrderByMatchDateDescIdDesc(userId, opponentName);
         if (matches.isEmpty()) {
             throw new GamePlanUnavailableException(opponentName);
         }
-        var request = promptBuilder.build(opponentName, matches);
+        var request = promptBuilder.build(opponentName, matches, locale);
         var lowData = matches.size() < GamePlanPromptBuilder.LOW_DATA_THRESHOLD;
-        return new GamePlanContext(request, matches.size(), lowData);
+        return new GamePlanContext(request, matches.size(), lowData, locale);
     }
 
     public void stream(GamePlanContext context, Consumer<String> onToken) {

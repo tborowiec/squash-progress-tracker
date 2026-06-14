@@ -5,6 +5,7 @@ import org.borowiec.squashprogresstracker.llm.dto.LlmMessage;
 import org.borowiec.squashprogresstracker.llm.dto.LlmRequest;
 import org.borowiec.squashprogresstracker.llm.dto.LlmRole;
 import org.borowiec.squashprogresstracker.match.Match;
+import org.borowiec.squashprogresstracker.user.Locale;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,8 +21,11 @@ public class GamePlanPromptBuilder {
             Do NOT give generic conditioning, fitness, or mental-game advice unrelated to the actual match data.
             Output concise, actionable prose: tactical patterns you observe and suggested tactics for the next match.""";
 
-    public LlmRequest build(String opponentName, List<Match> matches) {
-        var system = new LlmMessage(LlmRole.SYSTEM, SYSTEM_MESSAGE);
+    private static final String PL_DIRECTIVE = "\nOdpowiadaj po polsku.";
+
+    public LlmRequest build(String opponentName, List<Match> matches, Locale locale) {
+        var systemContent = locale == Locale.PL ? SYSTEM_MESSAGE + PL_DIRECTIVE : SYSTEM_MESSAGE;
+        var system = new LlmMessage(LlmRole.SYSTEM, systemContent);
         var user = new LlmMessage(LlmRole.USER, buildUserMessage(opponentName, matches));
         return new LlmRequest(List.of(system, user), null, null, null);
     }

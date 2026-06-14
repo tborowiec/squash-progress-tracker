@@ -317,32 +317,32 @@ Negligible. react-i18next is pure-runtime (~8 KB core + ~15-20 KB with plugins, 
 
 #### Automated
 
-- [x] 2.1 Type check passes (`npm run typecheck`)
-- [x] 2.2 Biome check passes (`npm run lint`)
-- [x] 2.3 Build succeeds (`npm run build`)
+- [x] 2.1 Type check passes (`npm run typecheck`) — 36d41fa
+- [x] 2.2 Biome check passes (`npm run lint`) — 36d41fa
+- [x] 2.3 Build succeeds (`npm run build`) — 36d41fa
 
 #### Manual
 
-- [x] 2.4 Every screen renders fully in PL and EN — no untranslated leaks
-- [x] 2.5 Match-count plural correct in Polish (1 / 2-4 / 5+) and English
-- [x] 2.6 Opponent names and notes render verbatim in both languages
-- [x] 2.7 Switch in NavHeader → reload → choice sticks (persisted)
-- [x] 2.8 Sign out → sign in on fresh browser → language follows the account
-- [x] 2.9 Pre-auth switch on Login page works; account locale applies after sign-in
-- [x] 2.10 First visit auto-detects Polish browser → Polish; unsupported → English
+- [x] 2.4 Every screen renders fully in PL and EN — no untranslated leaks — 36d41fa
+- [x] 2.5 Match-count plural correct in Polish (1 / 2-4 / 5+) and English — 36d41fa
+- [x] 2.6 Opponent names and notes render verbatim in both languages — 36d41fa
+- [x] 2.7 Switch in NavHeader → reload → choice sticks (persisted) — 36d41fa
+- [x] 2.8 Sign out → sign in on fresh browser → language follows the account — 36d41fa
+- [x] 2.9 Pre-auth switch on Login page works; account locale applies after sign-in — 36d41fa
+- [x] 2.10 First visit auto-detects Polish browser → Polish; unsupported → English — 36d41fa
 
 ### Phase 3: Game-plan locale threading & disclaimer localization
 
 #### Automated
 
-- [ ] 3.1 Backend tests pass (`./mvnw test`)
-- [ ] 3.2 Prompt-builder unit test — Polish directive for `Locale.PL`, English/default case
-- [ ] 3.3 SSE integration test passes — `meta` event carries disclaimer (label present)
-- [ ] 3.4 Spotless check passes (`./mvnw spotless:check`)
+- [x] 3.1 Backend tests pass (`./mvnw test`)
+- [x] 3.2 Prompt-builder unit test — Polish directive for `Locale.PL`, English/default case
+- [x] 3.3 SSE integration test passes — `meta` event carries disclaimer (label present)
+- [x] 3.4 Spotless check passes (`./mvnw spotless:check`)
 
 #### Manual
 
-- [ ] 3.5 Polish UI → game plan text is Polish (no silent English fallback)
-- [ ] 3.6 English UI → plan is English
-- [ ] 3.7 Disclaimer shown in active language and always present
-- [ ] 3.8 Switching language then generating produces a plan in the new language
+- [x] 3.5 Polish UI → game plan text is Polish (no silent English fallback)
+- [x] 3.6 English UI → plan is English
+- [x] 3.7 Disclaimer shown in active language and always present
+- [x] 3.8 Switching language then generating produces a plan in the new language
