@@ -1,7 +1,7 @@
 ---
 change_id: i18n-pl-en
 title: Internationalization (Polish & English)
-status: preparing
+status: planned
 created: 2026-06-14
 updated: 2026-06-14
 ---
