@@ -302,16 +302,16 @@ Negligible. react-i18next is pure-runtime (~8 KB core + ~15-20 KB with plugins, 
 
 #### Automated
 
-- [ ] 1.1 App boots — Flyway V3 applies and `validate` passes
-- [ ] 1.2 Backend tests pass (`./mvnw test`)
-- [ ] 1.3 Integration test passes — register → login → PUT locale → GET /me asserts `$.locale == 'pl'`
-- [ ] 1.4 Invalid-locale write returns 4xx
-- [ ] 1.5 Spotless check passes (`./mvnw spotless:check`)
+- [x] 1.1 App boots — Flyway V3 applies and `validate` passes
+- [x] 1.2 Backend tests pass (`./mvnw test`)
+- [x] 1.3 Integration test passes — register → login → PUT locale → GET /me asserts `$.locale == 'pl'`
+- [x] 1.4 Invalid-locale write returns 4xx
+- [x] 1.5 Spotless check passes (`./mvnw spotless:check`)
 
 #### Manual
 
-- [ ] 1.6 Existing rows backfilled to `en` after migration
-- [ ] 1.7 Cross-user isolation — one user's locale change doesn't affect another
+- [x] 1.6 Existing rows backfilled to `en` after migration
+- [x] 1.7 Cross-user isolation — one user's locale change doesn't affect another
 
 ### Phase 2: Frontend i18n foundation, string extraction & switcher
 
