@@ -1,5 +1,6 @@
 import type { AxiosError } from 'axios'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import type { ApiError } from '../api/auth'
 import { createMatch, parseMatch } from '../api/matches'
@@ -98,6 +99,7 @@ const s: Record<string, React.CSSProperties> = {
 
 export default function LogMatchPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [mode, setMode] = useState<'ai' | 'manual'>('ai')
   const [aiText, setAiText] = useState('')
   const [parsing, setParsing] = useState(false)
@@ -134,7 +136,7 @@ export default function LogMatchPage() {
       setMode('manual')
     } catch (err) {
       const ae = (err as AxiosError<ApiError>).response?.data
-      setGlobalError(ae?.message ?? 'Could not parse match. Please try again.')
+      setGlobalError(ae?.message ?? t('logMatch.couldNotParse'))
     } finally {
       setParsing(false)
     }
@@ -144,9 +146,9 @@ export default function LogMatchPage() {
     <div style={s.page}>
       <NavHeader
         links={[
-          { label: 'Dashboard', to: '/' },
-          { label: 'History', to: '/history' },
-          { label: 'Game plan', to: '/game-plan' },
+          { label: t('nav.dashboard'), to: '/' },
+          { label: t('nav.history'), to: '/history' },
+          { label: t('nav.gamePlan'), to: '/game-plan' },
         ]}
       />
 
@@ -154,9 +156,7 @@ export default function LogMatchPage() {
         <div style={s.card}>
           {globalError && <div style={s.banner}>{globalError}</div>}
           {parseWarning && mode === 'manual' && (
-            <div style={s.caveat}>
-              Some fields could not be parsed — review opponent and sets before saving.
-            </div>
+            <div style={s.caveat}>{t('logMatch.parseWarning')}</div>
           )}
 
           <div style={s.toggleRow}>
@@ -169,7 +169,7 @@ export default function LogMatchPage() {
               }}
               onClick={() => switchMode('ai')}
             >
-              AI
+              {t('logMatch.ai')}
             </button>
             <button
               type="button"
@@ -180,27 +180,27 @@ export default function LogMatchPage() {
               }}
               onClick={() => switchMode('manual')}
             >
-              Manual
+              {t('logMatch.manual')}
             </button>
           </div>
 
           {mode === 'ai' && (
             <div style={s.section}>
-              <h2 style={s.sectionHeading}>Describe your match</h2>
+              <h2 style={s.sectionHeading}>{t('logMatch.describeMatch')}</h2>
               <textarea
                 style={s.aiTextarea}
-                placeholder="e.g. beat Kowalski 3:1 (11:5, 6:11, 11:2, 11:1) on May 5th, struggled in the second set"
+                placeholder={t('logMatch.aiTextareaPlaceholder')}
                 value={aiText}
                 onChange={e => setAiText(e.target.value)}
               />
-              <p style={s.disclaimer}>AI-parsed — review all fields before saving</p>
+              <p style={s.disclaimer}>{t('logMatch.aiDisclaimer')}</p>
               <button
                 type="button"
                 style={{ ...s.parseBtn, opacity: parsing || !aiText.trim() ? 0.7 : 1 }}
                 onClick={handleParse}
                 disabled={parsing || !aiText.trim()}
               >
-                {parsing ? 'Parsing…' : 'Parse with AI'}
+                {parsing ? t('logMatch.parsing') : t('logMatch.parseWithAI')}
               </button>
             </div>
           )}
@@ -209,7 +209,7 @@ export default function LogMatchPage() {
             <MatchForm
               key={formKey}
               initial={initial}
-              submitLabel="Save match"
+              submitLabel={t('logMatch.saveMatch')}
               onSubmit={async payload => {
                 await createMatch(payload)
                 navigate('/history')

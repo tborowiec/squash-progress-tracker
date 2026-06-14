@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import ReactMarkdown from 'react-markdown'
 import { useSearchParams } from 'react-router-dom'
 import { type GamePlanMeta, streamGamePlan } from '../api/gameplans'
@@ -118,6 +119,7 @@ const s: Record<string, React.CSSProperties> = {
 
 export default function GamePlanPage() {
   const [searchParams] = useSearchParams()
+  const { t } = useTranslation()
   const [opponents, setOpponents] = useState<string[]>([])
   const [opponent, setOpponent] = useState(searchParams.get('opponent') ?? '')
   const [status, setStatus] = useState<'idle' | 'streaming' | 'done' | 'error'>('idle')
@@ -141,7 +143,7 @@ export default function GamePlanPage() {
     setStatus('streaming')
     closeStreamRef.current = streamGamePlan(opponent, {
       onMeta: m => setMeta(m),
-      onToken: t => setPlan(prev => prev + t),
+      onToken: tok => setPlan(prev => prev + tok),
       onDone: () => setStatus('done'),
       onError: () => setStatus('error'),
     })
@@ -155,9 +157,9 @@ export default function GamePlanPage() {
       <style>{CURSOR_STYLE}</style>
       <NavHeader
         links={[
-          { label: 'Dashboard', to: '/' },
-          { label: 'Log match', to: '/matches/new' },
-          { label: 'History', to: '/history' },
+          { label: t('nav.dashboard'), to: '/' },
+          { label: t('nav.logMatch'), to: '/matches/new' },
+          { label: t('nav.history'), to: '/history' },
         ]}
       />
 
@@ -165,7 +167,7 @@ export default function GamePlanPage() {
         <div style={s.inner}>
           <div style={s.toolbar}>
             <select style={s.select} value={opponent} onChange={e => setOpponent(e.target.value)}>
-              <option value="">Select opponent…</option>
+              <option value="">{t('gamePlan.selectOpponent')}</option>
               {opponents.map(o => (
                 <option key={o} value={o}>
                   {o}
@@ -178,28 +180,22 @@ export default function GamePlanPage() {
               disabled={isDisabled}
               onClick={handleGenerate}
             >
-              {status === 'streaming' ? 'Generating…' : 'Generate game plan'}
+              {status === 'streaming' ? t('gamePlan.generating') : t('gamePlan.generateBtn')}
             </button>
           </div>
 
           {showBanner && (
             <div style={s.bannerWrap}>
-              <div style={s.banner}>
-                {meta?.disclaimer ??
-                  'AI-generated advice — not factual analysis. Verify before relying on it.'}
-              </div>
+              <div style={s.banner}>{meta?.disclaimer ?? t('gamePlan.disclaimer')}</div>
               {meta?.lowData && (
                 <div style={s.caveat}>
-                  Based on limited history ({meta.matchCount} match
-                  {meta.matchCount === 1 ? '' : 'es'}) — treat with extra caution.
+                  {t('gamePlan.lowDataCaveat', { count: meta.matchCount })}
                 </div>
               )}
             </div>
           )}
 
-          {status === 'error' && (
-            <div style={s.errorCard}>AI service is temporarily unavailable. Please try again.</div>
-          )}
+          {status === 'error' && <div style={s.errorCard}>{t('gamePlan.errorCard')}</div>}
 
           {plan !== '' && (
             <div style={s.planCard}>
@@ -282,12 +278,13 @@ export default function GamePlanPage() {
           )}
 
           {status !== 'error' && plan === '' && status !== 'streaming' && (
-            <p style={s.placeholder}>Select an opponent and generate a game plan.</p>
+            <p style={s.placeholder}>{t('gamePlan.placeholder')}</p>
           )}
 
           {status === 'streaming' && plan === '' && (
             <p style={{ ...s.placeholder, paddingTop: '2rem' }}>
-              Generating<span className="__cursor">▊</span>
+              {t('gamePlan.generatingPlaceholder')}
+              <span className="__cursor">▊</span>
             </p>
           )}
         </div>

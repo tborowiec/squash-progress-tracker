@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { me, type UserResponse } from '../api/auth'
+import i18n from '../i18n'
 
 interface AuthState {
   user: UserResponse | null
@@ -15,7 +16,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     me()
-      .then(setUser)
+      .then(u => {
+        setUser(u)
+        i18n.changeLanguage(u.locale)
+      })
       .catch(() => setUser(null))
       .finally(() => setLoading(false))
   }, [])

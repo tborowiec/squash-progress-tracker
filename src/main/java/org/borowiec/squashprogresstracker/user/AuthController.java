@@ -7,6 +7,7 @@ import org.borowiec.squashprogresstracker.security.AppUserDetails;
 import org.borowiec.squashprogresstracker.security.CurrentUser;
 import org.borowiec.squashprogresstracker.user.dto.LoginRequest;
 import org.borowiec.squashprogresstracker.user.dto.RegisterRequest;
+import org.borowiec.squashprogresstracker.user.dto.UpdateLocaleRequest;
 import org.borowiec.squashprogresstracker.user.dto.UserResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -83,5 +84,13 @@ public class AuthController {
         var userId = currentUser.currentUserId();
         var user = userRepository.findById(userId).orElseThrow();
         return UserResponse.from(user);
+    }
+
+    @PutMapping("/me/locale")
+    public UserResponse updateLocale(@Valid @RequestBody UpdateLocaleRequest request) {
+        var userId = currentUser.currentUserId();
+        var user = userRepository.findById(userId).orElseThrow();
+        user.setLocale(Locale.fromTag(request.locale()));
+        return UserResponse.from(userRepository.save(user));
     }
 }

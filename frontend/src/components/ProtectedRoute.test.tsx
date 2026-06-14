@@ -56,7 +56,7 @@ describe('ProtectedRoute', () => {
 
     it('renders the outlet when authenticated', () => {
       mockUseAuth.mockReturnValue({
-        user: { id: 1, email: 'player@example.com' },
+        user: { id: 1, email: 'player@example.com', locale: 'en' },
         loading: false,
         setUser: vi.fn(),
       })

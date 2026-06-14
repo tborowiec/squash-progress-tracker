@@ -3,6 +3,7 @@ package org.borowiec.squashprogresstracker.user;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.Test;
@@ -201,5 +202,70 @@ class AuthIntegrationTests {
         mockMvc.perform(post("/api/auth/logout").with(csrf()).session(session)).andExpect(status().isNoContent());
 
         mockMvc.perform(get("/api/auth/me").session(session)).andExpect(status().isUnauthorized());
+    }
+
+    // ── locale ───────────────────────────────────────────────────────────────
+
+    private MockHttpSession registerAndLogin(String email) throws Exception {
+        mockMvc.perform(post("/api/auth/register")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"" + email + "\",\"password\":\"password1\"}"))
+                .andExpect(status().isCreated());
+
+        return (MockHttpSession) mockMvc.perform(post("/api/auth/login")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"" + email + "\",\"password\":\"password1\"}"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getRequest()
+                .getSession(false);
+    }
+
+    @Test
+    void updateLocale_persistsAndReturnsNewLocale() throws Exception {
+        var session = registerAndLogin("locale-user@example.com");
+
+        mockMvc.perform(put("/api/auth/me/locale")
+                        .with(csrf())
+                        .session(session)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"locale\":\"pl\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.locale").value("pl"));
+
+        mockMvc.perform(get("/api/auth/me").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.locale").value("pl"));
+    }
+
+    @Test
+    void updateLocale_invalidTagReturns400() throws Exception {
+        var session = registerAndLogin("locale-invalid@example.com");
+
+        mockMvc.perform(put("/api/auth/me/locale")
+                        .with(csrf())
+                        .session(session)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"locale\":\"fr\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateLocale_doesNotAffectOtherUsers() throws Exception {
+        var sessionA = registerAndLogin("locale-a@example.com");
+        var sessionB = registerAndLogin("locale-b@example.com");
+
+        mockMvc.perform(put("/api/auth/me/locale")
+                        .with(csrf())
+                        .session(sessionA)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"locale\":\"pl\"}"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/auth/me").session(sessionB))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.locale").value("en"));
     }
 }

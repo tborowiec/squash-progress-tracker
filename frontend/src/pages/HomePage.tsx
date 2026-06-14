@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import NavHeader from '../components/NavHeader'
 import { useAuth } from '../contexts/AuthContext'
@@ -70,32 +71,33 @@ const s: Record<string, React.CSSProperties> = {
 export default function HomePage() {
   const { user } = useAuth()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   return (
     <div style={s.page}>
       <NavHeader
         links={[
-          { label: 'History', to: '/history' },
-          { label: 'Game plan', to: '/game-plan' },
-          { label: 'Log match', to: '/matches/new' },
+          { label: t('nav.history'), to: '/history' },
+          { label: t('nav.gamePlan'), to: '/game-plan' },
+          { label: t('nav.logMatch'), to: '/matches/new' },
         ]}
       />
 
       <main style={s.main}>
         <div style={s.welcome}>
-          <p style={s.eyebrow}>Dashboard</p>
-          <h1 style={s.heading}>Welcome, {user?.email}</h1>
+          <p style={s.eyebrow}>{t('home.eyebrow')}</p>
+          <h1 style={s.heading}>{t('home.welcome', { email: user?.email })}</h1>
         </div>
 
         <div style={s.actions}>
           <button type="button" style={s.primaryBtn} onClick={() => navigate('/matches/new')}>
-            Log match
+            {t('home.logMatchBtn')}
           </button>
           <button type="button" style={s.secondaryBtn} onClick={() => navigate('/history')}>
-            Match history
+            {t('home.matchHistoryBtn')}
           </button>
           <button type="button" style={s.secondaryBtn} onClick={() => navigate('/game-plan')}>
-            Game plan
+            {t('home.gamePlanBtn')}
           </button>
         </div>
       </main>

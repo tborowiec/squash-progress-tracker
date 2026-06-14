@@ -20,6 +20,9 @@ public class User {
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
+    @Column(nullable = false)
+    private Locale locale = Locale.EN;
+
     @PrePersist
     void prePersist() {
         if (createdAt == null) {
@@ -57,5 +60,13 @@ public class User {
 
     public void setCreatedAt(OffsetDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
     }
 }

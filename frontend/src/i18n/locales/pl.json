@@ -1,0 +1,98 @@
+{
+  "nav": {
+    "signOut": "Wyloguj",
+    "history": "Historia",
+    "gamePlan": "Plan gry",
+    "logMatch": "Dodaj mecz",
+    "dashboard": "Pulpit"
+  },
+  "home": {
+    "eyebrow": "Pulpit",
+    "welcome": "Witaj, {{email}}",
+    "logMatchBtn": "Dodaj mecz",
+    "matchHistoryBtn": "Historia meczy",
+    "gamePlanBtn": "Plan gry"
+  },
+  "auth": {
+    "eyebrow": "Squash Progress Tracker",
+    "email": "Email",
+    "password": "Hasło",
+    "signIn": "Zaloguj się",
+    "signingIn": "Logowanie…",
+    "noAccount": "Nie masz konta?",
+    "registerLink": "Zarejestruj się",
+    "createAccount": "Utwórz konto",
+    "creatingAccount": "Tworzenie konta…",
+    "alreadyHaveAccount": "Masz już konto?",
+    "signInLink": "Zaloguj się",
+    "loginFailed": "Logowanie nie powiodło się. Spróbuj ponownie.",
+    "registrationFailed": "Rejestracja nie powiodła się. Spróbuj ponownie."
+  },
+  "matchForm": {
+    "matchDetails": "Szczegóły meczu",
+    "opponent": "Przeciwnik",
+    "date": "Data",
+    "notes": "Notatki",
+    "notesPlaceholder": "Opcjonalne notatki…",
+    "setScores": "Wyniki setów",
+    "setLabel": "Set {{n}}",
+    "vs": "vs",
+    "addSetCount": "+ Dodaj set ({{n}}/5)",
+    "addSetMax": "+ Dodaj set (maks)",
+    "saving": "Zapisywanie…",
+    "couldNotSave": "Nie można zapisać meczu. Spróbuj ponownie.",
+    "removeSet": "Usuń set"
+  },
+  "match": {
+    "result": {
+      "WON": "WYGRANY",
+      "LOST": "PRZEGRANY",
+      "DRAW": "REMIS"
+    }
+  },
+  "history": {
+    "allOpponents": "Wszyscy przeciwnicy",
+    "gamePlanArrow": "Plan gry →",
+    "loading": "Ładowanie…",
+    "noMatches": "Brak meczy.",
+    "logFirstMatch": "Dodaj swój pierwszy mecz →",
+    "deleteConfirm": "Usunąć ten mecz?",
+    "confirm": "Potwierdź",
+    "cancel": "Anuluj",
+    "deleting": "Usuwanie…",
+    "edit": "Edytuj",
+    "delete": "Usuń",
+    "couldNotDelete": "Nie można usunąć. Spróbuj ponownie."
+  },
+  "logMatch": {
+    "ai": "AI",
+    "manual": "Ręcznie",
+    "describeMatch": "Opisz swój mecz",
+    "aiTextareaPlaceholder": "np. pokonałem Kowalskiego 3:1 (11:5, 6:11, 11:2, 11:1) 5 maja, miałem problemy w drugim secie",
+    "aiDisclaimer": "Parsowane przez AI — sprawdź wszystkie pola przed zapisem",
+    "parseWithAI": "Parsuj z AI",
+    "parsing": "Parsowanie…",
+    "saveMatch": "Zapisz mecz",
+    "parseWarning": "Niektóre pola nie zostały sparsowane — sprawdź przeciwnika i sety przed zapisem.",
+    "couldNotParse": "Nie można sparsować meczu. Spróbuj ponownie."
+  },
+  "gamePlan": {
+    "selectOpponent": "Wybierz przeciwnika…",
+    "generating": "Generowanie…",
+    "generateBtn": "Generuj plan gry",
+    "disclaimer": "Porada wygenerowana przez AI — nie jest to analiza faktyczna. Zweryfikuj przed zastosowaniem.",
+    "lowDataCaveat_one": "Krótka historia pojedynków ({{count}} mecz) — traktuj z ograniczonym zaufaniem.",
+    "lowDataCaveat_few": "Krótka historia pojedynków ({{count}} mecze) — traktuj z ograniczonym zaufaniem.",
+    "lowDataCaveat_many": "Krótka historia pojedynków ({{count}} meczy) — traktuj z ograniczonym zaufaniem.",
+    "lowDataCaveat_other": "Krótka historia pojedynków ({{count}} meczy) — traktuj z ograniczonym zaufaniem.",
+    "errorCard": "Usługa AI jest chwilowo niedostępna. Spróbuj ponownie.",
+    "placeholder": "Wybierz przeciwnika i wygeneruj plan gry.",
+    "generatingPlaceholder": "Generowanie"
+  },
+  "editMatch": {
+    "loading": "Ładowanie…",
+    "notFound": "Nie znaleziono meczu.",
+    "backToHistory": "← Powrót do historii",
+    "updateMatch": "Zaktualizuj mecz"
+  }
+}

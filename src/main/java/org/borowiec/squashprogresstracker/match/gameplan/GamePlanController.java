@@ -36,8 +36,8 @@ public class GamePlanController {
             try {
                 emitter.send(SseEmitter.event()
                         .name("meta")
-                        .data(objectMapper.writeValueAsString(
-                                new MetaPayload(AiDisclaimer.TEXT, context.matchCount(), context.lowData()))));
+                        .data(objectMapper.writeValueAsString(new MetaPayload(
+                                AiDisclaimer.text(context.locale()), context.matchCount(), context.lowData()))));
 
                 service.stream(context, token -> {
                     try {
