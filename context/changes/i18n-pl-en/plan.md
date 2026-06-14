@@ -335,14 +335,14 @@ Negligible. react-i18next is pure-runtime (~8 KB core + ~15-20 KB with plugins, 
 
 #### Automated
 
-- [x] 3.1 Backend tests pass (`./mvnw test`)
-- [x] 3.2 Prompt-builder unit test — Polish directive for `Locale.PL`, English/default case
-- [x] 3.3 SSE integration test passes — `meta` event carries disclaimer (label present)
-- [x] 3.4 Spotless check passes (`./mvnw spotless:check`)
+- [x] 3.1 Backend tests pass (`./mvnw test`) — cbe2b25
+- [x] 3.2 Prompt-builder unit test — Polish directive for `Locale.PL`, English/default case — cbe2b25
+- [x] 3.3 SSE integration test passes — `meta` event carries disclaimer (label present) — cbe2b25
+- [x] 3.4 Spotless check passes (`./mvnw spotless:check`) — cbe2b25
 
 #### Manual
 
-- [x] 3.5 Polish UI → game plan text is Polish (no silent English fallback)
-- [x] 3.6 English UI → plan is English
-- [x] 3.7 Disclaimer shown in active language and always present
-- [x] 3.8 Switching language then generating produces a plan in the new language
+- [x] 3.5 Polish UI → game plan text is Polish (no silent English fallback) — cbe2b25
+- [x] 3.6 English UI → plan is English — cbe2b25
+- [x] 3.7 Disclaimer shown in active language and always present — cbe2b25
+- [x] 3.8 Switching language then generating produces a plan in the new language — cbe2b25
