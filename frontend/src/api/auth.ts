@@ -3,6 +3,7 @@ import client from './client'
 export interface UserResponse {
   id: number
   email: string
+  locale: string
 }
 
 export interface ApiError {
@@ -20,3 +21,6 @@ export const register = (email: string, password: string) =>
   client.post<UserResponse>('/api/auth/register', { email, password }).then(r => r.data)
 
 export const logout = () => client.post('/api/auth/logout')
+
+export const updateLocale = (locale: string) =>
+  client.put<UserResponse>('/api/auth/me/locale', { locale }).then(r => r.data)

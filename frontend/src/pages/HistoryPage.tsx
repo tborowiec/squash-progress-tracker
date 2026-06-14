@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { deleteMatch, listMatches, listOpponents, type MatchResponse } from '../api/matches'
 import NavHeader from '../components/NavHeader'
@@ -171,6 +172,7 @@ function formatSets(match: MatchResponse): string {
 
 export default function HistoryPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [matches, setMatches] = useState<MatchResponse[]>([])
   const [opponents, setOpponents] = useState<string[]>([])
   const [filter, setFilter] = useState('')
@@ -207,7 +209,7 @@ export default function HistoryPage() {
       setMatches(m)
       setConfirmingId(null)
     } catch {
-      setDeleteError({ id, msg: 'Could not delete. Please try again.' })
+      setDeleteError({ id, msg: t('history.couldNotDelete') })
       setConfirmingId(null)
     } finally {
       setDeletingId(null)
@@ -218,9 +220,9 @@ export default function HistoryPage() {
     <div style={s.page}>
       <NavHeader
         links={[
-          { label: 'Dashboard', to: '/' },
-          { label: 'Log match', to: '/matches/new' },
-          { label: 'Game plan', to: '/game-plan' },
+          { label: t('nav.dashboard'), to: '/' },
+          { label: t('nav.logMatch'), to: '/matches/new' },
+          { label: t('nav.gamePlan'), to: '/game-plan' },
         ]}
       />
 
@@ -232,7 +234,7 @@ export default function HistoryPage() {
               value={filter}
               onChange={e => handleFilterChange(e.target.value)}
             >
-              <option value="">All opponents</option>
+              <option value="">{t('history.allOpponents')}</option>
               {opponents.map(o => (
                 <option key={o} value={o}>
                   {o}
@@ -247,24 +249,24 @@ export default function HistoryPage() {
                 disabled={!filter}
                 onClick={() => navigate(`/game-plan?opponent=${encodeURIComponent(filter)}`)}
               >
-                Game plan →
+                {t('history.gamePlanArrow')}
               </button>
               <button type="button" style={s.logBtn} onClick={() => navigate('/matches/new')}>
-                Log match
+                {t('nav.logMatch')}
               </button>
             </div>
           </div>
 
           {loading ? (
-            <p style={s.loading}>Loading…</p>
+            <p style={s.loading}>{t('history.loading')}</p>
           ) : matches.length === 0 ? (
             <div style={s.empty}>
-              <p style={s.emptyMsg}>No matches yet.</p>
+              <p style={s.emptyMsg}>{t('history.noMatches')}</p>
               <Link
                 to="/matches/new"
                 style={{ color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '13px' }}
               >
-                Log your first match →
+                {t('history.logFirstMatch')}
               </Link>
             </div>
           ) : (
@@ -276,7 +278,7 @@ export default function HistoryPage() {
                     <span style={s.dateBadge}>{match.matchDate}</span>
                   </div>
                   <span style={resultStyle(match.result)}>
-                    {match.setsWon}–{match.setsLost} {match.result}
+                    {match.setsWon}–{match.setsLost} {t(`match.result.${match.result}`)}
                   </span>
                 </div>
                 <p style={s.sets}>{formatSets(match)}</p>
@@ -285,7 +287,7 @@ export default function HistoryPage() {
                 <div style={s.actions}>
                   {confirmingId === match.id ? (
                     <>
-                      <span style={s.confirmText}>Delete this match?</span>
+                      <span style={s.confirmText}>{t('history.deleteConfirm')}</span>
                       <button
                         type="button"
                         style={{
@@ -297,7 +299,7 @@ export default function HistoryPage() {
                         onClick={() => handleDelete(match.id)}
                         disabled={deletingId === match.id}
                       >
-                        {deletingId === match.id ? 'Deleting…' : 'Confirm'}
+                        {deletingId === match.id ? t('history.deleting') : t('history.confirm')}
                       </button>
                       <button
                         type="button"
@@ -305,7 +307,7 @@ export default function HistoryPage() {
                         onClick={() => setConfirmingId(null)}
                         disabled={deletingId === match.id}
                       >
-                        Cancel
+                        {t('history.cancel')}
                       </button>
                     </>
                   ) : (
@@ -315,7 +317,7 @@ export default function HistoryPage() {
                         style={{ ...s.actionBtn, color: 'var(--teal)' }}
                         onClick={() => navigate(`/matches/${match.id}/edit`)}
                       >
-                        Edit
+                        {t('history.edit')}
                       </button>
                       <button
                         type="button"
@@ -325,7 +327,7 @@ export default function HistoryPage() {
                           setDeleteError(null)
                         }}
                       >
-                        Delete
+                        {t('history.delete')}
                       </button>
                     </>
                   )}

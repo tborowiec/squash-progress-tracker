@@ -1,0 +1,96 @@
+{
+  "nav": {
+    "signOut": "Sign out",
+    "history": "History",
+    "gamePlan": "Game plan",
+    "logMatch": "Log match",
+    "dashboard": "Dashboard"
+  },
+  "home": {
+    "eyebrow": "Dashboard",
+    "welcome": "Welcome, {{email}}",
+    "logMatchBtn": "Log match",
+    "matchHistoryBtn": "Match history",
+    "gamePlanBtn": "Game plan"
+  },
+  "auth": {
+    "eyebrow": "Squash Progress Tracker",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signingIn": "Signing in…",
+    "noAccount": "No account?",
+    "registerLink": "Register",
+    "createAccount": "Create account",
+    "creatingAccount": "Creating account…",
+    "alreadyHaveAccount": "Already have an account?",
+    "signInLink": "Sign in",
+    "loginFailed": "Login failed. Please try again.",
+    "registrationFailed": "Registration failed. Please try again."
+  },
+  "matchForm": {
+    "matchDetails": "Match details",
+    "opponent": "Opponent",
+    "date": "Date",
+    "notes": "Notes",
+    "notesPlaceholder": "Optional notes…",
+    "setScores": "Set scores",
+    "setLabel": "Set {{n}}",
+    "vs": "vs",
+    "addSetCount": "+ Add set ({{n}}/5)",
+    "addSetMax": "+ Add set (max)",
+    "saving": "Saving…",
+    "couldNotSave": "Could not save match. Please try again.",
+    "removeSet": "Remove set"
+  },
+  "match": {
+    "result": {
+      "WON": "WON",
+      "LOST": "LOST",
+      "DRAW": "DRAW"
+    }
+  },
+  "history": {
+    "allOpponents": "All opponents",
+    "gamePlanArrow": "Game plan →",
+    "loading": "Loading…",
+    "noMatches": "No matches yet.",
+    "logFirstMatch": "Log your first match →",
+    "deleteConfirm": "Delete this match?",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "deleting": "Deleting…",
+    "edit": "Edit",
+    "delete": "Delete",
+    "couldNotDelete": "Could not delete. Please try again."
+  },
+  "logMatch": {
+    "ai": "AI",
+    "manual": "Manual",
+    "describeMatch": "Describe your match",
+    "aiTextareaPlaceholder": "e.g. beat Kowalski 3:1 (11:5, 6:11, 11:2, 11:1) on May 5th, struggled in the second set",
+    "aiDisclaimer": "AI-parsed — review all fields before saving",
+    "parseWithAI": "Parse with AI",
+    "parsing": "Parsing…",
+    "saveMatch": "Save match",
+    "parseWarning": "Some fields could not be parsed — review opponent and sets before saving.",
+    "couldNotParse": "Could not parse match. Please try again."
+  },
+  "gamePlan": {
+    "selectOpponent": "Select opponent…",
+    "generating": "Generating…",
+    "generateBtn": "Generate game plan",
+    "disclaimer": "AI-generated advice — not factual analysis. Verify before relying on it.",
+    "lowDataCaveat_one": "Based on limited history ({{count}} match) — treat with extra caution.",
+    "lowDataCaveat_other": "Based on limited history ({{count}} matches) — treat with extra caution.",
+    "errorCard": "AI service is temporarily unavailable. Please try again.",
+    "placeholder": "Select an opponent and generate a game plan.",
+    "generatingPlaceholder": "Generating"
+  },
+  "editMatch": {
+    "loading": "Loading…",
+    "notFound": "Match not found.",
+    "backToHistory": "← Back to history",
+    "updateMatch": "Update match"
+  }
+}

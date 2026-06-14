@@ -302,34 +302,34 @@ Negligible. react-i18next is pure-runtime (~8 KB core + ~15-20 KB with plugins, 
 
 #### Automated
 
-- [x] 1.1 App boots — Flyway V3 applies and `validate` passes
-- [x] 1.2 Backend tests pass (`./mvnw test`)
-- [x] 1.3 Integration test passes — register → login → PUT locale → GET /me asserts `$.locale == 'pl'`
-- [x] 1.4 Invalid-locale write returns 4xx
-- [x] 1.5 Spotless check passes (`./mvnw spotless:check`)
+- [x] 1.1 App boots — Flyway V3 applies and `validate` passes — e56118e
+- [x] 1.2 Backend tests pass (`./mvnw test`) — e56118e
+- [x] 1.3 Integration test passes — register → login → PUT locale → GET /me asserts `$.locale == 'pl'` — e56118e
+- [x] 1.4 Invalid-locale write returns 4xx — e56118e
+- [x] 1.5 Spotless check passes (`./mvnw spotless:check`) — e56118e
 
 #### Manual
 
-- [x] 1.6 Existing rows backfilled to `en` after migration
-- [x] 1.7 Cross-user isolation — one user's locale change doesn't affect another
+- [x] 1.6 Existing rows backfilled to `en` after migration — e56118e
+- [x] 1.7 Cross-user isolation — one user's locale change doesn't affect another — e56118e
 
 ### Phase 2: Frontend i18n foundation, string extraction & switcher
 
 #### Automated
 
-- [ ] 2.1 Type check passes (`npm run typecheck`)
-- [ ] 2.2 Biome check passes (`npm run lint`)
-- [ ] 2.3 Build succeeds (`npm run build`)
+- [x] 2.1 Type check passes (`npm run typecheck`)
+- [x] 2.2 Biome check passes (`npm run lint`)
+- [x] 2.3 Build succeeds (`npm run build`)
 
 #### Manual
 
-- [ ] 2.4 Every screen renders fully in PL and EN — no untranslated leaks
-- [ ] 2.5 Match-count plural correct in Polish (1 / 2-4 / 5+) and English
-- [ ] 2.6 Opponent names and notes render verbatim in both languages
-- [ ] 2.7 Switch in NavHeader → reload → choice sticks (persisted)
-- [ ] 2.8 Sign out → sign in on fresh browser → language follows the account
-- [ ] 2.9 Pre-auth switch on Login page works; account locale applies after sign-in
-- [ ] 2.10 First visit auto-detects Polish browser → Polish; unsupported → English
+- [x] 2.4 Every screen renders fully in PL and EN — no untranslated leaks
+- [x] 2.5 Match-count plural correct in Polish (1 / 2-4 / 5+) and English
+- [x] 2.6 Opponent names and notes render verbatim in both languages
+- [x] 2.7 Switch in NavHeader → reload → choice sticks (persisted)
+- [x] 2.8 Sign out → sign in on fresh browser → language follows the account
+- [x] 2.9 Pre-auth switch on Login page works; account locale applies after sign-in
+- [x] 2.10 First visit auto-detects Polish browser → Polish; unsupported → English
 
 ### Phase 3: Game-plan locale threading & disclaimer localization
 

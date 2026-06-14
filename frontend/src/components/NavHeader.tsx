@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { logout } from '../api/auth'
 import { useAuth } from '../contexts/AuthContext'
+import LanguageSwitcher from './LanguageSwitcher'
 
 interface NavLink {
   label: string
@@ -52,6 +54,7 @@ const s: Record<string, React.CSSProperties> = {
 export default function NavHeader({ links = [] }: Props) {
   const navigate = useNavigate()
   const { setUser } = useAuth()
+  const { t } = useTranslation()
 
   async function handleSignOut() {
     await logout()
@@ -70,8 +73,9 @@ export default function NavHeader({ links = [] }: Props) {
             {l.label}
           </Link>
         ))}
+        <LanguageSwitcher />
         <button type="button" style={s.signOut} onClick={handleSignOut}>
-          Sign out
+          {t('nav.signOut')}
         </button>
       </div>
     </header>

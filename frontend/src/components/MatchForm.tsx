@@ -1,5 +1,6 @@
 import type { AxiosError } from 'axios'
 import { useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { ApiError } from '../api/auth'
 import type { CreateOrUpdateMatchRequest, SetScoreRequest } from '../api/matches'
 
@@ -185,6 +186,7 @@ const s: Record<string, React.CSSProperties> = {
 }
 
 export default function MatchForm({ initial, onSubmit, submitLabel }: Props) {
+  const { t } = useTranslation()
   const nextSetId = useRef(0)
   const makeSet = (row: SetRow): SetRowState => ({ ...row, id: String(nextSetId.current++) })
 
@@ -205,22 +207,22 @@ export default function MatchForm({ initial, onSubmit, submitLabel }: Props) {
     if (sets.length > 1) setSets(prev => prev.filter((_, idx) => idx !== i))
   }
   const updateSet = (i: number, field: keyof SetRow, val: string) => {
-    setSets(prev => prev.map((s, idx) => (idx === i ? { ...s, [field]: val } : s)))
+    setSets(prev => prev.map((row, idx) => (idx === i ? { ...row, [field]: val } : row)))
   }
 
   const setsWon = sets.filter(
-    s =>
-      s.playerScore !== '' &&
-      s.opponentScore !== '' &&
-      Number(s.playerScore) > Number(s.opponentScore),
+    row =>
+      row.playerScore !== '' &&
+      row.opponentScore !== '' &&
+      Number(row.playerScore) > Number(row.opponentScore),
   ).length
   const setsLost = sets.filter(
-    s =>
-      s.playerScore !== '' &&
-      s.opponentScore !== '' &&
-      Number(s.playerScore) < Number(s.opponentScore),
+    row =>
+      row.playerScore !== '' &&
+      row.opponentScore !== '' &&
+      Number(row.playerScore) < Number(row.opponentScore),
   ).length
-  const hasScores = sets.some(s => s.playerScore !== '' || s.opponentScore !== '')
+  const hasScores = sets.some(row => row.playerScore !== '' || row.opponentScore !== '')
   const result = setsWon > setsLost ? 'WON' : setsLost > setsWon ? 'LOST' : 'DRAW'
   const resultColor =
     result === 'WON' ? 'var(--teal)' : result === 'LOST' ? 'var(--error)' : 'var(--muted)'
@@ -231,9 +233,9 @@ export default function MatchForm({ initial, onSubmit, submitLabel }: Props) {
     setFieldErrors({})
     setGlobalError('')
     try {
-      const setsPayload: SetScoreRequest[] = sets.map(s => ({
-        playerScore: Number(s.playerScore),
-        opponentScore: Number(s.opponentScore),
+      const setsPayload: SetScoreRequest[] = sets.map(row => ({
+        playerScore: Number(row.playerScore),
+        opponentScore: Number(row.opponentScore),
       }))
       await onSubmit({ opponentName, matchDate, notes: notes || undefined, sets: setsPayload })
     } catch (err) {
@@ -241,7 +243,7 @@ export default function MatchForm({ initial, onSubmit, submitLabel }: Props) {
       if (ae?.fieldErrors) {
         setFieldErrors(ae.fieldErrors)
       } else {
-        setGlobalError(ae?.message ?? 'Could not save match. Please try again.')
+        setGlobalError(ae?.message ?? t('matchForm.couldNotSave'))
       }
     } finally {
       setBusy(false)
@@ -255,11 +257,11 @@ export default function MatchForm({ initial, onSubmit, submitLabel }: Props) {
       <form onSubmit={handleSubmit}>
         {/* Match details */}
         <div style={s.section}>
-          <h2 style={s.sectionHeading}>Match details</h2>
+          <h2 style={s.sectionHeading}>{t('matchForm.matchDetails')}</h2>
 
           <div style={s.field}>
             <label style={s.label} htmlFor="opponent">
-              Opponent
+              {t('matchForm.opponent')}
             </label>
             <input
               id="opponent"
@@ -278,7 +280,7 @@ export default function MatchForm({ initial, onSubmit, submitLabel }: Props) {
 
           <div style={s.field}>
             <label style={s.label} htmlFor="date">
-              Date
+              {t('matchForm.date')}
             </label>
             <input
               id="date"
@@ -297,12 +299,12 @@ export default function MatchForm({ initial, onSubmit, submitLabel }: Props) {
 
           <div style={s.field}>
             <label style={s.label} htmlFor="notes">
-              Notes
+              {t('matchForm.notes')}
             </label>
             <textarea
               id="notes"
               style={{ ...s.textarea, borderColor: fieldErrors.notes ? 'var(--error)' : undefined }}
-              placeholder="Optional notes…"
+              placeholder={t('matchForm.notesPlaceholder')}
               value={notes}
               onChange={e => setNotes(e.target.value)}
             />
@@ -312,11 +314,11 @@ export default function MatchForm({ initial, onSubmit, submitLabel }: Props) {
 
         {/* Set scores */}
         <div style={s.section}>
-          <h2 style={s.sectionHeading}>Set scores</h2>
+          <h2 style={s.sectionHeading}>{t('matchForm.setScores')}</h2>
 
           {sets.map((set, i) => (
             <div key={set.id} style={s.setRow}>
-              <span style={s.setLabel}>Set {i + 1}</span>
+              <span style={s.setLabel}>{t('matchForm.setLabel', { n: i + 1 })}</span>
               <input
                 style={{
                   ...s.scoreInput,
@@ -330,7 +332,7 @@ export default function MatchForm({ initial, onSubmit, submitLabel }: Props) {
                 onChange={e => updateSet(i, 'playerScore', e.target.value)}
                 required
               />
-              <span style={s.vs}>vs</span>
+              <span style={s.vs}>{t('matchForm.vs')}</span>
               <input
                 style={{
                   ...s.scoreInput,
@@ -349,7 +351,7 @@ export default function MatchForm({ initial, onSubmit, submitLabel }: Props) {
                 style={{ ...s.removeBtn, opacity: sets.length === 1 ? 0.3 : 1 }}
                 onClick={() => removeSet(i)}
                 disabled={sets.length === 1}
-                title="Remove set"
+                title={t('matchForm.removeSet')}
               >
                 ✕
               </button>
@@ -364,7 +366,9 @@ export default function MatchForm({ initial, onSubmit, submitLabel }: Props) {
             onClick={addSet}
             disabled={sets.length >= 5}
           >
-            + Add set {sets.length < 5 ? `(${sets.length}/5)` : '(max)'}
+            {sets.length < 5
+              ? t('matchForm.addSetCount', { n: sets.length })
+              : t('matchForm.addSetMax')}
           </button>
 
           {hasScores && (
@@ -372,13 +376,15 @@ export default function MatchForm({ initial, onSubmit, submitLabel }: Props) {
               <span style={s.liveScoreNum}>
                 {setsWon} – {setsLost}
               </span>
-              <span style={{ ...s.liveScoreLabel, color: resultColor }}>{result}</span>
+              <span style={{ ...s.liveScoreLabel, color: resultColor }}>
+                {t(`match.result.${result}`)}
+              </span>
             </div>
           )}
         </div>
 
         <button style={{ ...s.submitBtn, opacity: busy ? 0.7 : 1 }} type="submit" disabled={busy}>
-          {busy ? 'Saving…' : submitLabel}
+          {busy ? t('matchForm.saving') : submitLabel}
         </button>
       </form>
     </>

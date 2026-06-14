@@ -1,7 +1,9 @@
 import type { AxiosError } from 'axios'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { type ApiError, login } from '../api/auth'
+import LanguageSwitcher from '../components/LanguageSwitcher'
 import { useAuth } from '../contexts/AuthContext'
 
 const s: Record<string, React.CSSProperties> = {
@@ -21,13 +23,18 @@ const s: Record<string, React.CSSProperties> = {
     padding: '2.5rem',
     boxShadow: '0 0 60px rgba(0,201,167,0.04)',
   },
+  cardHeader: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    marginBottom: '0.5rem',
+  },
   eyebrow: {
     fontFamily: 'var(--font-mono)',
     fontSize: '11px',
     letterSpacing: '0.15em',
     color: 'var(--teal)',
     textTransform: 'uppercase' as const,
-    marginBottom: '0.5rem',
   },
   heading: {
     fontFamily: 'var(--font-display)',
@@ -92,6 +99,7 @@ const s: Record<string, React.CSSProperties> = {
 export default function LoginPage() {
   const navigate = useNavigate()
   const { setUser } = useAuth()
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -107,7 +115,7 @@ export default function LoginPage() {
       navigate('/')
     } catch (err) {
       const ae = (err as AxiosError<ApiError>).response?.data
-      setError(ae?.message ?? 'Login failed. Please try again.')
+      setError(ae?.message ?? t('auth.loginFailed'))
     } finally {
       setBusy(false)
     }
@@ -116,15 +124,18 @@ export default function LoginPage() {
   return (
     <div style={s.page}>
       <div style={s.card}>
-        <p style={s.eyebrow}>Squash Progress Tracker</p>
-        <h1 style={s.heading}>Sign in</h1>
+        <div style={s.cardHeader}>
+          <p style={s.eyebrow}>{t('auth.eyebrow')}</p>
+          <LanguageSwitcher />
+        </div>
+        <h1 style={s.heading}>{t('auth.signIn')}</h1>
 
         {error && <div style={s.error}>{error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div style={s.field}>
             <label style={s.label} htmlFor="email">
-              Email
+              {t('auth.email')}
             </label>
             <input
               id="email"
@@ -138,7 +149,7 @@ export default function LoginPage() {
           </div>
           <div style={s.field}>
             <label style={s.label} htmlFor="password">
-              Password
+              {t('auth.password')}
             </label>
             <input
               id="password"
@@ -151,12 +162,12 @@ export default function LoginPage() {
             />
           </div>
           <button style={{ ...s.btn, opacity: busy ? 0.7 : 1 }} type="submit" disabled={busy}>
-            {busy ? 'Signing in…' : 'Sign in'}
+            {busy ? t('auth.signingIn') : t('auth.signIn')}
           </button>
         </form>
 
         <p style={s.footer}>
-          No account? <Link to="/register">Register</Link>
+          {t('auth.noAccount')} <Link to="/register">{t('auth.registerLink')}</Link>
         </p>
       </div>
     </div>

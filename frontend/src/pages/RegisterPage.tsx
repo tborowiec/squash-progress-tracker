@@ -1,7 +1,9 @@
 import type { AxiosError } from 'axios'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { type ApiError, register } from '../api/auth'
+import LanguageSwitcher from '../components/LanguageSwitcher'
 
 const s: Record<string, React.CSSProperties> = {
   page: {
@@ -20,13 +22,18 @@ const s: Record<string, React.CSSProperties> = {
     padding: '2.5rem',
     boxShadow: '0 0 60px rgba(0,201,167,0.04)',
   },
+  cardHeader: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    marginBottom: '0.5rem',
+  },
   eyebrow: {
     fontFamily: 'var(--font-mono)',
     fontSize: '11px',
     letterSpacing: '0.15em',
     color: 'var(--teal)',
     textTransform: 'uppercase' as const,
-    marginBottom: '0.5rem',
   },
   heading: {
     fontFamily: 'var(--font-display)',
@@ -95,6 +102,7 @@ const s: Record<string, React.CSSProperties> = {
 
 export default function RegisterPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [globalError, setGlobalError] = useState('')
@@ -114,7 +122,7 @@ export default function RegisterPage() {
       if (ae?.fieldErrors) {
         setFieldErrors(ae.fieldErrors)
       } else {
-        setGlobalError(ae?.message ?? 'Registration failed. Please try again.')
+        setGlobalError(ae?.message ?? t('auth.registrationFailed'))
       }
     } finally {
       setBusy(false)
@@ -124,15 +132,18 @@ export default function RegisterPage() {
   return (
     <div style={s.page}>
       <div style={s.card}>
-        <p style={s.eyebrow}>Squash Progress Tracker</p>
-        <h1 style={s.heading}>Create account</h1>
+        <div style={s.cardHeader}>
+          <p style={s.eyebrow}>{t('auth.eyebrow')}</p>
+          <LanguageSwitcher />
+        </div>
+        <h1 style={s.heading}>{t('auth.createAccount')}</h1>
 
         {globalError && <div style={s.globalError}>{globalError}</div>}
 
         <form onSubmit={handleSubmit}>
           <div style={s.field}>
             <label style={s.label} htmlFor="email">
-              Email
+              {t('auth.email')}
             </label>
             <input
               id="email"
@@ -150,7 +161,7 @@ export default function RegisterPage() {
           </div>
           <div style={s.field}>
             <label style={s.label} htmlFor="password">
-              Password
+              {t('auth.password')}
             </label>
             <input
               id="password"
@@ -167,12 +178,12 @@ export default function RegisterPage() {
             {fieldErrors.password && <p style={s.fieldError}>{fieldErrors.password}</p>}
           </div>
           <button style={{ ...s.btn, opacity: busy ? 0.7 : 1 }} type="submit" disabled={busy}>
-            {busy ? 'Creating account…' : 'Create account'}
+            {busy ? t('auth.creatingAccount') : t('auth.createAccount')}
           </button>
         </form>
 
         <p style={s.footer}>
-          Already have an account? <Link to="/login">Sign in</Link>
+          {t('auth.alreadyHaveAccount')} <Link to="/login">{t('auth.signInLink')}</Link>
         </p>
       </div>
     </div>

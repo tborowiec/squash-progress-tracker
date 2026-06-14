@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getMatch, updateMatch } from '../api/matches'
 import MatchForm, { type MatchFormInitial } from '../components/MatchForm'
@@ -28,6 +29,7 @@ const s: Record<string, React.CSSProperties> = {
 export default function EditMatchPage() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [initial, setInitial] = useState<MatchFormInitial | null>(null)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
@@ -59,27 +61,27 @@ export default function EditMatchPage() {
     <div style={s.page}>
       <NavHeader
         links={[
-          { label: 'Dashboard', to: '/' },
-          { label: 'History', to: '/history' },
-          { label: 'Game plan', to: '/game-plan' },
+          { label: t('nav.dashboard'), to: '/' },
+          { label: t('nav.history'), to: '/history' },
+          { label: t('nav.gamePlan'), to: '/game-plan' },
         ]}
       />
 
       <main style={s.main}>
         <div style={s.card}>
           {loading ? (
-            <p style={s.loading}>Loading…</p>
+            <p style={s.loading}>{t('editMatch.loading')}</p>
           ) : notFound ? (
             <div style={s.notFound}>
-              <p style={s.notFoundMsg}>Match not found.</p>
+              <p style={s.notFoundMsg}>{t('editMatch.notFound')}</p>
               <Link to="/history" style={s.backLink}>
-                ← Back to history
+                {t('editMatch.backToHistory')}
               </Link>
             </div>
           ) : initial ? (
             <MatchForm
               initial={initial}
-              submitLabel="Update match"
+              submitLabel={t('editMatch.updateMatch')}
               onSubmit={async payload => {
                 await updateMatch(Number(id), payload)
                 navigate('/history')
