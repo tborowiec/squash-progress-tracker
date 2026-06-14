@@ -1,10 +1,10 @@
 ---
 project: "Squash Progress Tracker"
-version: 1
+version: 2
 status: draft
 created: 2026-05-30
-updated: 2026-06-06
-prd_version: 1
+updated: 2026-06-14
+prd_version: 2
 main_goal: speed
 top_blocker: time
 ---
@@ -35,6 +35,7 @@ Competitive squash players have no tool that turns match history into a pre-matc
 | S-02  | ai-game-plan               | select an opponent and get an AI-generated game plan (north star)           | F-01, S-01, F-02 | FR-010, US-02                  | done     |
 | S-03  | ai-match-entry             | log a match by typing free text, review the AI preview, confirm or reject   | F-01, S-01, F-02 | FR-003, FR-004, FR-005, US-01  | done     |
 | S-04  | edit-delete-match          | edit or delete a saved match record                                         | F-01, S-01       | FR-008, FR-009                 | done     |
+| S-05  | i18n-pl-en                 | use the app in Polish or English (browser-detected default, per-user persisted) and get game plans in the chosen language | F-01, S-02       | FR-011, FR-012, FR-013, US-03  | planned  |
 
 ## Streams
 
@@ -44,8 +45,9 @@ Navigation aid — groups items that share a Prerequisites chain. Canonical orde
 | ------ | ------------------ | ---------------------------------------------- | ------------------------------------------------------------------------------------- |
 | A      | Account & match log | `F-01` → `S-01` → `S-04`                       | The must-have data spine; no AI dependency, so it can't stall on the provider decision. |
 | B      | AI value loop      | `F-02` → `S-02` → `S-03`                        | Joins Stream A at `S-01` (both AI slices read saved matches). `F-02` runs parallel to `F-01`/`S-01`. |
+| C      | Localization       | `F-01` → `S-02` → `S-05`                        | Cross-cutting: retrofits PL/EN across all already-built UI (`S-01`/`S-03`/`S-04`) and routes new game-plan generation through the active locale. Sequenced after the core loop is proven. |
 
-(Every `F-NN` and `S-NN` appears in exactly one stream. `S-02` and `S-03` are siblings on Stream B — both depend on `F-02` + `S-01` and neither blocks the other.)
+(Every `F-NN` and `S-NN` appears in exactly one stream — `S-05`'s home is Stream C. `S-02` and `S-03` are siblings on Stream B — both depend on `F-02` + `S-01` and neither blocks the other.)
 
 ## Baseline
 
@@ -138,6 +140,21 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Risk:** Data hygiene on existing records; lowest validation value, so sequenced last under the speed goal. Independent of the AI slices, so a separate agent run can build it in parallel with S-02/S-03.
 - **Status:** done
 
+### S-05: Internationalization (Polish & English)
+
+- **Outcome:** the entire interface is available in Polish and English. On first visit the language is auto-detected from the browser (`navigator.language` / `Accept-Language`); a signed-in player can switch language from the UI and the choice is persisted **for the user** (a `locale` column on `users`, so it follows them across devices/sessions, not just the current browser). AI-generated game plans are produced in the player's active interface language — the locale is threaded into the prompt so a Polish UI yields a Polish plan.
+- **Change ID:** i18n-pl-en
+- **PRD refs:** FR-011, FR-012, FR-013, US-03 (added in PRD v2, 2026-06-14)
+- **Prerequisites:** F-01 (per-user persistence + auth to store the locale preference against the account), S-02 (game-plan generation, whose prompt must carry the locale)
+- **Parallel with:** — (all core slices already `done`; this is a cross-cutting retrofit over the shipped UI)
+- **Blockers:** none — all prerequisites are `done`.
+- **Unknowns:**
+  - Translation source-of-truth and library: react-i18next with JSON resource bundles is the conventional fit (no i18n lib wired yet) — confirm at `/10x-plan`. Block: no.
+  - Game-plan output quality in Polish from Gemini `gemini-2.5-flash` — verify the model honors a Polish-output instruction with no quality regression (`GamePlanPromptBuilder` is the injection point). Owner: user/plan. Block: no.
+  - Anonymous-default persistence before sign-in (cookie/localStorage) vs. account-only — leaning localStorage for the pre-auth default, DB column as the authoritative per-user store after login. Block: no.
+- **Risk:** A cross-cutting localization retrofit over already-built UI — the cost is breadth (every rendered string + the game-plan prompt), not depth. Sequenced after the core value loop is validated so localization never delayed the north star. Two correctness traps for `/10x-plan` to pin: (1) untranslated strings leaking through (enforce keys, no hard-coded copy), and (2) the game plan silently falling back to English when the UI is Polish — the locale must reach the LLM prompt, not just the frontend. Per-user persistence (not browser-only) is the explicit ask in this slice.
+- **Status:** planned
+
 ## Backlog Handoff
 
 | Roadmap ID | Change ID                  | Suggested issue title                                        | Ready for `/10x-plan` | Notes |
@@ -148,10 +165,13 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-02       | ai-game-plan               | AI-generated game plan for a selected opponent (north star)  | yes                   | Needs F-01, S-01, F-02 done (all resolved). |
 | S-03       | ai-match-entry             | Natural-language match entry with AI-parsed confirm preview  | yes                   | Needs F-01, S-01, F-02 done (all resolved). |
 | S-04       | edit-delete-match          | Edit and delete saved match records                          | no                    | Needs F-01, S-01 done. |
+| S-05       | i18n-pl-en                 | Polish/English i18n with per-user persisted locale + localized game plans | yes      | Needs F-01, S-02 done (both archived). Cross-cutting retrofit; PRD FRs FR-011..FR-013 added in v2. |
 
 This table is the clean handoff to Jira/Linear or any MCP-backed backlog. One row per `F-NN`/`S-NN`.
 
 ## Open Roadmap Questions
+
+2. **~~i18n (S-05) is not in PRD v1 — backfill it?~~ RESOLVED 2026-06-14 (PRD v2):** Added FR-011/FR-012/FR-013 (Localization) and US-03 to the PRD; `prd_version` bumped to 2. Acceptance criteria now exist before `/10x-plan`.
 
 1. **~~Which LLM provider (and integration path) backs the AI features?~~ RESOLVED 2026-06-03 (issue #2):** **Google Gemini** (`gemini-2.5-flash`) via its **OpenAI-compatible endpoint**, behind a **thin direct adapter** (not Spring AI — Boot 4 lacked a GA Spring AI at decision time). Wired in `application.properties` (`llm.base-url` / `llm.model`) and `OpenAiCompatLlmClient`. The OpenAI wire format keeps the provider swappable under `LLM_API_KEY` / `LLM_BASE_URL`. Caveat carried forward: Gemini's free tier trains on prompts (no opt-out) — synthetic data for dev, paid/no-training tier for real user data.
 

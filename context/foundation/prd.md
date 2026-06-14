@@ -1,8 +1,9 @@
 ---
 project: "Squash Progress Tracker"
-version: 1
+version: 2
 status: draft
 created: 2026-05-20
+updated: 2026-06-14
 context_type: greenfield
 product_type: web-app
 target_scale:
@@ -66,6 +67,20 @@ A player can log a match via natural language text → AI parses it and shows a 
 - The game plan references the player's historical performance against that opponent
 - Player can request a new game plan at any time regardless of how many matches are logged
 
+---
+
+### US-03: Player uses the app in their preferred language
+
+- **Given** a player opening the app, whose browser is configured for Polish
+- **When** they first load the app, and later open the language switcher to choose English
+- **Then** the interface initially renders in Polish (auto-detected), switches to English on demand, and that choice is remembered against their account on the next sign-in from any device — and any game plan they generate is written in the language the interface is currently showing
+
+#### Acceptance Criteria
+- On first visit the language defaults to the browser's preferred language when it is one of the supported languages (Polish, English); otherwise it falls back to English
+- A signed-in player can switch language from the UI, and the preference is persisted to their account (survives sign-out/sign-in and follows them across devices)
+- All interface text the player encounters is translated — no untranslated strings leak through in either language
+- A game plan generated while the interface is in a given language is written in that same language
+
 ## Functional Requirements
 
 ### Authentication
@@ -97,12 +112,22 @@ A player can log a match via natural language text → AI parses it and shows a 
 - FR-010: Player can select an opponent from their match history and request an AI-generated game plan for the next match against that opponent. Priority: must-have
   > Socratic: Counter-argument considered: thin data (1 match) causes generic/hallucinated tips, eroding trust early. Resolution: kept; the "AI-generated advice" label guardrail sets expectations. The player decides when they have enough data to ask.
 
+### Localization
+
+- FR-011: The app is available in Polish and English; on first visit the language is auto-detected from the browser, falling back to English when the browser's preferred language is unsupported. Priority: must-have
+  > Socratic: Counter-argument considered: English-only is cheaper and the persona is "technically comfortable". Resolution: added post-v1; the primary persona is Polish-club squash players (opponent names like "Kowalski" in US-01), so Polish is a first-class language, not a nice-to-have.
+- FR-012: Player can switch the interface language from the UI, and the choice is persisted to their account so it follows them across sessions and devices. Priority: must-have
+  > Socratic: Counter-argument considered: a browser-local cookie/localStorage is simpler than a DB column. Resolution: per-user persistence is the explicit requirement — the preference must follow the account, not the browser; localStorage only seeds the pre-sign-in default.
+- FR-013: AI-generated game plans are produced in the player's active interface language. Priority: must-have
+  > Socratic: Counter-argument considered: always generate in English and let the player translate. Resolution: kept; a Polish-speaking player reading a Polish UI expects Polish advice — the locale must reach the LLM prompt, not stop at the frontend.
+
 ## Non-Functional Requirements
 
 - Any AI operation (text parsing, game plan generation) provides continuous visible progress feedback to the player; the interface does not freeze or go silent.
 - AI text parsing completes within 5 seconds as perceived by the player (from submit to structured preview appearing).
 - No match record belonging to one player is accessible by a different player.
 - The product is fully usable on the latest two major versions of Chrome, Firefox, Safari, and Edge (desktop). Mobile browser support is explicitly out of scope for MVP.
+- The supported interface languages are Polish and English; the language set is fixed for MVP (additional languages are out of scope). User-supplied content (opponent names, match notes) is never machine-translated — only interface chrome and AI-generated game-plan output are localized.
 
 ## Business Logic
 
